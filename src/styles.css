@@ -324,9 +324,9 @@ pre code {
   border: 1px solid var(--line);
   background: linear-gradient(165deg, var(--surface-strong), var(--surface));
   box-shadow:
-    0 1px 0 var(--inset-glint) inset,
-    0 22px 44px rgba(0, 0, 0, 0.06),
-    0 6px 18px rgba(0, 0, 0, 0.04);
+    0 2px 4px rgba(0, 0, 0, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.06),
+    0 24px 48px rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(4px);
 }
 
@@ -414,5 +414,544 @@ a {
   body {
     background-color: var(--background);
     color: var(--foreground);
+  }
+}
+
+/* ─── Hero Slider ─────────────────────────────────────── */
+
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  min-height: clamp(560px, 82vh, 840px);
+  display: flex;
+  flex-direction: column;
+  isolation: isolate;
+}
+
+@media (max-width: 640px) {
+  .hero-section {
+    min-height: 600px;
+  }
+}
+
+.hero-slides-container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1100ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+}
+
+.hero-slide.is-active {
+  opacity: 1;
+}
+
+.hero-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.06);
+  transition: transform 0s;
+}
+
+/* Ken Burns duration ≈ autoplay duration so zoom completes in view */
+.hero-slide.is-active img {
+  animation: hero-ken-burns 6500ms ease-out forwards;
+}
+
+@keyframes hero-ken-burns {
+  from { transform: scale(1.06); }
+  to   { transform: scale(1.00); }
+}
+
+/*
+ * Layered overlay:
+ *   1. Side-weighted darkness for text column (stronger on left)
+ *   2. Bottom vignette so text never sits on a bright sky/road
+ */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      100deg,
+      rgba(10, 8, 5, 0.80) 0%,
+      rgba(10, 8, 5, 0.58) 40%,
+      rgba(10, 8, 5, 0.22) 78%,
+      rgba(10, 8, 5, 0.12) 100%
+    ),
+    linear-gradient(
+      to top,
+      rgba(10, 8, 5, 0.55) 0%,
+      rgba(10, 8, 5, 0.00) 45%
+    );
+}
+
+/* Arrow nav buttons */
+.hero-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(15, 12, 10, 0.30);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  cursor: pointer;
+  transition: background 200ms ease, border-color 200ms ease, transform 200ms ease;
+}
+
+.hero-arrow:hover {
+  background: rgba(15, 12, 10, 0.50);
+  border-color: rgba(255, 255, 255, 0.55);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.hero-arrow:focus-visible {
+  outline: 2px solid var(--color-coral-glow-500);
+  outline-offset: 3px;
+}
+
+.hero-arrow-left  { left: 1.25rem; }
+.hero-arrow-right { right: 1.25rem; }
+
+/* Hide floating arrows on phones — dots remain, swipe-friendly */
+@media (max-width: 640px) {
+  .hero-arrow { display: none; }
+}
+
+/* Dot indicators */
+.hero-dots {
+  position: absolute;
+  bottom: 8.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.35rem 0.7rem;
+  border-radius: 9999px;
+  background: rgba(10, 8, 5, 0.35);
+  backdrop-filter: blur(6px);
+}
+
+@media (max-width: 640px) {
+  .hero-dots {
+    bottom: 6.75rem;
+  }
+}
+
+.hero-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: background 220ms ease, width 220ms ease;
+}
+
+.hero-dot:hover { background: rgba(255, 255, 255, 0.75); }
+
+.hero-dot.is-active {
+  width: 26px;
+  background: var(--color-coral-glow-500);
+}
+
+.hero-dot:focus-visible {
+  outline: 2px solid var(--color-coral-glow-500);
+  outline-offset: 3px;
+}
+
+/* Text content above slider */
+.hero-content {
+  position: relative;
+  z-index: 5;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5rem 0 10rem;
+}
+
+@media (min-width: 640px) {
+  .hero-content { padding: 7rem 0 12rem; }
+}
+
+.hero-text-enter {
+  max-width: 40rem;
+  animation: hero-text-rise 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes hero-text-rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.hero-kicker {
+  display: inline-block;
+  margin-bottom: 1.25rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(8px);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.hero-title {
+  margin: 0 0 1.25rem;
+  color: #fff;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-size: clamp(2.1rem, 1.5rem + 3.2vw, 4.5rem);
+  text-shadow:
+    0 2px 14px rgba(0, 0, 0, 0.55),
+    0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.hero-title-accent {
+  color: var(--color-coral-glow-500);
+}
+
+.hero-description {
+  max-width: 36rem;
+  margin: 0 0 2rem;
+  color: rgba(255, 255, 255, 0.94);
+  line-height: 1.6;
+  font-size: clamp(1rem, 0.92rem + 0.35vw, 1.15rem);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+}
+
+.hero-cta {
+  height: 3rem;
+  padding: 0 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 0.85rem;
+  background: var(--color-coral-glow-500);
+  color: #fff;
+  border: 0;
+  box-shadow: 0 12px 28px -10px rgba(255, 89, 6, 0.55);
+  cursor: pointer;
+}
+
+.hero-cta:hover {
+  background: var(--color-coral-glow-400);
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide,
+  .hero-slide img,
+  .hero-slide.is-active img,
+  .hero-text-enter,
+  .hero-arrow,
+  .hero-dot {
+    animation: none !important;
+    transition: none !important;
+  }
+  .hero-slide img { transform: none; }
+}
+
+/* ─── Booking Card ────────────────────────────────────── */
+
+.booking-card-wrapper {
+  position: relative;
+  z-index: 20;
+  margin-top: -72px;
+  padding-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .booking-card-wrapper {
+    margin-top: -48px;
+  }
+}
+
+.booking-card {
+  background: #fff;
+  border-radius: 1.25rem;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.04),
+    0 16px 40px rgba(0, 0, 0, 0.12),
+    0 40px 80px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.booking-card-header {
+  background: linear-gradient(90deg, var(--color-coral-glow-400), var(--color-spicy-paprika-500));
+  padding: 0.875rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.booking-card-header-icon {
+  width: 22px;
+  height: 22px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.booking-card-header h2 {
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+
+.booking-card-header span {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.8);
+  margin-left: auto;
+}
+
+.booking-card-body {
+  padding: 1.25rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .booking-card-body {
+    padding: 1.5rem 1.75rem 1.75rem;
+  }
+}
+
+
+/* ─── Booking Panel (tabs + form) ─────────────────────── */
+
+.booking-tabs-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+}
+
+.booking-tabs {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.booking-tabs::-webkit-scrollbar { display: none; }
+
+.booking-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.95rem;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  background: color-mix(in oklab, var(--color-white-400) 30%, transparent);
+  color: var(--foreground);
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease, transform 150ms ease;
+}
+
+.booking-tab:hover:not(.is-active) {
+  background: color-mix(in oklab, var(--foreground) 8%, transparent);
+}
+
+.booking-tab:focus-visible {
+  outline: 2px solid var(--color-coral-glow-500);
+  outline-offset: 2px;
+}
+
+.booking-tab.is-active {
+  background: var(--color-white-100);
+  color: #fff;
+}
+
+.booking-view-link {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: 0.875rem;
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.booking-view-link:hover { text-decoration: none; }
+.booking-view-link:focus-visible {
+  outline: 2px solid var(--color-coral-glow-500);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Form grid: locations column, pickup, return, CTA */
+.booking-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  align-items: end;
+  padding-top: 0.25rem;
+}
+
+@media (min-width: 1024px) {
+  .booking-form {
+    grid-template-columns: minmax(0, 1.8fr) auto auto auto;
+    gap: 1.25rem;
+  }
+}
+
+.booking-form-locations {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.booking-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.booking-field-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--foreground);
+  letter-spacing: 0.005em;
+}
+
+.booking-field-control {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.7rem 0.9rem;
+  min-height: 3rem;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 0.65rem;
+  cursor: pointer;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+.booking-field-control:hover,
+.booking-field-control:focus-within {
+  border-color: var(--foreground);
+}
+.booking-field-control:focus-within {
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-coral-glow-500) 25%, transparent);
+}
+
+.booking-select {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  outline: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--foreground);
+  cursor: pointer;
+  appearance: none;
+}
+
+.booking-datetime {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+}
+
+.booking-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  min-height: 3rem;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 0.65rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--foreground);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+.booking-chip:hover { border-color: var(--foreground); }
+.booking-chip:focus-visible {
+  outline: none;
+  border-color: var(--color-coral-glow-500);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-coral-glow-500) 25%, transparent);
+}
+
+.booking-toggle-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  color: var(--muted-foreground);
+  background: transparent;
+  border: 0;
+  padding: 0.15rem 0;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: color 150ms ease;
+}
+.booking-toggle-link:hover { color: var(--foreground); }
+
+.booking-submit {
+  width: 100%;
+  height: 3rem;
+  padding: 0 1.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  background: var(--color-coral-glow-400);
+  color: #fff;
+  border: 0;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 10px 22px -10px rgba(255, 89, 6, 0.5);
+  transition: background 150ms ease, transform 150ms ease;
+}
+.booking-submit:hover { background: var(--color-coral-glow-500); }
+
+@media (min-width: 1024px) {
+  .booking-submit { width: auto; }
+}
+
+@media (max-width: 640px) {
+  .booking-tabs-row {
+    flex-wrap: wrap;
+    gap: 0.75rem;
   }
 }
