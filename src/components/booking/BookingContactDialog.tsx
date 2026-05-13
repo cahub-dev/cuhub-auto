@@ -11,8 +11,7 @@ import {
 	DialogTitle,
 } from "#/components/ui/dialog";
 
-// CAHUB-TODO: replace with the real CA HUB AUTO WhatsApp number and sales email
-const WHATSAPP_NUMBER = "+258000000000";
+const WHATSAPP_NUMBER = "+258877541015";
 const BOOKINGS_EMAIL = "bookings@cahubauto.co.mz";
 
 export interface BookingPayload {

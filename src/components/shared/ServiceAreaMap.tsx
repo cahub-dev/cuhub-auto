@@ -315,7 +315,7 @@ export function ServiceAreaMap(): React.JSX.Element {
 
 						{/* Auto-cycle info card — bottom-left of map */}
 						{activeCityPin && !hoverTooltip && (
-							<div className="absolute bottom-5 left-5 z-10 rise-in">
+							<div className="absolute bottom-5 left-5 z-10 ">
 								<div className="island-shell rounded-xl px-3.5 py-2.5" style={{ minWidth: "148px" }}>
 									<div className="flex items-center gap-1.5 mb-0.5">
 										<MapPin className="size-3.5 shrink-0" style={{ color: "#ff8549" }} />

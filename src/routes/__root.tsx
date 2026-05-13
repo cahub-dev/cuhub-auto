@@ -4,13 +4,11 @@ import {
 	createRootRouteWithContext,
 	HeadContent,
 	Scripts,
-	useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { Header } from "#/components/Header";
 import { Footer } from "#/components/layout/footer";
-import { ScrollRevealInit } from "#/components/shared/ScrollRevealInit";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import { SITE_NAME, SITE_URL } from "../lib/seo";
 import appCss from "../styles.css?url";
@@ -26,7 +24,7 @@ const LOCAL_BUSINESS_SCHEMA = {
 	description:
 		"Vehicle and heavy equipment rental for professional operations across Mozambique.",
 	url: SITE_URL,
-	telephone: "+258848880551",
+	telephone: "+258877541015",
 	email: "cahubauto@gmail.com",
 	address: {
 		"@type": "PostalAddress",
@@ -93,8 +91,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<NavigationProgress />
-				<ScrollRevealInit />
 				<Header />
 				<main>{children}</main>
 				<Footer />
@@ -111,18 +107,5 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<Scripts />
 			</body>
 		</html>
-	);
-}
-
-function NavigationProgress(): React.JSX.Element {
-	const isLoading = useRouterState({
-		select: (state) => state.isLoading || state.isTransitioning,
-	});
-
-	return (
-		<div
-			className={`navigation-progress${isLoading ? " is-active" : ""}`}
-			aria-hidden="true"
-		/>
 	);
 }

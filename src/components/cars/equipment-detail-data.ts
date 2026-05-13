@@ -8,10 +8,13 @@ import {
 	Settings,
 	Users,
 } from "lucide-react";
-import type { CarDetailData, CarExtra } from "#/components/cars/car-detail-data";
+import type {
+	CarDetailData,
+	CarExtra,
+} from "#/components/cars/car-detail-data";
 
 const CONTACT = {
-	whatsappNumber: "+258840000000",
+	whatsappNumber: "+258877541015",
 	email: "info@cahub.co.mz",
 };
 

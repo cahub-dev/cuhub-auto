@@ -30,7 +30,7 @@ function FleetPage(): React.JSX.Element {
 			<div className="bg-[#f6f6f6] py-14 md:py-20">
 				<div className="page-wrap">
 					<div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
-						<aside className="motion-scroll-reveal self-start rounded-2xl bg-white p-6 shadow-[0_10px_28px_rgba(0,0,0,0.05)] lg:sticky lg:top-24">
+						<aside className=" self-start rounded-2xl bg-white p-6 shadow-[0_10px_28px_rgba(0,0,0,0.05)] lg:sticky lg:top-24">
 							<div className="mb-7">
 								<h2 className="mb-4 text-xl font-bold text-foreground">
 									Search
@@ -86,7 +86,7 @@ function FleetPage(): React.JSX.Element {
 						</aside>
 
 						<section
-							className="motion-scroll-reveal"
+							className=""
 							aria-label="Fleet results"
 						>
 							<div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -103,7 +103,7 @@ function FleetPage(): React.JSX.Element {
 								</select>
 							</div>
 
-							<div className="motion-scroll-reveal motion-stagger grid grid-cols-1 gap-6 md:grid-cols-2">
+							<div className=" grid grid-cols-1 gap-6 md:grid-cols-2">
 								{FEATURED_FLEET.map((car) => (
 									<FleetCard key={car.id} car={car} />
 								))}

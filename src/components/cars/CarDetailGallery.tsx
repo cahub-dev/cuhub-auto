@@ -13,7 +13,7 @@ export function CarDetailGallery({
 				<img
 					src={images[0]}
 					alt={name}
-					className="motion-image-zoom h-full min-h-[280px] w-full object-cover lg:min-h-[420px]"
+					className=" h-full min-h-[280px] w-full object-cover lg:min-h-[420px]"
 				/>
 			</div>
 			<div className="grid grid-cols-2 gap-3 lg:flex lg:flex-col">
@@ -25,7 +25,7 @@ export function CarDetailGallery({
 						<img
 							src={image}
 							alt={`${name} view ${index + 2}`}
-							className="motion-image-zoom h-40 w-full object-cover lg:h-full"
+							className=" h-40 w-full object-cover lg:h-full"
 						/>
 					</div>
 				))}

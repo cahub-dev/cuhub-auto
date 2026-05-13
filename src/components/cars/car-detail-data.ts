@@ -43,7 +43,7 @@ export interface CarDetailData {
 }
 
 const CONTACT = {
-	whatsappNumber: "+258840000000",
+	whatsappNumber: "+258877541015",
 	email: "info@cahub.co.mz",
 };
 

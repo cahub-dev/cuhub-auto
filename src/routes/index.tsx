@@ -27,7 +27,7 @@ function Home(): React.JSX.Element {
 			<Hero />
 			<div className="booking-card-wrapper">
 				<div className="page-wrap">
-					<div className="motion-scale-in">
+					<div className="">
 						<BookingPanel />
 					</div>
 				</div>

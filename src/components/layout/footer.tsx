@@ -59,11 +59,18 @@ export function Footer(): React.JSX.Element {
 								</span>
 							</p>
 							<a
-								href="tel:+258848880551"
+								href="tel:+258877541015"
 								className="flex items-center gap-3 !text-white no-underline hover:!text-primary"
 							>
 								<Phone className="size-4 text-primary" aria-hidden="true" />
-								+258 848880551 (Mr. Vasco, Manager)
+								+258 87 754 1015
+							</a>
+							<a
+								href="tel:+258877030101"
+								className="flex items-center gap-3 !text-white no-underline hover:!text-primary"
+							>
+								<Phone className="size-4 text-primary" aria-hidden="true" />
+								+258 87 703 0101
 							</a>
 							<a
 								href="mailto:cahubauto@gmail.com"
