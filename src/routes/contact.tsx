@@ -1,14 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
+import type React from "react";
+import { ContactForm } from "#/components/contact/ContactForm";
+import { ContactHero } from "#/components/contact/ContactHero";
+import { ContactInfoCards } from "#/components/contact/ContactInfoCards";
+import { ContactMap } from "#/components/contact/ContactMap";
 
 export const Route = createFileRoute("/contact")({ component: ContactPage });
 
-function ContactPage() {
+function ContactPage(): React.JSX.Element {
 	return (
-		<div className="page-wrap py-16">
-			<h1 className="display-title text-3xl font-bold mb-4">Contact Us</h1>
-			<p className="text-muted-foreground">
-				Get in touch with CA HUB AUTO for bookings and enquiries.
-			</p>
-		</div>
+		<>
+			<ContactHero />
+			<ContactInfoCards />
+			<ContactMap />
+			<ContactForm />
+		</>
 	);
 }

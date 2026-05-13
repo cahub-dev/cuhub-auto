@@ -10,7 +10,6 @@ const NAV_ITEMS = [
 	{ label: "Home", to: "/" },
 	{ label: "Fleet", to: "/fleet" },
 	{ label: "About", to: "/about" },
-	{ label: "Partners", to: "/partners" },
 	{ label: "Contact", to: "/contact" },
 ] as const;
 

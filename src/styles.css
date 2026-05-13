@@ -690,8 +690,8 @@ a {
   position: absolute;
   left: 0;
   right: 0;
+  top: 100px;
   bottom: 0;
-  height: 50%;
   background-color: #f6f6f6;
   z-index: -1;
 }
@@ -699,10 +699,7 @@ a {
 .booking-card {
   background: #fff;
   border-radius: 1.25rem;
-  box-shadow:
-    0 4px 6px rgba(0, 0, 0, 0.04),
-    0 16px 40px rgba(0, 0, 0, 0.12),
-    0 40px 80px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.08);
   overflow: hidden;
 }
 

@@ -9,19 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as PartnersRouteImport } from './routes/partners'
 import { Route as FleetRouteImport } from './routes/fleet'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CarsIndexRouteImport } from './routes/cars/index'
+import { Route as FleetCarIdRouteImport } from './routes/fleet_/$carId'
 import { Route as BookingNewRouteImport } from './routes/booking/new'
 
-const PartnersRoute = PartnersRouteImport.update({
-  id: '/partners',
-  path: '/partners',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const FleetRoute = FleetRouteImport.update({
   id: '/fleet',
   path: '/fleet',
@@ -47,6 +42,11 @@ const CarsIndexRoute = CarsIndexRouteImport.update({
   path: '/cars/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FleetCarIdRoute = FleetCarIdRouteImport.update({
+  id: '/fleet_/$carId',
+  path: '/fleet/$carId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BookingNewRoute = BookingNewRouteImport.update({
   id: '/booking/new',
   path: '/booking/new',
@@ -58,8 +58,8 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/fleet': typeof FleetRoute
-  '/partners': typeof PartnersRoute
   '/booking/new': typeof BookingNewRoute
+  '/fleet/$carId': typeof FleetCarIdRoute
   '/cars/': typeof CarsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -67,8 +67,8 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/fleet': typeof FleetRoute
-  '/partners': typeof PartnersRoute
   '/booking/new': typeof BookingNewRoute
+  '/fleet/$carId': typeof FleetCarIdRoute
   '/cars': typeof CarsIndexRoute
 }
 export interface FileRoutesById {
@@ -77,8 +77,8 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/fleet': typeof FleetRoute
-  '/partners': typeof PartnersRoute
   '/booking/new': typeof BookingNewRoute
+  '/fleet_/$carId': typeof FleetCarIdRoute
   '/cars/': typeof CarsIndexRoute
 }
 export interface FileRouteTypes {
@@ -88,8 +88,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/fleet'
-    | '/partners'
     | '/booking/new'
+    | '/fleet/$carId'
     | '/cars/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -97,8 +97,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/fleet'
-    | '/partners'
     | '/booking/new'
+    | '/fleet/$carId'
     | '/cars'
   id:
     | '__root__'
@@ -106,8 +106,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/fleet'
-    | '/partners'
     | '/booking/new'
+    | '/fleet_/$carId'
     | '/cars/'
   fileRoutesById: FileRoutesById
 }
@@ -116,20 +116,13 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   FleetRoute: typeof FleetRoute
-  PartnersRoute: typeof PartnersRoute
   BookingNewRoute: typeof BookingNewRoute
+  FleetCarIdRoute: typeof FleetCarIdRoute
   CarsIndexRoute: typeof CarsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/partners': {
-      id: '/partners'
-      path: '/partners'
-      fullPath: '/partners'
-      preLoaderRoute: typeof PartnersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/fleet': {
       id: '/fleet'
       path: '/fleet'
@@ -165,6 +158,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CarsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fleet_/$carId': {
+      id: '/fleet_/$carId'
+      path: '/fleet/$carId'
+      fullPath: '/fleet/$carId'
+      preLoaderRoute: typeof FleetCarIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/booking/new': {
       id: '/booking/new'
       path: '/booking/new'
@@ -180,8 +180,8 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   FleetRoute: FleetRoute,
-  PartnersRoute: PartnersRoute,
   BookingNewRoute: BookingNewRoute,
+  FleetCarIdRoute: FleetCarIdRoute,
   CarsIndexRoute: CarsIndexRoute,
 }
 export const routeTree = rootRouteImport

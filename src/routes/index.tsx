@@ -4,6 +4,7 @@ import { BookingPanel } from "#/components/booking/BookingPanel";
 import { FeaturedFleet } from "#/components/cars/FeaturedFleet";
 import { Hero } from "#/components/Hero";
 import { TrustedPartners } from "#/components/shared/TrustedPartners";
+import { ServiceAreaMap } from "#/components/shared/ServiceAreaMap";
 import { WhyChooseUs } from "#/components/shared/WhyChooseUs";
 import { VideoSection } from "#/components/VideoSection";
 
@@ -20,6 +21,7 @@ function Home(): React.JSX.Element {
 			</div>
 			<FeaturedFleet />
 			<WhyChooseUs />
+			<ServiceAreaMap />
 			<VideoSection />
 			<TrustedPartners />
 		</div>

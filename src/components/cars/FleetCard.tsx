@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import type React from "react";
 import { Button } from "#/components/ui/button";
 
@@ -11,7 +12,11 @@ export interface FleetCardData {
 
 export function FleetCard({ car }: { car: FleetCardData }): React.JSX.Element {
 	return (
-		<div className="flex flex-col bg-white rounded-2xl border border-border/40 overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-shadow duration-300">
+		<Link
+			to="/fleet/$carId"
+			params={{ carId: car.id }}
+			className="flex flex-col bg-white rounded-2xl border border-border/40 overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-shadow duration-300 no-underline"
+		>
 			{/* Image */}
 			<div className="relative aspect-[4/3] overflow-hidden bg-muted/30">
 				<img
@@ -45,11 +50,13 @@ export function FleetCard({ car }: { car: FleetCardData }): React.JSX.Element {
 				{/* CTA */}
 				<Button
 					variant="outline"
-					className="w-full h-11 font-semibold text-sm rounded-lg cursor-pointer mt-1"
+					className="w-full h-11 font-semibold text-sm rounded-lg mt-1 pointer-events-none"
+					tabIndex={-1}
+					aria-hidden="true"
 				>
 					Request Quote
 				</Button>
 			</div>
-		</div>
+		</Link>
 	);
 }

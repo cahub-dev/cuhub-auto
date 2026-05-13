@@ -1,10 +1,8 @@
-import { Link } from "@tanstack/react-router";
 import type React from "react";
 import {
 	type Client,
 	ClientLogoCard,
 } from "#/components/shared/ClientLogoCard";
-import { Button } from "#/components/ui/button";
 
 const CLIENTS: Client[] = [
 	{
@@ -34,14 +32,6 @@ export function TrustedClients(): React.JSX.Element {
 							Our Trusted Clients
 						</h2>
 					</div>
-					<Link to="/partners" className="no-underline">
-						<Button
-							variant="outline"
-							className="h-10 px-6 font-medium text-sm rounded-lg cursor-pointer self-start"
-						>
-							Show all Clients
-						</Button>
-					</Link>
 				</div>
 
 				{/* Grid */}
