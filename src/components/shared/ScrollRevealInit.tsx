@@ -5,10 +5,29 @@ export function ScrollRevealInit(): null {
 	const pathname = useRouterState({ select: (s) => s.location.pathname });
 
 	useEffect(() => {
-		const els = document.querySelectorAll<Element>(
-			".motion-scroll-reveal:not(.is-visible)",
+		const els = Array.from(
+			document.querySelectorAll<HTMLElement>(".motion-scroll-reveal"),
 		);
-		if (!els.length) return;
+		if (!els.length) {
+			document.body.classList.add("motion-scroll-ready");
+			return;
+		}
+
+		// 1. Immediately mark elements already in viewport — no flash
+		const vh = window.innerHeight;
+		for (const el of els) {
+			const { top, bottom } = el.getBoundingClientRect();
+			if (top < vh + 60 && bottom > 0) {
+				el.classList.add("is-visible");
+			}
+		}
+
+		// 2. Now enable scroll-reveal CSS (hides only the not-yet-visible ones)
+		document.body.classList.add("motion-scroll-ready");
+
+		// 3. Observe remaining off-screen elements
+		const pending = els.filter((el) => !el.classList.contains("is-visible"));
+		if (!pending.length) return;
 
 		const observer = new IntersectionObserver(
 			(entries) => {
@@ -19,10 +38,10 @@ export function ScrollRevealInit(): null {
 					}
 				}
 			},
-			{ threshold: 0.08, rootMargin: "0px 0px -48px 0px" },
+			{ threshold: 0.07, rootMargin: "0px 0px -40px 0px" },
 		);
 
-		for (const el of els) observer.observe(el);
+		for (const el of pending) observer.observe(el);
 		return () => observer.disconnect();
 	}, [pathname]);
 
