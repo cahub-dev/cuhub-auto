@@ -45,9 +45,9 @@ export const EQUIPMENT_DETAILS: CarDetailData[] = [
 		reviewCount: 31,
 		dailyRate: 280,
 		gallery: [
-			"/loader/loaderr_1.png",
-			"/loader/loader_2.png",
-			"/loader/loader_3.png",
+			"/loader/loaderr_1.webp",
+			"/loader/loader_2.webp",
+			"/loader/loader_3.webp",
 		],
 		specs: [
 			{ label: "Operator", value: "Optional", icon: Users },
@@ -81,9 +81,9 @@ export const EQUIPMENT_DETAILS: CarDetailData[] = [
 		reviewCount: 28,
 		dailyRate: 340,
 		gallery: [
-			"/excavator/excavator_1.png",
-			"/excavator/excavator_2.png",
-			"/excavator/excavator_3.png",
+			"/excavator/excavator_1.webp",
+			"/excavator/excavator_2.webp",
+			"/excavator/excavator_3.webp",
 		],
 		specs: [
 			{ label: "Operator", value: "Optional", icon: Users },
@@ -117,9 +117,9 @@ export const EQUIPMENT_DETAILS: CarDetailData[] = [
 		reviewCount: 24,
 		dailyRate: 420,
 		gallery: [
-			"/scania/scania_1.png",
-			"/scania/scania_2.png",
-			"/scania/scania_3.png",
+			"/scania/scania_1.webp",
+			"/scania/scania_2.webp",
+			"/scania/scania_3.webp",
 		],
 		specs: [
 			{ label: "Seat Capacity", value: "2 People", icon: Users },

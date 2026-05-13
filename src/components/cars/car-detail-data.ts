@@ -78,9 +78,9 @@ export const CAR_DETAILS: CarDetailData[] = [
 		reviewCount: 56,
 		dailyRate: 120,
 		gallery: [
-			"/landcruiser/landcruiser_1.png",
-			"/landcruiser/landcruiser_2.png",
-			"/landcruiser/landcruiser_3.png",
+			"/landcruiser/landcruiser_1.webp",
+			"/landcruiser/landcruiser_2.webp",
+			"/landcruiser/landcruiser_3.webp",
 		],
 		specs: [
 			{ label: "Seat Capacity", value: "7 People", icon: Users },
@@ -114,9 +114,9 @@ export const CAR_DETAILS: CarDetailData[] = [
 		reviewCount: 42,
 		dailyRate: 85,
 		gallery: [
-			"/navara_single/navara_single_1.png",
-			"/navara_single/navara_single_2.png",
-			"/navara_single/navara_single_3.png",
+			"/navara_single/navara_single_1.webp",
+			"/navara_single/navara_single_2.webp",
+			"/navara_single/navara_single_3.webp",
 		],
 		specs: [
 			{ label: "Seat Capacity", value: "2 People", icon: Users },
@@ -150,9 +150,9 @@ export const CAR_DETAILS: CarDetailData[] = [
 		reviewCount: 49,
 		dailyRate: 95,
 		gallery: [
-			"/navara_double/navara_double_1.png",
-			"/navara_double/navara_double_2.png",
-			"/navara_double/navara_double_3.png",
+			"/navara_double/navara_double_1.webp",
+			"/navara_double/navara_double_2.webp",
+			"/navara_double/navara_double_3.webp",
 		],
 		specs: [
 			{ label: "Seat Capacity", value: "5 People", icon: Users },

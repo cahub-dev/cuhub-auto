@@ -5,7 +5,7 @@ export const FEATURED_FLEET: FleetCardData[] = [
 	{
 		id: "toyota-land-cruiser",
 		name: "Toyota Land Cruiser",
-		image: "/car_types/toyota_landcruiser.png",
+		image: "/car_types/toyota_landcruiser.webp",
 		description:
 			"Engineered for high-performance operations, operational reliability, secure, and professional presence. Ideal for supervisory and logistics roles in demanding environments.",
 		sectors: ["Mining", "Construction"],
@@ -13,7 +13,7 @@ export const FEATURED_FLEET: FleetCardData[] = [
 	{
 		id: "nissan-navara-single",
 		name: "Nissan Navara Single Cab",
-		image: "/car_types/nissan_navara.png",
+		image: "/car_types/nissan_navara.webp",
 		description:
 			"Strategic operational support vehicle, designed for mobility in challenging terrain. Ideal for transporting supervisors, technicians, and light equipment.",
 		sectors: ["Mining", "Construction", "Rural"],
@@ -21,7 +21,7 @@ export const FEATURED_FLEET: FleetCardData[] = [
 	{
 		id: "nissan-navara-double",
 		name: "Nissan Navara Double Cab",
-		image: "/car_types/nissan-navara_2.png",
+		image: "/car_types/nissan-navara_2.webp",
 		description:
 			"Ideal for operations in difficult terrain, including mining, construction, and rural areas. Offers excellent performance, safety, and reliable mobility for operational teams.",
 		sectors: ["Mining", "Construction", "Rural"],
@@ -29,7 +29,7 @@ export const FEATURED_FLEET: FleetCardData[] = [
 	{
 		id: "develon-loader",
 		name: "Develon Loader SD300",
-		image: "/car_types/develon-loader.png",
+		image: "/car_types/develon-loader.webp",
 		description:
 			"Combining power and versatility, allowing for efficient excavation, loading, and transport of materials across varied terrains. Ideal for construction, infrastructure, and mining projects.",
 		sectors: ["Construction", "Mining", "Infrastructure"],
@@ -37,7 +37,7 @@ export const FEATURED_FLEET: FleetCardData[] = [
 	{
 		id: "develon-excavator",
 		name: "Develon Excavator Shovel DX220",
-		image: "/car_types/develon-excavator.png",
+		image: "/car_types/develon-excavator.webp",
 		description:
 			"Offers high productivity, low fuel consumption, and exceptional durability, ensuring continuous and safe operations even on difficult terrain.",
 		sectors: ["Mining", "Construction", "Infrastructure"],
@@ -45,7 +45,7 @@ export const FEATURED_FLEET: FleetCardData[] = [
 	{
 		id: "scania-mining",
 		name: "Scania Mining Truck",
-		image: "/car_types/scania.png",
+		image: "/car_types/scania.webp",
 		description:
 			"Engineered for extreme-duty performance, reducing operating costs and operational efficiency in the toughest mining environments. Delivers superior hauling capacity to support heavy industrial operations.",
 		sectors: ["Mining", "Heavy Industry"],

@@ -50,7 +50,7 @@ export function Header() {
 						className="flex items-center shrink-0 no-underline"
 						aria-label="CA HUB AUTO — Home"
 					>
-						<img src="/logo.jpg" alt="CA HUB AUTO" className="h-9 w-auto" />
+						<img src="/logo.webp" alt="CA HUB AUTO" className="h-9 w-auto" />
 					</Link>
 
 					<nav className="hidden md:flex items-center gap-1">

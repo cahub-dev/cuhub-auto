@@ -20,7 +20,7 @@ export function VideoSection(): React.JSX.Element {
 		<section className="relative w-full h-[320px] md:h-[420px] lg:h-[500px] overflow-hidden">
 			{/* Background image */}
 			<img
-				src="/video_placeholder.png"
+				src="/video_placeholder.webp"
 				alt="Video thumbnail"
 				className="absolute inset-0 w-full h-full object-cover"
 			/>

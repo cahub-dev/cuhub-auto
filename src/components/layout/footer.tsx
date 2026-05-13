@@ -16,7 +16,7 @@ export function Footer(): React.JSX.Element {
 				<div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_1.4fr] lg:gap-16">
 					<div>
 						<img
-							src="/logo.jpg"
+							src="/logo.webp"
 							alt="CA HUB AUTO"
 							className="mb-6 h-12 w-auto rounded-sm bg-white"
 						/>

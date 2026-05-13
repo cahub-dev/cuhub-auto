@@ -4,7 +4,7 @@ export function ContactHero(): React.JSX.Element {
 	return (
 		<section className="relative flex min-h-[320px] items-center justify-center overflow-hidden md:min-h-[420px]">
 			<img
-				src="/sliders/slider_2.png"
+				src="/sliders/slider_2.webp"
 				alt="CA HUB AUTO heavy equipment operations"
 				className="absolute inset-0 h-full w-full object-cover"
 			/>

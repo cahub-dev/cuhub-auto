@@ -8,14 +8,14 @@ const PARTNERS: Client[] = [
 	{
 		id: "first-capital",
 		name: "First Capital",
-		logo: "/clients/First Capital.png",
+		logo: "/clients/First Capital.webp",
 	},
-	{ id: "millenium", name: "Millenium", logo: "/clients/millenium.png" },
-	{ id: "motorcare", name: "Motorcare", logo: "/clients/motorcare.png" },
-	{ id: "movitel", name: "Movitel", logo: "/clients/movitel.png" },
-	{ id: "tecnel", name: "Tecnel", logo: "/clients/tecnel.png" },
-	{ id: "thl", name: "THL", logo: "/clients/thl.png" },
-	{ id: "toyota", name: "Toyota", logo: "/clients/toyota.png" },
+	{ id: "millenium", name: "Millenium", logo: "/clients/millenium.webp" },
+	{ id: "motorcare", name: "Motorcare", logo: "/clients/motorcare.webp" },
+	{ id: "movitel", name: "Movitel", logo: "/clients/movitel.webp" },
+	{ id: "tecnel", name: "Tecnel", logo: "/clients/tecnel.webp" },
+	{ id: "thl", name: "THL", logo: "/clients/thl.webp" },
+	{ id: "toyota", name: "Toyota", logo: "/clients/toyota.webp" },
 ];
 
 export function TrustedPartners(): React.JSX.Element {

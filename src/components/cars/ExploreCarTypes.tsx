@@ -5,62 +5,62 @@ const CAR_TYPES: CarType[] = [
 	{
 		id: "toyota-land-cruiser",
 		name: "Toyota Land Cruiser",
-		image: "/car_types/toyota_landcruiser.png",
+		image: "/car_types/toyota_landcruiser.webp",
 	},
 	{
 		id: "nissan-navara",
 		name: "Nissan Navara",
-		image: "/car_types/nissan_navara.png",
+		image: "/car_types/nissan_navara.webp",
 	},
 	{
 		id: "nissan-navara-double",
 		name: "Nissan Navara Double",
-		image: "/car_types/nissan-navara_2.png",
+		image: "/car_types/nissan-navara_2.webp",
 	},
 	{
 		id: "develon-excavator",
 		name: "Develon Excavator",
-		image: "/car_types/develon-excavator.png",
+		image: "/car_types/develon-excavator.webp",
 	},
 	{
 		id: "develon-loader",
 		name: "Develon Loader",
-		image: "/car_types/develon-loader.png",
+		image: "/car_types/develon-loader.webp",
 	},
 	{
 		id: "scania-mining",
 		name: "Scania Mining Truck",
-		image: "/car_types/scania.png",
+		image: "/car_types/scania.webp",
 	},
 	{
 		id: "hatchback",
 		name: "Hatchback",
-		image: "/car_types/hatchback.png",
+		image: "/car_types/hatchback.webp",
 	},
 	{
 		id: "luxury-sedan",
 		name: "Luxury Sedan",
-		image: "/car_types/luxury-sedan.png",
+		image: "/car_types/luxury-sedan.webp",
 	},
 	{
 		id: "sedan",
 		name: "Sedan",
-		image: "/car_types/sedan.png",
+		image: "/car_types/sedan.webp",
 	},
 	{
 		id: "sports-car",
 		name: "Sports Car",
-		image: "/car_types/sports-car.png",
+		image: "/car_types/sports-car.webp",
 	},
 	{
 		id: "suv",
 		name: "SUV",
-		image: "/car_types/suv.png",
+		image: "/car_types/suv.webp",
 	},
 	{
 		id: "truck",
 		name: "Truck",
-		image: "/car_types/truck.png",
+		image: "/car_types/truck.webp",
 	},
 ];
 

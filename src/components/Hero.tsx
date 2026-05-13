@@ -13,7 +13,7 @@ const SLIDES = [
 		titleLine2: "Meets Performance",
 		description:
 			"Founded in 2023, CA HUB AUTO provides reliable vehicle and heavy equipment rental solutions across Mozambique.",
-		image: "/sliders/sldier_1.png",
+		image: "/sliders/sldier_1.webp",
 	},
 	{
 		kicker: "HEAVY EQUIPMENT",
@@ -21,7 +21,7 @@ const SLIDES = [
 		titleLine2: "Project Forward",
 		description:
 			"From mining to construction, our heavy equipment fleet is built for the most demanding job sites.",
-		image: "/sliders/slider_2.png",
+		image: "/sliders/slider_2.webp",
 	},
 	{
 		kicker: "RELIABLE FLEET",
@@ -29,7 +29,7 @@ const SLIDES = [
 		titleLine2: "Toughest Terrain",
 		description:
 			"Our maintained fleet of 4x4s, trucks, and machinery keeps your operations running without interruption.",
-		image: "/sliders/slider_3.png",
+		image: "/sliders/slider_3.webp",
 	},
 	{
 		kicker: "ACROSS MOZAMBIQUE",
@@ -37,7 +37,7 @@ const SLIDES = [
 		titleLine2: "Every Job",
 		description:
 			"Telecommunications, infrastructure, logistics — we deliver dependable vehicles wherever your project takes you.",
-		image: "/sliders/slider_4.png",
+		image: "/sliders/slider_4.webp",
 	},
 ] as const;
 
