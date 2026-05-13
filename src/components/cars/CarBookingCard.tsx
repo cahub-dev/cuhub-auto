@@ -3,8 +3,8 @@
 import { Mail, MessageCircle } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
-import type { CarDetailData } from "#/components/cars/car-detail-data";
 import { LOCATIONS } from "#/components/booking/LocationField";
+import type { CarDetailData } from "#/components/cars/car-detail-data";
 import { Button } from "#/components/ui/button";
 import { Input } from "#/components/ui/input";
 
@@ -36,7 +36,11 @@ function money(value: number): string {
 	}).format(value);
 }
 
-export function CarBookingCard({ car }: { car: CarDetailData }): React.JSX.Element {
+export function CarBookingCard({
+	car,
+}: {
+	car: CarDetailData;
+}): React.JSX.Element {
 	const today = toDateInput(new Date());
 	const tomorrow = toDateInput(addDays(new Date(), 1));
 	const [pickupDate, setPickupDate] = useState(today);
@@ -77,7 +81,7 @@ export function CarBookingCard({ car }: { car: CarDetailData }): React.JSX.Eleme
 	}
 
 	return (
-		<aside className="rounded-2xl bg-white p-6 shadow-[0_20px_70px_rgba(0,0,0,0.08)] lg:sticky lg:top-24">
+		<aside className="w-full self-start rounded-2xl bg-white p-6 shadow-[0_10px_28px_rgba(0,0,0,0.05)] lg:sticky lg:top-24">
 			<h2 className="display-title mb-5 text-2xl font-bold text-foreground">
 				Reserve this Vehicle
 			</h2>
@@ -86,6 +90,7 @@ export function CarBookingCard({ car }: { car: CarDetailData }): React.JSX.Eleme
 				<div className="grid grid-cols-2 gap-3">
 					<Field label="Pickup date">
 						<Input
+							aria-label="Pickup date"
 							type="date"
 							value={pickupDate}
 							min={today}
@@ -94,6 +99,7 @@ export function CarBookingCard({ car }: { car: CarDetailData }): React.JSX.Eleme
 					</Field>
 					<Field label="Return date">
 						<Input
+							aria-label="Return date"
 							type="date"
 							value={returnDate}
 							min={pickupDate}
@@ -104,6 +110,7 @@ export function CarBookingCard({ car }: { car: CarDetailData }): React.JSX.Eleme
 				<div className="grid grid-cols-2 gap-3">
 					<Field label="Pickup time">
 						<Input
+							aria-label="Pickup time"
 							type="time"
 							value={pickupTime}
 							onChange={(event) => setPickupTime(event.target.value)}
@@ -111,6 +118,7 @@ export function CarBookingCard({ car }: { car: CarDetailData }): React.JSX.Eleme
 					</Field>
 					<Field label="Return time">
 						<Input
+							aria-label="Return time"
 							type="time"
 							value={returnTime}
 							onChange={(event) => setReturnTime(event.target.value)}
@@ -118,10 +126,18 @@ export function CarBookingCard({ car }: { car: CarDetailData }): React.JSX.Eleme
 					</Field>
 				</div>
 				<Field label="Pickup location">
-					<LocationSelect value={pickupLocation} onChange={setPickupLocation} />
+					<LocationSelect
+						label="Pickup location"
+						value={pickupLocation}
+						onChange={setPickupLocation}
+					/>
 				</Field>
 				<Field label="Return location">
-					<LocationSelect value={returnLocation} onChange={setReturnLocation} />
+					<LocationSelect
+						label="Return location"
+						value={returnLocation}
+						onChange={setReturnLocation}
+					/>
 				</Field>
 			</div>
 
@@ -151,7 +167,10 @@ export function CarBookingCard({ car }: { car: CarDetailData }): React.JSX.Eleme
 			</div>
 
 			<div className="space-y-3 border-t border-border/60 pt-5 text-sm">
-				<PriceRow label={`${rentalDays} rental day${rentalDays === 1 ? "" : "s"}`} value={money(baseTotal)} />
+				<PriceRow
+					label={`${rentalDays} rental day${rentalDays === 1 ? "" : "s"}`}
+					value={money(baseTotal)}
+				/>
 				<PriceRow label="Selected extras" value={money(extrasTotal)} />
 				<PriceRow label="Estimated total" value={money(total)} strong />
 			</div>
@@ -163,7 +182,11 @@ export function CarBookingCard({ car }: { car: CarDetailData }): React.JSX.Eleme
 						Book via WhatsApp
 					</a>
 				</Button>
-				<Button asChild variant="outline" className="h-12 rounded-lg font-semibold">
+				<Button
+					asChild
+					variant="outline"
+					className="h-12 rounded-lg font-semibold"
+				>
 					<a href={emailHref}>
 						<Mail className="size-4" aria-hidden="true" />
 						Send Email Inquiry
@@ -182,22 +205,25 @@ function Field({
 	children: React.ReactNode;
 }): React.JSX.Element {
 	return (
-		<label className="grid gap-1.5 text-sm font-medium text-foreground">
-			{label}
+		<div className="grid gap-1.5 text-sm font-medium text-foreground">
+			<span>{label}</span>
 			{children}
-		</label>
+		</div>
 	);
 }
 
 function LocationSelect({
+	label,
 	value,
 	onChange,
 }: {
+	label: string;
 	value: string;
 	onChange: (value: string) => void;
 }): React.JSX.Element {
 	return (
 		<select
+			aria-label={label}
 			value={value}
 			onChange={(event) => onChange(event.target.value)}
 			className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
@@ -222,10 +248,20 @@ function PriceRow({
 }): React.JSX.Element {
 	return (
 		<div className="flex items-center justify-between gap-4">
-			<span className={strong ? "font-semibold text-foreground" : "text-muted-foreground"}>
+			<span
+				className={
+					strong ? "font-semibold text-foreground" : "text-muted-foreground"
+				}
+			>
 				{label}
 			</span>
-			<span className={strong ? "text-lg font-bold text-foreground" : "font-semibold text-foreground"}>
+			<span
+				className={
+					strong
+						? "text-lg font-bold text-foreground"
+						: "font-semibold text-foreground"
+				}
+			>
 				{value}
 			</span>
 		</div>

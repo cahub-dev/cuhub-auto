@@ -1,6 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { buildPageMeta } from "#/lib/seo";
 
-export const Route = createFileRoute("/about")({ component: AboutPage });
+export const Route = createFileRoute("/about")({
+	head: () => ({
+		meta: buildPageMeta({
+			title: "About Us",
+			description:
+				"CA HUB AUTO is a Mozambique-based vehicle and heavy equipment rental company. We support mining, construction, and infrastructure teams with reliable, well-maintained fleets — based in Maputo and operating nationwide.",
+		}),
+	}),
+	component: AboutPage,
+});
 
 function AboutPage() {
 	return (

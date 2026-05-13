@@ -2,7 +2,7 @@ import type React from "react";
 
 export function ContactHero(): React.JSX.Element {
 	return (
-		<section className="relative flex min-h-[320px] items-center justify-center overflow-hidden md:min-h-[420px]">
+		<section className="relative flex min-h-[240px] items-center justify-center overflow-hidden md:min-h-[320px]">
 			<img
 				src="/sliders/slider_2.webp"
 				alt="CA HUB AUTO heavy equipment operations"

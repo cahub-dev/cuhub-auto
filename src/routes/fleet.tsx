@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { buildPageMeta } from "#/lib/seo";
 import { Search, SlidersHorizontal } from "lucide-react";
 import type React from "react";
 import { FEATURED_FLEET } from "#/components/cars/FeaturedFleet";
@@ -6,7 +7,17 @@ import { FleetCard } from "#/components/cars/FleetCard";
 import { FleetHero } from "#/components/cars/FleetHero";
 import { Button } from "#/components/ui/button";
 
-export const Route = createFileRoute("/fleet")({ component: FleetPage });
+export const Route = createFileRoute("/fleet")({
+	head: () => ({
+		meta: buildPageMeta({
+			title: "Fleet — Vehicles & Equipment for Hire",
+			description:
+				"Browse CA HUB AUTO's full rental fleet in Mozambique. SUVs, single and double cab pickups, wheel loaders, excavators, and heavy mining trucks — available for daily or project-based hire.",
+			ogImage: "/car_types/toyota_landcruiser.webp",
+		}),
+	}),
+	component: FleetPage,
+});
 
 const CATEGORIES = ["Vehicles", "Heavy Equipment", "Mining", "Construction"];
 const SECTORS = ["Mining", "Construction", "Infrastructure", "Rural"];
