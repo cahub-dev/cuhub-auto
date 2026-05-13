@@ -682,14 +682,18 @@ a {
 .booking-card-wrapper {
   position: relative;
   z-index: 20;
-  margin-top: -72px;
-  padding-bottom: 0;
+  margin-top: -100px;
 }
 
-@media (max-width: 640px) {
-  .booking-card-wrapper {
-    margin-top: -48px;
-  }
+.booking-card-wrapper::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 50%;
+  background-color: #f6f6f6;
+  z-index: -1;
 }
 
 .booking-card {

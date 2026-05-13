@@ -4,7 +4,6 @@ import { Link } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { BookingPanel } from "#/components/booking/BookingPanel";
 import { Button } from "#/components/ui/button";
 
 const SLIDES = [
@@ -98,7 +97,6 @@ export function Hero(): React.JSX.Element {
 	const slide = SLIDES[activeSlide];
 
 	return (
-		<>
 			<section
 				ref={sectionRef}
 				className="hero-section"
@@ -177,13 +175,5 @@ export function Hero(): React.JSX.Element {
 					</div>
 				</div>
 			</section>
-
-			{/* ── Elevated Booking Card ── */}
-			<div className="booking-card-wrapper">
-				<div className="page-wrap">
-					<BookingPanel />
-				</div>
-			</div>
-		</>
 	);
 }
