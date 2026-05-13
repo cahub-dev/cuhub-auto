@@ -9,10 +9,12 @@ import type { CarDetailData } from "#/components/cars/car-detail-data";
 export function CarDetail({ car }: { car: CarDetailData }): React.JSX.Element {
 	return (
 		<div className="page-wrap py-10 md:py-14">
-			<CarDetailGallery images={car.gallery} name={car.name} />
+			<div className="motion-mask-in">
+				<CarDetailGallery images={car.gallery} name={car.name} />
+			</div>
 
 			<div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_330px]">
-				<div className="min-w-0 space-y-8">
+				<div className="motion-rise-in min-w-0 space-y-8">
 					<header>
 						<div className="mb-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
 							<span className="inline-flex items-center gap-1.5 font-semibold text-primary">
@@ -39,7 +41,9 @@ export function CarDetail({ car }: { car: CarDetailData }): React.JSX.Element {
 					<CarDetailContent car={car} />
 				</div>
 
-				<CarBookingCard car={car} />
+				<div className="motion-scale-in">
+					<CarBookingCard car={car} />
+				</div>
 			</div>
 		</div>
 	);

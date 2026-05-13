@@ -33,7 +33,7 @@ export function ContactForm(): React.JSX.Element {
 	return (
 		<section className="pb-20 md:pb-28">
 			<div className="page-wrap">
-				<div className="mb-10 text-center">
+				<div className="motion-scroll-reveal mb-10 text-center">
 					<span className="island-kicker inline-block rounded-full bg-accent px-3 py-1 text-primary">
 						Get In Touch
 					</span>
@@ -42,7 +42,10 @@ export function ContactForm(): React.JSX.Element {
 					</h2>
 				</div>
 
-				<form onSubmit={handleSubmit} className="mx-auto max-w-3xl space-y-5">
+				<form
+					onSubmit={handleSubmit}
+					className="motion-scroll-reveal mx-auto max-w-3xl space-y-5"
+				>
 					<div className="grid gap-5 md:grid-cols-2">
 						<Input
 							value={name}

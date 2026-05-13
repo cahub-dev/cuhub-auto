@@ -57,7 +57,7 @@ export function FeaturedFleet(): React.JSX.Element {
 		<section className="py-16 md:py-24" style={{ backgroundColor: "#f6f6f6" }}>
 			<div className="page-wrap">
 				{/* Header */}
-				<div className="flex flex-col items-center text-center mb-10 md:mb-14">
+				<div className="motion-scroll-reveal flex flex-col items-center text-center mb-10 md:mb-14">
 					<span className="island-kicker inline-block mb-3 px-3 py-1 rounded-full text-primary font-semibold text-xs tracking-wider bg-accent">
 						OUR SERVICES
 					</span>
@@ -67,7 +67,7 @@ export function FeaturedFleet(): React.JSX.Element {
 				</div>
 
 				{/* Grid */}
-				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+				<div className="motion-scroll-reveal motion-stagger grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
 					{FEATURED_FLEET.map((car) => (
 						<FleetCard key={car.id} car={car} />
 					))}

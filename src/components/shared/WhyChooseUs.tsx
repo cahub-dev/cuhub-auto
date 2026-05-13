@@ -39,7 +39,7 @@ export function WhyChooseUs(): React.JSX.Element {
 		<section className="py-16 md:py-24">
 			<div className="page-wrap">
 				{/* Header */}
-				<div className="flex flex-col items-center text-center mb-10 md:mb-14">
+				<div className="motion-scroll-reveal flex flex-col items-center text-center mb-10 md:mb-14">
 					<span className="island-kicker inline-block mb-3 px-3 py-1 rounded-full text-primary font-semibold text-xs tracking-wider bg-accent">
 						WHY CHOOSE US
 					</span>
@@ -49,13 +49,13 @@ export function WhyChooseUs(): React.JSX.Element {
 				</div>
 
 				{/* Bento Grid: 3 top, 2 bottom */}
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 md:gap-5">
+				<div className="motion-scroll-reveal motion-stagger grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 md:gap-5">
 					{ADVANTAGES.map((item, idx) => {
 						const isTopRow = idx < 3;
 						return (
 							<div
 								key={item.title}
-								className={`flex flex-col gap-4 p-6 bg-white rounded-2xl border border-border/30 transition-shadow duration-300 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] ${
+								className={`motion-card flex flex-col gap-4 p-6 bg-white rounded-2xl border border-border/30 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] ${
 									isTopRow ? "lg:col-span-2" : "lg:col-span-3"
 								}`}
 							>

@@ -1,9 +1,9 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import type React from "react";
 import { CarDetail } from "#/components/cars/CarDetail";
 import { getCarDetail } from "#/components/cars/car-detail-data";
-import { SITE_NAME, SITE_URL } from "#/lib/seo";
 import { Button } from "#/components/ui/button";
+import { SITE_NAME, SITE_URL } from "#/lib/seo";
 
 export const Route = createFileRoute("/fleet_/$carId")({
 	head: ({ params }) => {

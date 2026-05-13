@@ -4,11 +4,13 @@ import {
 	createRootRouteWithContext,
 	HeadContent,
 	Scripts,
+	useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { Header } from "#/components/Header";
 import { Footer } from "#/components/layout/footer";
+import { ScrollRevealInit } from "#/components/shared/ScrollRevealInit";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import { SITE_NAME, SITE_URL } from "../lib/seo";
 import appCss from "../styles.css?url";
@@ -65,7 +67,12 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 		links: [
 			{ rel: "stylesheet", href: appCss },
 			{ rel: "icon", href: "/favicon.ico", sizes: "48x48" },
-			{ rel: "icon", type: "image/webp", href: "/favicon-32x32.webp", sizes: "32x32" },
+			{
+				rel: "icon",
+				type: "image/webp",
+				href: "/favicon-32x32.webp",
+				sizes: "32x32",
+			},
 			{ rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
 			{ rel: "manifest", href: "/manifest.json" },
 		],
@@ -86,6 +93,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
+				<NavigationProgress />
+				<ScrollRevealInit />
 				<Header />
 				<main>{children}</main>
 				<Footer />
@@ -102,5 +111,18 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<Scripts />
 			</body>
 		</html>
+	);
+}
+
+function NavigationProgress(): React.JSX.Element {
+	const isLoading = useRouterState({
+		select: (state) => state.isLoading || state.isTransitioning,
+	});
+
+	return (
+		<div
+			className={`navigation-progress${isLoading ? " is-active" : ""}`}
+			aria-hidden="true"
+		/>
 	);
 }

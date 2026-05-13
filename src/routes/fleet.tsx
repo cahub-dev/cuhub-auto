@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { buildPageMeta } from "#/lib/seo";
 import { Search, SlidersHorizontal } from "lucide-react";
 import type React from "react";
 import { FEATURED_FLEET } from "#/components/cars/FeaturedFleet";
 import { FleetCard } from "#/components/cars/FleetCard";
 import { FleetHero } from "#/components/cars/FleetHero";
 import { Button } from "#/components/ui/button";
+import { buildPageMeta } from "#/lib/seo";
 
 export const Route = createFileRoute("/fleet")({
 	head: () => ({
@@ -30,7 +30,7 @@ function FleetPage(): React.JSX.Element {
 			<div className="bg-[#f6f6f6] py-14 md:py-20">
 				<div className="page-wrap">
 					<div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
-						<aside className="self-start rounded-2xl bg-white p-6 shadow-[0_10px_28px_rgba(0,0,0,0.05)] lg:sticky lg:top-24">
+						<aside className="motion-scroll-reveal self-start rounded-2xl bg-white p-6 shadow-[0_10px_28px_rgba(0,0,0,0.05)] lg:sticky lg:top-24">
 							<div className="mb-7">
 								<h2 className="mb-4 text-xl font-bold text-foreground">
 									Search
@@ -85,7 +85,10 @@ function FleetPage(): React.JSX.Element {
 							</Button>
 						</aside>
 
-						<section aria-label="Fleet results">
+						<section
+							className="motion-scroll-reveal"
+							aria-label="Fleet results"
+						>
 							<div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 								<p className="text-sm font-medium text-muted-foreground">
 									Showing {FEATURED_FLEET.length} fleet options
@@ -100,7 +103,7 @@ function FleetPage(): React.JSX.Element {
 								</select>
 							</div>
 
-							<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+							<div className="motion-scroll-reveal motion-stagger grid grid-cols-1 gap-6 md:grid-cols-2">
 								{FEATURED_FLEET.map((car) => (
 									<FleetCard key={car.id} car={car} />
 								))}

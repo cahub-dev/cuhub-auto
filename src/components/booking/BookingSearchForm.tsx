@@ -64,7 +64,7 @@ export function BookingSearchForm({
 
 	return (
 		<>
-			<div className="booking-form">
+			<div key={category} className="booking-form motion-fade-in">
 				<div className="booking-form-locations">
 					<LocationField
 						id="pickup-location"

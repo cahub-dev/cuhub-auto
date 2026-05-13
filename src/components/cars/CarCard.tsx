@@ -20,14 +20,14 @@ export function CarCard({ car }: { car: CarCardData }): React.JSX.Element {
 		<Link
 			to="/fleet/$carId"
 			params={{ carId: car.id }}
-			className="flex flex-col bg-white rounded-2xl border border-border/40 overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-shadow duration-300 no-underline"
+			className="motion-card group flex flex-col bg-white rounded-2xl border border-border/40 overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] no-underline"
 		>
 			{/* Image */}
 			<div className="relative aspect-[4/3] overflow-hidden">
 				<img
 					src={car.image}
 					alt={car.name}
-					className="w-full h-full object-cover"
+					className="motion-image-zoom w-full h-full object-cover"
 					loading="lazy"
 				/>
 				{/* Price badge */}

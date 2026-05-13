@@ -17,12 +17,12 @@ export function VideoSection(): React.JSX.Element {
 	const [open, setOpen] = useState(false);
 
 	return (
-		<section className="relative w-full h-[320px] md:h-[420px] lg:h-[500px] overflow-hidden">
+		<section className="motion-scroll-reveal relative w-full h-[320px] md:h-[420px] lg:h-[500px] overflow-hidden">
 			{/* Background image */}
 			<img
 				src="/video_placeholder.webp"
 				alt="Video thumbnail"
-				className="absolute inset-0 w-full h-full object-cover"
+				className="motion-image-zoom absolute inset-0 w-full h-full object-cover"
 			/>
 
 			{/* Dark overlay */}
@@ -34,7 +34,7 @@ export function VideoSection(): React.JSX.Element {
 					<DialogTrigger asChild>
 						<button
 							type="button"
-							className="flex items-center justify-center size-20 md:size-24 rounded-full bg-white shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
+							className="motion-scale-in flex items-center justify-center size-20 md:size-24 rounded-full bg-white shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
 							aria-label="Play video"
 						>
 							<Play className="size-8 md:size-10 text-primary fill-primary ml-1" />

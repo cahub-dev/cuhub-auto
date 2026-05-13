@@ -141,6 +141,16 @@
   --sidebar-ring: var(--color-coral-glow-400);
 }
 
+:root {
+  --motion-duration-fast: 150ms;
+  --motion-duration-base: 220ms;
+  --motion-duration-slow: 360ms;
+  --motion-duration-page: 700ms;
+  --motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --motion-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
 @theme inline {
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
 
@@ -349,6 +359,11 @@ a {
     transform 180ms ease;
 }
 
+button:active:not(:disabled),
+[role="button"]:active {
+  transform: scale(0.97);
+}
+
 .island-kicker {
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -387,7 +402,7 @@ a {
 }
 
 .rise-in {
-  animation: rise-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: rise-in var(--motion-duration-page) var(--motion-ease-out) both;
 }
 
 @keyframes rise-in {
@@ -399,6 +414,231 @@ a {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.motion-fade-in {
+  animation: motion-fade-in var(--motion-duration-slow) var(--motion-ease-out) both;
+}
+
+.motion-rise-in {
+  animation: motion-rise-in var(--motion-duration-page) var(--motion-ease-out) both;
+}
+
+.motion-scale-in {
+  animation: motion-scale-in var(--motion-duration-slow) var(--motion-ease-out) both;
+}
+
+.motion-mask-in {
+  clip-path: inset(10% 0 0 0 round 1rem);
+  animation: motion-mask-in var(--motion-duration-page) var(--motion-ease-out) both;
+}
+
+.motion-stagger > * {
+  animation: motion-rise-in var(--motion-duration-page) var(--motion-ease-out) both;
+}
+
+.motion-stagger > *:nth-child(2) { animation-delay: 70ms; }
+.motion-stagger > *:nth-child(3) { animation-delay: 140ms; }
+.motion-stagger > *:nth-child(4) { animation-delay: 210ms; }
+.motion-stagger > *:nth-child(5) { animation-delay: 280ms; }
+.motion-stagger > *:nth-child(6) { animation-delay: 350ms; }
+.motion-stagger > *:nth-child(7) { animation-delay: 420ms; }
+.motion-stagger > *:nth-child(8) { animation-delay: 490ms; }
+
+/* Scroll-reveal: hidden until IntersectionObserver adds .is-visible */
+.motion-scroll-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity var(--motion-duration-page) var(--motion-ease-out),
+    transform var(--motion-duration-page) var(--motion-ease-out);
+}
+
+.motion-scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger: children animate in sequence once parent is visible */
+.motion-scroll-reveal.motion-stagger > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--motion-duration-page) var(--motion-ease-out),
+    transform var(--motion-duration-page) var(--motion-ease-out);
+}
+
+.motion-scroll-reveal.motion-stagger.is-visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.motion-scroll-reveal.motion-stagger.is-visible > *:nth-child(1) { transition-delay: 0ms; }
+.motion-scroll-reveal.motion-stagger.is-visible > *:nth-child(2) { transition-delay: 80ms; }
+.motion-scroll-reveal.motion-stagger.is-visible > *:nth-child(3) { transition-delay: 160ms; }
+.motion-scroll-reveal.motion-stagger.is-visible > *:nth-child(4) { transition-delay: 240ms; }
+.motion-scroll-reveal.motion-stagger.is-visible > *:nth-child(5) { transition-delay: 320ms; }
+.motion-scroll-reveal.motion-stagger.is-visible > *:nth-child(6) { transition-delay: 400ms; }
+.motion-scroll-reveal.motion-stagger.is-visible > *:nth-child(7) { transition-delay: 480ms; }
+.motion-scroll-reveal.motion-stagger.is-visible > *:nth-child(8) { transition-delay: 560ms; }
+
+.motion-card {
+  transition:
+    border-color var(--motion-duration-base) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-base) var(--motion-ease-standard),
+    transform var(--motion-duration-base) var(--motion-ease-standard);
+}
+
+.motion-card:hover {
+  transform: translateY(-6px);
+}
+
+.motion-image-zoom {
+  transition:
+    filter var(--motion-duration-slow) var(--motion-ease-standard),
+    transform 520ms var(--motion-ease-standard);
+}
+
+.motion-card:hover .motion-image-zoom,
+.motion-image-zoom:hover {
+  filter: saturate(1.08) contrast(1.04);
+  transform: scale(1.07);
+}
+
+.motion-card [data-slot="button"] {
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-ease-standard),
+    border-color var(--motion-duration-fast) var(--motion-ease-standard),
+    color var(--motion-duration-fast) var(--motion-ease-standard),
+    transform var(--motion-duration-fast) var(--motion-ease-standard);
+}
+
+.motion-card:hover [data-slot="button"] {
+  transform: translateY(-1px);
+}
+
+.motion-cta-shift svg:last-child {
+  transition: transform var(--motion-duration-fast) var(--motion-ease-standard);
+}
+
+.motion-cta-shift:hover svg:last-child {
+  transform: translateX(2px);
+}
+
+.navigation-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 80;
+  height: 3px;
+  pointer-events: none;
+  opacity: 0;
+  transform-origin: left;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--color-coral-glow-500), var(--color-spicy-paprika-500));
+  transition:
+    opacity var(--motion-duration-fast) var(--motion-ease-standard),
+    transform var(--motion-duration-slow) var(--motion-ease-out);
+}
+
+.navigation-progress.is-active {
+  opacity: 1;
+  animation: navigation-progress 1200ms var(--motion-ease-in-out) infinite;
+}
+
+.loading-shimmer {
+  position: relative;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--accent) 76%, white 24%);
+}
+
+.loading-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in oklab, white 65%, transparent),
+    transparent
+  );
+  animation: loading-shimmer 1400ms var(--motion-ease-in-out) infinite;
+}
+
+.loading-spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 9999px;
+  animation: loading-spin 700ms linear infinite;
+}
+
+[data-slot="button"] {
+  transition:
+    background-color var(--motion-duration-fast) var(--motion-ease-standard),
+    border-color var(--motion-duration-fast) var(--motion-ease-standard),
+    color var(--motion-duration-fast) var(--motion-ease-standard),
+    box-shadow var(--motion-duration-fast) var(--motion-ease-standard),
+    transform var(--motion-duration-fast) var(--motion-ease-standard);
+}
+
+[data-slot="button"]:not(:disabled):active {
+  transform: translateY(1px) scale(0.99);
+}
+
+@keyframes motion-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes motion-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes motion-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes motion-mask-in {
+  from {
+    opacity: 0;
+    clip-path: inset(14% 0 0 0 round 1rem);
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0 round 1rem);
+    transform: translateY(0);
+  }
+}
+
+@keyframes navigation-progress {
+  0% { transform: scaleX(0); }
+  45% { transform: scaleX(0.72); }
+  100% { transform: scaleX(1); }
+}
+
+@keyframes loading-shimmer {
+  to { transform: translateX(100%); }
+}
+
+@keyframes loading-spin {
+  to { transform: rotate(360deg); }
 }
 
 .site-footer {
@@ -572,6 +812,7 @@ a {
 .hero-dot.is-active {
   width: 26px;
   background: var(--color-coral-glow-500);
+  animation: hero-dot-pulse 1200ms var(--motion-ease-in-out) infinite alternate;
 }
 
 .hero-dot:focus-visible {
@@ -602,6 +843,15 @@ a {
 @keyframes hero-text-rise {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes hero-dot-pulse {
+  from {
+    box-shadow: 0 0 0 0 rgba(255, 89, 6, 0);
+  }
+  to {
+    box-shadow: 0 0 0 5px rgba(255, 89, 6, 0.22);
+  }
 }
 
 .hero-kicker {
@@ -660,20 +910,39 @@ a {
 
 .hero-cta:hover {
   background: var(--color-coral-glow-400);
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px -12px rgba(255, 89, 6, 0.68);
 }
 
 /* Respect reduced-motion preferences */
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after,
   .hero-slide,
   .hero-slide img,
   .hero-slide.is-active img,
   .hero-text-enter,
   .hero-arrow,
-  .hero-dot {
+  .hero-dot,
+  .hero-dot.is-active,
+  .motion-fade-in,
+  .motion-rise-in,
+  .motion-scale-in,
+  .motion-mask-in,
+  .motion-scroll-reveal,
+  .motion-scroll-reveal.motion-stagger > *,
+  .motion-stagger > *,
+  .loading-shimmer::after,
+  .loading-spinner,
+  .navigation-progress.is-active {
     animation: none !important;
     transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
   .hero-slide img { transform: none; }
+  .motion-mask-in { clip-path: none; }
 }
 
 /* ─── Booking Card ────────────────────────────────────── */
@@ -783,6 +1052,7 @@ a {
 
 .booking-tab:hover:not(.is-active) {
   background: color-mix(in oklab, var(--foreground) 8%, transparent);
+  transform: translateY(-1px);
 }
 
 .booking-tab:focus-visible {
@@ -793,6 +1063,7 @@ a {
 .booking-tab.is-active {
   background: var(--color-white-100);
   color: #fff;
+  transform: translateY(-1px);
 }
 
 .booking-view-link {
@@ -943,7 +1214,10 @@ a {
   box-shadow: 0 10px 22px -10px rgba(255, 89, 6, 0.5);
   transition: background 150ms ease, transform 150ms ease;
 }
-.booking-submit:hover { background: var(--color-coral-glow-500); }
+.booking-submit:hover {
+  background: var(--color-coral-glow-500);
+  transform: translateY(-1px);
+}
 
 @media (min-width: 1024px) {
   .booking-submit { width: auto; }
