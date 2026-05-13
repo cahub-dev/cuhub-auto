@@ -1,3 +1,5 @@
+"use client";
+
 import { Car } from "lucide-react";
 import type React from "react";
 import { useState } from "react";

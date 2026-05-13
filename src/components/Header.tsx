@@ -1,3 +1,5 @@
+"use client";
+
 import { Link, useRouter } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
