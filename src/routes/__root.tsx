@@ -8,6 +8,7 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { Header } from "#/components/Header";
+import { Footer } from "#/components/layout/footer";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
@@ -46,31 +47,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<body>
 				<Header />
 				<main>{children}</main>
-				<footer className="site-footer mt-20 py-12 px-5">
-					<div className="page-wrap">
-						<div className="flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-muted-foreground">
-							<div className="flex items-center gap-2">
-								<span className="display-title font-bold text-foreground">
-									CA HUB AUTO
-								</span>
-								<span className="opacity-60">
-									&copy; {new Date().getFullYear()}
-								</span>
-							</div>
-							<div className="flex items-center gap-6">
-								<a href="mailto:info@cahub.co.mz" className="nav-link text-sm">
-									info@cahub.co.mz
-								</a>
-								<a href="tel:+258840000000" className="nav-link text-sm">
-									+258 84 000 0000
-								</a>
-							</div>
-							<span className="opacity-50 text-xs">
-								Vehicle & Equipment Rental — Mozambique
-							</span>
-						</div>
-					</div>
-				</footer>
+				<Footer />
 				<TanStackDevtools
 					config={{ position: "bottom-right" }}
 					plugins={[

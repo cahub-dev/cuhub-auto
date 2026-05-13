@@ -1,7 +1,7 @@
 import type React from "react";
 import { FleetCard, type FleetCardData } from "#/components/cars/FleetCard";
 
-const FEATURED_FLEET: FleetCardData[] = [
+export const FEATURED_FLEET: FleetCardData[] = [
 	{
 		id: "toyota-land-cruiser",
 		name: "Toyota Land Cruiser",
