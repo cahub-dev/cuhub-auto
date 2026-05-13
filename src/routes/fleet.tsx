@@ -13,6 +13,7 @@ export const Route = createFileRoute("/fleet")({
 			title: "Fleet — Vehicles & Equipment for Hire",
 			description:
 				"Browse CA HUB AUTO's full rental fleet in Mozambique. SUVs, single and double cab pickups, wheel loaders, excavators, and heavy mining trucks — available for daily or project-based hire.",
+			path: "/fleet",
 			ogImage: "/car_types/toyota_landcruiser.webp",
 		}),
 	}),

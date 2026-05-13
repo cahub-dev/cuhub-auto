@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cahub.co.mz/sitemap.xml
+Sitemap: https://cuhub-auto.vercel.app/sitemap.xml

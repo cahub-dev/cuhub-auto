@@ -12,6 +12,7 @@ export const Route = createFileRoute("/contact")({
 			title: "Contact & Quote",
 			description:
 				"Get a rental quote from CA HUB AUTO. Reach us by phone, WhatsApp, or email for vehicle and equipment availability, pricing, and booking support — based in Maputo, Mozambique.",
+			path: "/contact",
 		}),
 	}),
 	component: ContactPage,

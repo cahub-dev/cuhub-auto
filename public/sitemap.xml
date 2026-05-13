@@ -1,53 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Update loc values with https://cahub.co.mz when domain is confirmed -->
+  <!-- Update loc values with https://cuhub-auto.vercel.app when domain is confirmed -->
   <url>
-    <loc>https://cahub.co.mz/</loc>
+    <loc>https://cuhub-auto.vercel.app/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://cahub.co.mz/fleet</loc>
+    <loc>https://cuhub-auto.vercel.app/fleet</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://cahub.co.mz/fleet/toyota-land-cruiser</loc>
+    <loc>https://cuhub-auto.vercel.app/fleet/toyota-land-cruiser</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cahub.co.mz/fleet/nissan-navara-single</loc>
+    <loc>https://cuhub-auto.vercel.app/fleet/nissan-navara-single</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cahub.co.mz/fleet/nissan-navara-double</loc>
+    <loc>https://cuhub-auto.vercel.app/fleet/nissan-navara-double</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cahub.co.mz/fleet/develon-loader</loc>
+    <loc>https://cuhub-auto.vercel.app/fleet/develon-loader</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cahub.co.mz/fleet/develon-excavator</loc>
+    <loc>https://cuhub-auto.vercel.app/fleet/develon-excavator</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cahub.co.mz/fleet/scania-mining</loc>
+    <loc>https://cuhub-auto.vercel.app/fleet/scania-mining</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cahub.co.mz/about</loc>
+    <loc>https://cuhub-auto.vercel.app/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://cahub.co.mz/contact</loc>
+    <loc>https://cuhub-auto.vercel.app/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

@@ -15,6 +15,7 @@ export const Route = createFileRoute("/")({
 			title: "Vehicle & Equipment Rental in Mozambique",
 			description:
 				"Rent vehicles and heavy equipment in Mozambique. Toyota Land Cruiser, Nissan Navara pickups, Develon loaders, excavators, and Scania mining trucks — daily and project rates from Maputo.",
+			path: "/",
 		}),
 	}),
 	component: Home,
