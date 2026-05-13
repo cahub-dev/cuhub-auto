@@ -1,6 +1,6 @@
 export const SITE_NAME = "CA HUB AUTO";
 export const SITE_URL = "https://cuhub-auto.vercel.app"; // swap for custom domain when ready
-export const DEFAULT_OG_IMAGE = "/hero.webp";
+export const DEFAULT_OG_IMAGE = "/og-image.jpg"; // JPEG required — WhatsApp/crawlers don't support WebP
 
 export function buildPageMeta({
 	title,

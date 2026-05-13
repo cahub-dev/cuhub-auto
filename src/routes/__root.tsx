@@ -56,7 +56,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			{ property: "og:site_name", content: SITE_NAME },
 			{ property: "og:locale", content: "en_US" },
 			{ property: "og:url", content: SITE_URL },
-			{ property: "og:image", content: `${SITE_URL}/hero.webp` },
+			{ property: "og:image", content: `${SITE_URL}/og-image.jpg` },
 			{ property: "og:image:width", content: "1200" },
 			{ property: "og:image:height", content: "630" },
 			{ property: "og:type", content: "website" },
