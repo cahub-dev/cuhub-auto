@@ -5,6 +5,7 @@ import { Button } from "#/components/ui/button";
 export interface FleetCardData {
 	id: string;
 	name: string;
+	category: string;
 	image: string;
 	description: string;
 	sectors: string[];
