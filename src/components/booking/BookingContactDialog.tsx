@@ -10,9 +10,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "#/components/ui/dialog";
-
-const WHATSAPP_NUMBER = "+258877541015";
-const BOOKINGS_EMAIL = "bookings@cahubauto.co.mz";
+import { BOOKING_EMAIL, BOOKING_WHATSAPP_NUMBER } from "#/lib/booking-message";
 
 export interface BookingPayload {
 	categoryLabel: string;
@@ -40,14 +38,14 @@ function buildMessage(b: BookingPayload): string {
 }
 
 function buildWhatsAppUrl(b: BookingPayload): string {
-	const number = WHATSAPP_NUMBER.replace(/\D/g, "");
+	const number = BOOKING_WHATSAPP_NUMBER.replace(/\D/g, "");
 	return `https://wa.me/${number}?text=${encodeURIComponent(buildMessage(b))}`;
 }
 
 function buildMailtoUrl(b: BookingPayload): string {
 	const subject = `Booking request: ${b.categoryLabel}`;
 	const body = encodeURIComponent(buildMessage(b));
-	return `mailto:${BOOKINGS_EMAIL}?subject=${encodeURIComponent(subject)}&body=${body}`;
+	return `mailto:${BOOKING_EMAIL}?subject=${encodeURIComponent(subject)}&body=${body}`;
 }
 
 export function BookingContactDialog({

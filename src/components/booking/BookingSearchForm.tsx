@@ -3,25 +3,10 @@
 import { Plus, X } from "lucide-react";
 import type React from "react";
 import { useMemo, useState } from "react";
-import type { BookingCategory } from "#/components/booking/BookingCategoryTabs";
 import { BookingContactDialog } from "#/components/booking/BookingContactDialog";
 import { DateTimeField } from "#/components/booking/DateTimeField";
 import { LOCATIONS, LocationField } from "#/components/booking/LocationField";
 import { Button } from "#/components/ui/button";
-
-const CTA_LABEL: Record<BookingCategory, string> = {
-	cars: "Show cars",
-	trucks: "Show trucks",
-	"heavy-equipment": "Show equipment",
-	machinery: "Show machinery",
-};
-
-const CATEGORY_LABEL: Record<BookingCategory, string> = {
-	cars: "car",
-	trucks: "truck",
-	"heavy-equipment": "heavy equipment",
-	machinery: "machinery",
-};
 
 function startOfToday(): Date {
 	const d = new Date();
@@ -35,11 +20,7 @@ function addDays(date: Date, days: number): Date {
 	return d;
 }
 
-export function BookingSearchForm({
-	category,
-}: {
-	category: BookingCategory;
-}): React.JSX.Element {
+export function BookingSearchForm(): React.JSX.Element {
 	const [pickupLocation, setPickupLocation] = useState<string>(LOCATIONS[0]);
 	const [returnLocation, setReturnLocation] = useState<string>(LOCATIONS[0]);
 	const [hasDifferentReturn, setHasDifferentReturn] = useState(false);
@@ -58,13 +39,19 @@ export function BookingSearchForm({
 		if (d >= returnDate) setReturnDate(addDays(d, 1));
 	}
 
-	const effectiveReturnLocation = hasDifferentReturn
-		? returnLocation
-		: pickupLocation;
+	const booking = {
+		categoryLabel: "car",
+		pickupLocation,
+		returnLocation: hasDifferentReturn ? returnLocation : pickupLocation,
+		pickupDate,
+		pickupTime,
+		returnDate,
+		returnTime,
+	};
 
 	return (
 		<>
-			<div key={category} className="booking-form ">
+			<div className="booking-form motion-fade-in">
 				<div className="booking-form-locations">
 					<LocationField
 						id="pickup-location"
@@ -72,33 +59,32 @@ export function BookingSearchForm({
 						value={pickupLocation}
 						onChange={setPickupLocation}
 					/>
-					{hasDifferentReturn ? (
-						<>
-							<LocationField
-								id="return-location"
-								label="Return location"
-								value={returnLocation}
-								onChange={setReturnLocation}
-							/>
-							<button
-								type="button"
-								className="booking-toggle-link"
-								onClick={() => setHasDifferentReturn(false)}
-							>
+					{hasDifferentReturn && (
+						<LocationField
+							id="return-location"
+							label="Return location"
+							value={returnLocation}
+							onChange={setReturnLocation}
+						/>
+					)}
+
+					<button
+						type="button"
+						className="booking-toggle-link"
+						onClick={() => setHasDifferentReturn(!hasDifferentReturn)}
+					>
+						{hasDifferentReturn ? (
+							<>
 								<X className="size-3.5" aria-hidden="true" />
 								Same return location
-							</button>
-						</>
-					) : (
-						<button
-							type="button"
-							className="booking-toggle-link"
-							onClick={() => setHasDifferentReturn(true)}
-						>
-							<Plus className="size-3.5" aria-hidden="true" />
-							Different return location
-						</button>
-					)}
+							</>
+						) : (
+							<>
+								<Plus className="size-3.5" aria-hidden="true" />
+								Different return location
+							</>
+						)}
+					</button>
 				</div>
 
 				<DateTimeField
@@ -119,27 +105,18 @@ export function BookingSearchForm({
 				/>
 
 				<Button
-					type="button"
 					size="lg"
 					className="booking-submit"
 					onClick={() => setDialogOpen(true)}
 				>
-					{CTA_LABEL[category]}
+					Start car request
 				</Button>
 			</div>
 
 			<BookingContactDialog
 				open={dialogOpen}
 				onOpenChange={setDialogOpen}
-				booking={{
-					categoryLabel: CATEGORY_LABEL[category],
-					pickupLocation,
-					returnLocation: effectiveReturnLocation,
-					pickupDate,
-					pickupTime,
-					returnDate,
-					returnTime,
-				}}
+				booking={booking}
 			/>
 		</>
 	);

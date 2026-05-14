@@ -1,4 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AboutHero } from "#/components/about/AboutHero";
+import { AboutIntro } from "#/components/about/AboutIntro";
+import { MissionVisionValues } from "#/components/about/MissionVisionValues";
+import { RentalProcess } from "#/components/about/RentalProcess";
+import { ServiceAreaMap } from "#/components/shared/ServiceAreaMap";
+import { TrustedPartners } from "#/components/shared/TrustedPartners";
+import { WhyChooseUs } from "#/components/shared/WhyChooseUs";
 import { buildPageMeta } from "#/lib/seo";
 
 export const Route = createFileRoute("/about")({
@@ -15,11 +22,14 @@ export const Route = createFileRoute("/about")({
 
 function AboutPage() {
 	return (
-		<div className="page-wrap py-16">
-			<h1 className="display-title text-3xl font-bold mb-4">About Us</h1>
-			<p className="text-muted-foreground">
-				Learn more about CA HUB AUTO and our mission.
-			</p>
+		<div>
+			<AboutHero />
+			<AboutIntro />
+			<MissionVisionValues />
+			<RentalProcess />
+			<WhyChooseUs />
+			<ServiceAreaMap />
+			<TrustedPartners />
 		</div>
 	);
 }

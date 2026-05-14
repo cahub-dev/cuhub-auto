@@ -803,76 +803,6 @@ a {
 }
 
 
-/* ─── Booking Panel (tabs + form) ─────────────────────── */
-
-.booking-tabs-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
-}
-
-.booking-tabs {
-  display: flex;
-  gap: 0.5rem;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.booking-tabs::-webkit-scrollbar { display: none; }
-
-.booking-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.95rem;
-  border: 1px solid transparent;
-  border-radius: 9999px;
-  background: color-mix(in oklab, var(--color-white-400) 30%, transparent);
-  color: var(--foreground);
-  font-size: 0.875rem;
-  font-weight: 500;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background 150ms ease, color 150ms ease, transform 150ms ease;
-}
-
-.booking-tab:hover:not(.is-active) {
-  background: color-mix(in oklab, var(--foreground) 8%, transparent);
-  transform: translateY(-1px);
-}
-
-.booking-tab:focus-visible {
-  outline: 2px solid var(--color-coral-glow-500);
-  outline-offset: 2px;
-}
-
-.booking-tab.is-active {
-  background: var(--color-white-100);
-  color: #fff;
-  transform: translateY(-1px);
-}
-
-.booking-view-link {
-  background: transparent;
-  border: 0;
-  padding: 0;
-  font-size: 0.875rem;
-  color: var(--foreground);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  white-space: nowrap;
-  flex-shrink: 0;
-  cursor: pointer;
-}
-.booking-view-link:hover { text-decoration: none; }
-.booking-view-link:focus-visible {
-  outline: 2px solid var(--color-coral-glow-500);
-  outline-offset: 3px;
-  border-radius: 2px;
-}
-
 /* Form grid: locations column, pickup, return, CTA */
 .booking-form {
   display: grid;
@@ -885,7 +815,13 @@ a {
 @media (min-width: 1024px) {
   .booking-form {
     grid-template-columns: minmax(0, 1.8fr) auto auto auto;
-    gap: 1.25rem;
+    column-gap: 1.25rem;
+    row-gap: 0.5rem;
+    align-items: start;
+  }
+
+  .booking-submit {
+    align-self: end;
   }
 }
 
@@ -1008,12 +944,8 @@ a {
 }
 
 @media (min-width: 1024px) {
-  .booking-submit { width: auto; }
-}
-
-@media (max-width: 640px) {
-  .booking-tabs-row {
-    flex-wrap: wrap;
-    gap: 0.75rem;
+  .booking-submit {
+    grid-column: 1;
+    width: 100%;
   }
 }
