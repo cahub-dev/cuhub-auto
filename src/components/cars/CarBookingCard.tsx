@@ -7,6 +7,10 @@ import { LOCATIONS } from "#/components/booking/LocationField";
 import type { CarDetailData } from "#/components/cars/car-detail-data";
 import { Button } from "#/components/ui/button";
 import { Input } from "#/components/ui/input";
+import {
+	buildVehicleBookingMailtoUrl,
+	buildVehicleBookingWhatsAppUrl,
+} from "#/lib/booking-message";
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
@@ -61,16 +65,20 @@ export function CarBookingCard({
 	const selectedExtraLabels = car.extras
 		.filter((extra) => selectedExtras.includes(extra.id))
 		.map((extra) => extra.label);
-	const message = [
-		`Hello CA HUB AUTO, I would like to book the ${car.name}.`,
-		`Pickup: ${pickupDate} at ${pickupTime} from ${pickupLocation}`,
-		`Return: ${returnDate} at ${returnTime} to ${returnLocation}`,
-		`Rental period: ${rentalDays} day${rentalDays === 1 ? "" : "s"}`,
-		`Extras: ${selectedExtraLabels.length > 0 ? selectedExtraLabels.join(", ") : "None"}`,
-		`Estimated total: ${money(total)}`,
-	].join("\n");
-	const whatsappHref = `https://wa.me/${car.whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent(message)}`;
-	const emailHref = `mailto:${car.email}?subject=${encodeURIComponent(`${car.name} booking inquiry`)}&body=${encodeURIComponent(message)}`;
+	const vehicleRequest = {
+		vehicleName: car.name,
+		pickupDate,
+		pickupTime,
+		pickupLocation,
+		returnDate,
+		returnTime,
+		returnLocation,
+		rentalDays,
+		extras: selectedExtraLabels,
+		estimatedTotal: money(total),
+	};
+	const whatsappHref = buildVehicleBookingWhatsAppUrl(vehicleRequest);
+	const emailHref = buildVehicleBookingMailtoUrl(vehicleRequest);
 
 	function toggleExtra(extraId: string): void {
 		setSelectedExtras((current) =>

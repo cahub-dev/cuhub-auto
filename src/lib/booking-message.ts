@@ -1,4 +1,4 @@
-export const BOOKING_WHATSAPP_NUMBER = "+258877541015";
+export const BOOKING_WHATSAPP_NUMBER = "+258848630631";
 export const BOOKING_EMAIL = "cahubauto@gmail.com";
 
 export interface BookingRequest {
@@ -17,6 +17,44 @@ export interface BookingRequest {
 	phone: string;
 	email: string;
 	address: string;
+}
+
+export interface VehicleBookingRequest {
+	vehicleName: string;
+	pickupDate: string;
+	pickupTime: string;
+	pickupLocation: string;
+	returnDate: string;
+	returnTime: string;
+	returnLocation: string;
+	rentalDays: number;
+	extras: string[];
+	estimatedTotal: string;
+}
+
+export interface QuickBookingRequest {
+	categoryLabel: string;
+	pickupLocation: string;
+	returnLocation: string;
+	pickupDate: string;
+	pickupTime: string;
+	returnDate: string;
+	returnTime: string;
+}
+
+export function buildWhatsAppUrl(
+	message: string,
+	number = BOOKING_WHATSAPP_NUMBER,
+): string {
+	return `https://wa.me/${number.replace(/\D/g, "")}?text=${encodeURIComponent(message)}`;
+}
+
+export function buildMailtoUrl(
+	subject: string,
+	message: string,
+	email = BOOKING_EMAIL,
+): string {
+	return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
 }
 
 export function buildBookingMessage(request: BookingRequest): string {
@@ -51,12 +89,66 @@ export function buildBookingMessage(request: BookingRequest): string {
 }
 
 export function buildBookingWhatsAppUrl(request: BookingRequest): string {
-	const number = BOOKING_WHATSAPP_NUMBER.replace(/\D/g, "");
-	return `https://wa.me/${number}?text=${encodeURIComponent(buildBookingMessage(request))}`;
+	return buildWhatsAppUrl(buildBookingMessage(request));
 }
 
 export function buildBookingMailtoUrl(request: BookingRequest): string {
 	const subject = `Rental quote request: ${request.fleetRequest}`;
-	const body = encodeURIComponent(buildBookingMessage(request));
-	return `mailto:${BOOKING_EMAIL}?subject=${encodeURIComponent(subject)}&body=${body}`;
+	return buildMailtoUrl(subject, buildBookingMessage(request));
+}
+
+export function buildVehicleBookingMessage(
+	request: VehicleBookingRequest,
+): string {
+	return [
+		`Hello CA HUB AUTO, I would like to book the ${request.vehicleName}.`,
+		`Pickup: ${request.pickupDate} at ${request.pickupTime} from ${request.pickupLocation}`,
+		`Return: ${request.returnDate} at ${request.returnTime} to ${request.returnLocation}`,
+		`Rental period: ${request.rentalDays} day${request.rentalDays === 1 ? "" : "s"}`,
+		`Extras: ${request.extras.length > 0 ? request.extras.join(", ") : "None"}`,
+		`Estimated total: ${request.estimatedTotal}`,
+	].join("\n");
+}
+
+export function buildVehicleBookingWhatsAppUrl(
+	request: VehicleBookingRequest,
+): string {
+	return buildWhatsAppUrl(buildVehicleBookingMessage(request));
+}
+
+export function buildVehicleBookingMailtoUrl(
+	request: VehicleBookingRequest,
+): string {
+	return buildMailtoUrl(
+		`${request.vehicleName} booking inquiry`,
+		buildVehicleBookingMessage(request),
+	);
+}
+
+export function buildQuickBookingMessage(request: QuickBookingRequest): string {
+	return [
+		"Hello CA HUB AUTO,",
+		"",
+		`I'd like to rent a ${request.categoryLabel}.`,
+		"",
+		`Pickup: ${request.pickupLocation}, ${request.pickupDate} at ${request.pickupTime}`,
+		`Return: ${request.returnLocation}, ${request.returnDate} at ${request.returnTime}`,
+		"",
+		"Please confirm availability. Thank you.",
+	].join("\n");
+}
+
+export function buildQuickBookingWhatsAppUrl(
+	request: QuickBookingRequest,
+): string {
+	return buildWhatsAppUrl(buildQuickBookingMessage(request));
+}
+
+export function buildQuickBookingMailtoUrl(
+	request: QuickBookingRequest,
+): string {
+	return buildMailtoUrl(
+		`Booking request: ${request.categoryLabel}`,
+		buildQuickBookingMessage(request),
+	);
 }
