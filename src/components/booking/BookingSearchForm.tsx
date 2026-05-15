@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { BookingContactDialog } from "#/components/booking/BookingContactDialog";
 import { DateTimeField } from "#/components/booking/DateTimeField";
 import { LOCATIONS, LocationField } from "#/components/booking/LocationField";
+import { BOOKING_CATEGORIES } from "#/components/booking/booking-request-options";
 import { Button } from "#/components/ui/button";
 
 function startOfToday(): Date {
@@ -21,6 +22,7 @@ function addDays(date: Date, days: number): Date {
 }
 
 export function BookingSearchForm(): React.JSX.Element {
+	const [category, setCategory] = useState<string>(BOOKING_CATEGORIES[0]);
 	const [pickupLocation, setPickupLocation] = useState<string>(LOCATIONS[0]);
 	const [returnLocation, setReturnLocation] = useState<string>(LOCATIONS[0]);
 	const [hasDifferentReturn, setHasDifferentReturn] = useState(false);
@@ -40,7 +42,7 @@ export function BookingSearchForm(): React.JSX.Element {
 	}
 
 	const booking = {
-		categoryLabel: "car",
+		categoryLabel: category.toLowerCase(),
 		pickupLocation,
 		returnLocation: hasDifferentReturn ? returnLocation : pickupLocation,
 		pickupDate,
@@ -52,6 +54,24 @@ export function BookingSearchForm(): React.JSX.Element {
 	return (
 		<>
 			<div className="booking-form motion-fade-in">
+				<div className="booking-field">
+					<label htmlFor="vehicle-category" className="booking-field-label">
+						Vehicle type
+					</label>
+					<div className="booking-field-control">
+						<select
+							id="vehicle-category"
+							className="booking-select"
+							value={category}
+							onChange={(e) => setCategory(e.target.value)}
+						>
+							{BOOKING_CATEGORIES.map((c) => (
+								<option key={c} value={c}>{c}</option>
+							))}
+						</select>
+					</div>
+				</div>
+
 				<div className="booking-form-locations">
 					<LocationField
 						id="pickup-location"
@@ -109,7 +129,7 @@ export function BookingSearchForm(): React.JSX.Element {
 					className="booking-submit"
 					onClick={() => setDialogOpen(true)}
 				>
-					Start car request
+					Start booking request
 				</Button>
 			</div>
 

@@ -1,0 +1,207 @@
+export const BUSINESS_DATA = {
+	company: {
+		name: "CA HUB AUTO",
+		phone: "+258 87 754 1015",
+		whatsapp: "258877541015",
+		email: "cahubauto@gmail.com",
+		address: "Rua de Micaia, Q.56, nº115, Maputo",
+		businessHours: "Monday–Saturday, 07:00–18:00",
+	},
+	fleet: [
+		{
+			name: "Toyota Land Cruiser",
+			type: "4x4 SUV",
+			capacity: "7 people",
+			dailyRate: 120,
+			weeklyRateNote: "Weekly and project rates available on request",
+			bestFor: "Executive travel, site visits, long-distance operations",
+		},
+		{
+			name: "Nissan Navara Single Cab",
+			type: "Light truck / Pickup",
+			capacity: "2 people",
+			dailyRate: 85,
+			bestFor: "Light cargo movement, site mobility, operational teams",
+		},
+		{
+			name: "Nissan Navara Double Cab",
+			type: "Light truck / Pickup",
+			capacity: "5 people",
+			dailyRate: 95,
+			bestFor: "Field teams needing passenger and cargo capacity",
+		},
+		{
+			name: "Develon Loader SD300",
+			type: "Heavy equipment",
+			dailyRate: 280,
+			bestFor: "Material handling, loading, site preparation, construction and mining",
+			operatorAvailable: true,
+		},
+		{
+			name: "Develon Excavator DX220",
+			type: "Heavy equipment",
+			dailyRate: 340,
+			bestFor: "Excavation, trenching, heavy site preparation",
+			operatorAvailable: true,
+		},
+		{
+			name: "Scania Mining Truck",
+			type: "Heavy vehicle",
+			dailyRate: 420,
+			bestFor: "Mining and industrial hauling operations",
+		},
+	],
+	extras: [
+		{ name: "Professional driver", price: "$45/day" },
+		{ name: "Certified operator (heavy equipment)", price: "$80/day" },
+		{ name: "Vehicle delivery to site", price: "$25 per delivery" },
+		{ name: "Premium insurance", price: "$18/day" },
+		{ name: "Site transport (equipment)", price: "$65 per deployment" },
+	],
+	included: [
+		"Scheduled maintenance support during rental period",
+		"Basic comprehensive insurance",
+		"Roadworthy inspection before handover",
+		"Flexible pickup coordination in Maputo",
+		"24/7 rental assistance for active bookings",
+	],
+	serviceAreas: [
+		"Maputo City",
+		"Maputo Province",
+		"Gaza",
+		"Inhambane",
+		"Sofala (Beira)",
+		"Manica",
+		"Tete",
+		"Zambezia (Quelimane)",
+		"Nampula",
+		"Cabo Delgado",
+	],
+	faqs: [
+		{
+			q: "What is the minimum rental period?",
+			a: "Minimum rental is 1 day. Weekly and monthly rates are available for longer projects.",
+		},
+		{
+			q: "Is a driver or operator included?",
+			a: "Driver/operator is optional and can be added as an extra. Vehicles can be rented with or without a driver.",
+		},
+		{
+			q: "What documents are required to rent?",
+			a: "Valid ID or passport, driver's licence (for vehicle rentals), and a signed rental agreement. Corporate clients may provide a company letter.",
+		},
+		{
+			q: "Are long-term or project-based rates available?",
+			a: "Yes. For projects lasting weeks or months we offer customised rates. Contact us for a quote.",
+		},
+		{
+			q: "Is insurance included?",
+			a: "Basic comprehensive insurance is included. Premium insurance is available as an add-on.",
+		},
+		{
+			q: "What happens in case of a breakdown?",
+			a: "We provide 24/7 assistance for active rentals. Our team coordinates replacement or repair support on site.",
+		},
+		{
+			q: "Do you offer cross-border rentals?",
+			a: "Cross-border rentals are available but must be approved and quoted in advance.",
+		},
+	],
+};
+
+export function buildSystemPrompt(language: "en" | "pt" = "en"): string {
+	const d = BUSINESS_DATA;
+
+	const fleetList = d.fleet
+		.map(
+			(v) =>
+				`  - ${v.name} (${v.type}): $${v.dailyRate}/day${v.operatorAvailable ? " — operator available" : ""}. Best for: ${v.bestFor}.`,
+		)
+		.join("\n");
+
+	const extrasList = d.extras
+		.map((e) => `  - ${e.name}: ${e.price}`)
+		.join("\n");
+
+	const faqList = d.faqs
+		.map((f) => `  Q: ${f.q}\n  A: ${f.a}`)
+		.join("\n\n");
+
+	const areasList = d.serviceAreas.join(", ");
+
+	return `You are the CA HUB AUTO virtual assistant — a specialist in vehicle and heavy equipment rental in Mozambique.
+
+LANGUAGE BEHAVIOUR:
+- Default reply language: ${language === "pt" ? "Portuguese (Mozambican/European)" : "English"}.
+- If the user writes in a different language mid-conversation, automatically switch and continue in that language. No confirmation needed.
+
+YOUR STRICT SCOPE — ONLY answer about:
+- CA HUB AUTO fleet, pricing, availability enquiries, service areas, rental process, and FAQs below.
+- Helping a visitor decide which vehicle fits their need.
+- Collecting contact details when they are ready to proceed.
+
+NEVER answer questions about competitors, vehicle purchases, general mechanics, weather, news, or any topic not listed above.
+If asked something out of scope, reply: "I can only help with CA HUB AUTO rentals. Is there something about our fleet or service I can assist with?"
+
+---
+
+COMPANY:
+Name: ${d.company.name}
+Phone: ${d.company.phone}
+WhatsApp: https://wa.me/${d.company.whatsapp}
+Email: mailto:${d.company.email}
+Address: ${d.company.address}
+Business hours: ${d.company.businessHours}
+
+---
+
+FLEET & DAILY RATES (USD — all rates are per calendar day):
+${fleetList}
+
+Rates exclude: fuel, driver/operator (optional extra), cross-border fees, toll fees.
+Weekly and project-based rates are negotiable — direct to team for quote.
+
+OPTIONAL EXTRAS:
+${extrasList}
+
+INCLUDED IN ALL RENTALS:
+${d.included.map((i) => `  - ${i}`).join("\n")}
+
+---
+
+SERVICE AREAS (10 provinces):
+${areasList}
+
+---
+
+FAQs:
+${faqList}
+
+---
+
+LEAD CAPTURE — apply when visitor shows booking or quote intent:
+1. Ask for their name.
+2. Ask which vehicle or equipment they need.
+3. Ask for dates and delivery location.
+4. Ask for their preferred contact (WhatsApp number or email).
+
+After collecting: "Thank you, [name]! Our team will confirm availability and reach out within the same business day. You can also contact us directly:"
+Then show both contact options on separate lines:
+  WhatsApp: https://wa.me/${d.company.whatsapp}
+  Email: mailto:${d.company.email}
+
+---
+
+ESCALATION — hand off immediately for:
+- Complaints, urgent issues, or breakdowns → say: "I'm connecting you with our operations team right now." Then show WhatsApp link.
+- Questions you cannot answer → offer both contact options.
+- 2+ messages of frustration → stop, escalate immediately, show contact options.
+
+---
+
+TONE & FORMAT:
+- Professional, warm, direct. Never start a reply with "Certainly!", "Of course!", or "Great question!".
+- Keep replies to 2–4 sentences unless listing options. Use bullet points for comparisons or lists.
+- For pricing questions: give the daily rate and note that project rates can be arranged.
+`;
+}
