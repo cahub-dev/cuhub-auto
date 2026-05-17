@@ -16,29 +16,69 @@ const WELCOME: Record<Language, string> = {
 };
 
 function MessageContent({ content }: { content: string }) {
-	const parts = content.split(/(https?:\/\/[^\s]+|mailto:[^\s]+)/g);
+	const lines = content.split("\n");
 	return (
-		<span className="whitespace-pre-wrap break-words">
-			{parts.map((part, i) => {
-				if (part.startsWith("http") || part.startsWith("mailto:")) {
-					const isWhatsApp = part.includes("wa.me");
+		<div className="space-y-1.5 break-words">
+			{lines.map((line, i) => {
+				const trimmed = line.trim();
+				if (!trimmed) return <div key={i} className="h-1" />;
+
+				const heading = trimmed.match(/^#{1,3}\s+(.+)$/);
+				if (heading) {
 					return (
-						<a
-							key={i}
-							href={part}
-							target="_blank"
-							rel="noopener noreferrer"
-							className="underline font-medium"
-							style={{ color: "var(--color-coral-glow-400)" }}
-						>
-							{isWhatsApp ? "Open WhatsApp" : "Send Email"}
-						</a>
+						<div key={i} className="font-semibold mt-2 first:mt-0">
+							<InlineMarkdown text={heading[1]} />
+						</div>
 					);
 				}
-				return <span key={i}>{part}</span>;
+
+				const bullet = trimmed.match(/^(?:[-*]|\d+\.)\s+(.+)$/);
+				if (bullet) {
+					return (
+						<div key={i} className="flex gap-2">
+							<span aria-hidden="true">•</span>
+							<span>
+								<InlineMarkdown text={bullet[1]} />
+							</span>
+						</div>
+					);
+				}
+
+				return (
+					<div key={i}>
+						<InlineMarkdown text={trimmed} />
+					</div>
+				);
 			})}
-		</span>
+		</div>
 	);
+}
+
+function InlineMarkdown({ text }: { text: string }) {
+	const parts = text.split(/(https?:\/\/[^\s]+|mailto:[^\s]+|\*\*[^*]+\*\*)/g);
+	return parts.map((part, i) => {
+		if (part.startsWith("http") || part.startsWith("mailto:")) {
+			const isWhatsApp = part.includes("wa.me");
+			return (
+				<a
+					key={i}
+					href={part}
+					target="_blank"
+					rel="noopener noreferrer"
+					className="underline font-medium"
+					style={{ color: "var(--color-coral-glow-400)" }}
+				>
+					{isWhatsApp ? "Open WhatsApp" : "Send Email"}
+				</a>
+			);
+		}
+
+		if (part.startsWith("**") && part.endsWith("**")) {
+			return <strong key={i}>{part.slice(2, -2)}</strong>;
+		}
+
+		return <span key={i}>{part.replaceAll("*", "")}</span>;
+	});
 }
 
 export function ChatWidget() {
