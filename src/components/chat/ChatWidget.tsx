@@ -1,5 +1,5 @@
-import { DefaultChatTransport, isTextUIPart } from "ai";
 import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport, isTextUIPart } from "ai";
 import { Loader2, MessageCircle, Send, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -123,10 +123,10 @@ export function ChatWidget() {
 	const showQuickReplies = messages.length === 0;
 
 	return (
-		<div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+		<div className="fixed inset-x-3 bottom-3 z-50 flex flex-col items-stretch gap-3 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:items-end">
 			{open && (
 				<div
-					className="w-[360px] flex flex-col rounded-2xl overflow-hidden island-shell"
+					className="w-full flex flex-col rounded-2xl overflow-hidden island-shell sm:w-[360px]"
 					style={{ height: "min(520px, calc(100dvh - 100px))" }}
 				>
 					{/* Header */}
@@ -326,7 +326,7 @@ export function ChatWidget() {
 			<button
 				type="button"
 				onClick={() => setOpen((v) => !v)}
-				className="w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+				className="w-14 h-14 rounded-full shadow-lg flex items-center justify-center self-end transition-all hover:scale-105 active:scale-95"
 				style={{ background: "var(--color-coral-glow-500)", color: "#fff" }}
 				aria-label={open ? "Close chat" : "Open chat"}
 			>
