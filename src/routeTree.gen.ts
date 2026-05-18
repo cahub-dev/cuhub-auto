@@ -17,6 +17,7 @@ import { Route as CarsIndexRouteImport } from './routes/cars/index'
 import { Route as FleetCarIdRouteImport } from './routes/fleet_/$carId'
 import { Route as BookingNewRouteImport } from './routes/booking/new'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as ApiBookingRouteImport } from './routes/api/booking'
 
 const FleetRoute = FleetRouteImport.update({
   id: '/fleet',
@@ -58,12 +59,18 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiBookingRoute = ApiBookingRouteImport.update({
+  id: '/api/booking',
+  path: '/api/booking',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/fleet': typeof FleetRoute
+  '/api/booking': typeof ApiBookingRoute
   '/api/chat': typeof ApiChatRoute
   '/booking/new': typeof BookingNewRoute
   '/fleet/$carId': typeof FleetCarIdRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/fleet': typeof FleetRoute
+  '/api/booking': typeof ApiBookingRoute
   '/api/chat': typeof ApiChatRoute
   '/booking/new': typeof BookingNewRoute
   '/fleet/$carId': typeof FleetCarIdRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/fleet': typeof FleetRoute
+  '/api/booking': typeof ApiBookingRoute
   '/api/chat': typeof ApiChatRoute
   '/booking/new': typeof BookingNewRoute
   '/fleet_/$carId': typeof FleetCarIdRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/fleet'
+    | '/api/booking'
     | '/api/chat'
     | '/booking/new'
     | '/fleet/$carId'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/fleet'
+    | '/api/booking'
     | '/api/chat'
     | '/booking/new'
     | '/fleet/$carId'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/fleet'
+    | '/api/booking'
     | '/api/chat'
     | '/booking/new'
     | '/fleet_/$carId'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   FleetRoute: typeof FleetRoute
+  ApiBookingRoute: typeof ApiBookingRoute
   ApiChatRoute: typeof ApiChatRoute
   BookingNewRoute: typeof BookingNewRoute
   FleetCarIdRoute: typeof FleetCarIdRoute
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/booking': {
+      id: '/api/booking'
+      path: '/api/booking'
+      fullPath: '/api/booking'
+      preLoaderRoute: typeof ApiBookingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   FleetRoute: FleetRoute,
+  ApiBookingRoute: ApiBookingRoute,
   ApiChatRoute: ApiChatRoute,
   BookingNewRoute: BookingNewRoute,
   FleetCarIdRoute: FleetCarIdRoute,

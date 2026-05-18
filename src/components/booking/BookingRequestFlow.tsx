@@ -1,6 +1,13 @@
 "use client";
 
-import { Clock, Mail, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
+import {
+	Clock,
+	Mail,
+	MapPin,
+	MessageCircle,
+	Phone,
+	ShieldCheck,
+} from "lucide-react";
 import type React from "react";
 import { useMemo, useState } from "react";
 import { BookingClientStep } from "#/components/booking/BookingClientStep";
@@ -15,15 +22,18 @@ import {
 } from "#/components/booking/booking-request-options";
 import { Button } from "#/components/ui/button";
 import {
-	type BookingRequest,
 	BOOKING_EMAIL,
 	BOOKING_WHATSAPP_NUMBER,
-	buildBookingMailtoUrl,
+	type BookingRequest,
 	buildBookingWhatsAppUrl,
 } from "#/lib/booking-message";
 
 export function BookingRequestFlow(): React.JSX.Element {
 	const [step, setStep] = useState(0);
+	const [submitStatus, setSubmitStatus] = useState<
+		"idle" | "sending" | "success" | "error"
+	>("idle");
+	const [submitError, setSubmitError] = useState("");
 	const [request, setRequest] = useState<BookingRequest>(
 		DEFAULT_BOOKING_REQUEST,
 	);
@@ -63,6 +73,33 @@ export function BookingRequestFlow(): React.JSX.Element {
 		}));
 	}
 
+	async function submitBookingRequest(): Promise<void> {
+		setSubmitStatus("sending");
+		setSubmitError("");
+
+		try {
+			const response = await fetch("/api/booking", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(request),
+			});
+
+			if (!response.ok) {
+				const body = await response.json().catch(() => null);
+				throw new Error(body?.error ?? "Unable to send booking request");
+			}
+
+			setSubmitStatus("success");
+		} catch (error) {
+			setSubmitStatus("error");
+			setSubmitError(
+				error instanceof Error
+					? error.message
+					: "Unable to send booking request",
+			);
+		}
+	}
+
 	return (
 		<div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[minmax(0,1fr)_320px]">
 			{/* Main form panel */}
@@ -77,15 +114,20 @@ export function BookingRequestFlow(): React.JSX.Element {
 							toggleExtra={toggleExtra}
 						/>
 					)}
-					{step === 2 && <BookingClientStep request={request} update={update} />}
+					{step === 2 && (
+						<BookingClientStep request={request} update={update} />
+					)}
 					{step === 3 && <BookingReviewStep request={request} />}
 
 					<BookingActions
 						step={step}
 						canContinue={canContinue}
 						request={request}
+						submitStatus={submitStatus}
+						submitError={submitError}
 						onBack={() => setStep((current) => Math.max(0, current - 1))}
 						onNext={() => setStep((current) => current + 1)}
+						onSubmitRequest={submitBookingRequest}
 					/>
 				</form>
 			</section>
@@ -105,7 +147,8 @@ export function BookingRequestFlow(): React.JSX.Element {
 							Quote request only
 						</p>
 						<p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-							No payment online. We confirm availability and send a proposal first.
+							No payment online. We confirm availability and send a proposal
+							first.
 						</p>
 					</div>
 				</div>
@@ -116,7 +159,9 @@ export function BookingRequestFlow(): React.JSX.Element {
 				<div className="flex flex-col gap-3">
 					<div className="flex items-center gap-2.5">
 						<Clock className="size-4 text-primary shrink-0" />
-						<span className="text-sm text-foreground">Reply within 24 hours</span>
+						<span className="text-sm text-foreground">
+							Reply within 24 hours
+						</span>
 					</div>
 					<div className="flex items-center gap-2.5">
 						<MapPin className="size-4 text-primary shrink-0" />
@@ -190,56 +235,80 @@ function BookingActions({
 	step,
 	canContinue,
 	request,
+	submitStatus,
+	submitError,
 	onBack,
 	onNext,
+	onSubmitRequest,
 }: {
 	step: number;
 	canContinue: boolean;
 	request: BookingRequest;
+	submitStatus: "idle" | "sending" | "success" | "error";
+	submitError: string;
 	onBack: () => void;
 	onNext: () => void;
+	onSubmitRequest: () => void;
 }): React.JSX.Element {
 	return (
-		<div className="mt-8 flex flex-col gap-3 border-t border-border/50 pt-5 sm:flex-row sm:justify-between">
-			<Button
-				type="button"
-				variant="outline"
-				disabled={step === 0}
-				onClick={onBack}
-				className="sm:w-auto"
-			>
-				Back
-			</Button>
+		<div className="mt-8 flex flex-col gap-3 border-t border-border/50 pt-5">
+			{submitStatus === "success" && (
+				<p className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+					Request sent. We emailed you a copy and notified our sales team.
+				</p>
+			)}
+			{submitStatus === "error" && (
+				<p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+					{submitError || "Unable to send booking request. Please try again."}
+				</p>
+			)}
 
-			{step < BOOKING_STEPS.length - 1 ? (
+			<div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
 				<Button
 					type="button"
-					disabled={!canContinue}
-					onClick={onNext}
+					variant="outline"
+					disabled={step === 0 || submitStatus === "sending"}
+					onClick={onBack}
 					className="sm:w-auto"
 				>
-					Continue
+					Back
 				</Button>
-			) : (
-				<div className="flex flex-col gap-2 sm:flex-row">
-					<Button asChild variant="outline">
-						<a href={buildBookingMailtoUrl(request)}>
-							<Mail className="size-4" aria-hidden="true" />
-							Send via Email
-						</a>
+
+				{step < BOOKING_STEPS.length - 1 ? (
+					<Button
+						type="button"
+						disabled={!canContinue}
+						onClick={onNext}
+						className="sm:w-auto"
+					>
+						Continue
 					</Button>
-					<Button asChild>
-						<a
-							href={buildBookingWhatsAppUrl(request)}
-							target="_blank"
-							rel="noreferrer"
+				) : (
+					<div className="flex flex-col gap-2 sm:flex-row">
+						<Button
+							type="button"
+							variant="outline"
+							disabled={
+								submitStatus === "sending" || submitStatus === "success"
+							}
+							onClick={onSubmitRequest}
 						>
-							<MessageCircle className="size-4" aria-hidden="true" />
-							Send via WhatsApp
-						</a>
-					</Button>
-				</div>
-			)}
+							<Mail className="size-4" aria-hidden="true" />
+							{submitStatus === "sending" ? "Sending..." : "Send via Email"}
+						</Button>
+						<Button asChild>
+							<a
+								href={buildBookingWhatsAppUrl(request)}
+								target="_blank"
+								rel="noreferrer"
+							>
+								<MessageCircle className="size-4" aria-hidden="true" />
+								Send via WhatsApp
+							</a>
+						</Button>
+					</div>
+				)}
+			</div>
 		</div>
 	);
 }
