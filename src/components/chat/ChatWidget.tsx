@@ -15,18 +15,25 @@ const WELCOME: Record<Language, string> = {
 	pt: "Olá! Sou o assistente da CA HUB AUTO. Como posso ajudá-lo hoje?",
 };
 
+const MAX_INPUT_CHARS = 1000;
+const SEND_COOLDOWN_MS = 1200;
+const ERROR_MESSAGE: Record<Language, string> = {
+	en: "The assistant is temporarily unavailable. Please try again in a moment.",
+	pt: "O assistente está temporariamente indisponível. Tente novamente dentro de instantes.",
+};
+
 function MessageContent({ content }: { content: string }) {
 	const lines = content.split("\n");
 	return (
 		<div className="space-y-1.5 break-words">
-			{lines.map((line, i) => {
+			{lines.map((line) => {
 				const trimmed = line.trim();
-				if (!trimmed) return <div key={i} className="h-1" />;
+				if (!trimmed) return <div key={line} className="h-1" />;
 
 				const heading = trimmed.match(/^#{1,3}\s+(.+)$/);
 				if (heading) {
 					return (
-						<div key={i} className="font-semibold mt-2 first:mt-0">
+						<div key={line} className="font-semibold mt-2 first:mt-0">
 							<InlineMarkdown text={heading[1]} />
 						</div>
 					);
@@ -35,7 +42,7 @@ function MessageContent({ content }: { content: string }) {
 				const bullet = trimmed.match(/^(?:[-*]|\d+\.)\s+(.+)$/);
 				if (bullet) {
 					return (
-						<div key={i} className="flex gap-2">
+						<div key={line} className="flex gap-2">
 							<span aria-hidden="true">•</span>
 							<span>
 								<InlineMarkdown text={bullet[1]} />
@@ -45,7 +52,7 @@ function MessageContent({ content }: { content: string }) {
 				}
 
 				return (
-					<div key={i}>
+					<div key={line}>
 						<InlineMarkdown text={trimmed} />
 					</div>
 				);
@@ -56,12 +63,12 @@ function MessageContent({ content }: { content: string }) {
 
 function InlineMarkdown({ text }: { text: string }) {
 	const parts = text.split(/(https?:\/\/[^\s]+|mailto:[^\s]+|\*\*[^*]+\*\*)/g);
-	return parts.map((part, i) => {
+	return parts.map((part) => {
 		if (part.startsWith("http") || part.startsWith("mailto:")) {
 			const isWhatsApp = part.includes("wa.me");
 			return (
 				<a
-					key={i}
+					key={part}
 					href={part}
 					target="_blank"
 					rel="noopener noreferrer"
@@ -74,10 +81,10 @@ function InlineMarkdown({ text }: { text: string }) {
 		}
 
 		if (part.startsWith("**") && part.endsWith("**")) {
-			return <strong key={i}>{part.slice(2, -2)}</strong>;
+			return <strong key={part}>{part.slice(2, -2)}</strong>;
 		}
 
-		return <span key={i}>{part.replaceAll("*", "")}</span>;
+		return <span key={part}>{part.replaceAll("*", "")}</span>;
 	});
 }
 
@@ -85,8 +92,10 @@ export function ChatWidget() {
 	const [open, setOpen] = useState(false);
 	const [language, setLanguage] = useState<Language>("en");
 	const [input, setInput] = useState("");
+	const [coolingDown, setCoolingDown] = useState(false);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const languageRef = useRef(language);
+	const cooldownRef = useRef<number | undefined>(undefined);
 
 	useEffect(() => {
 		languageRef.current = language;
@@ -101,13 +110,22 @@ export function ChatWidget() {
 		[],
 	);
 
-	const { messages, sendMessage, status, setMessages } = useChat({ transport });
+	const { messages, sendMessage, status, setMessages, error } = useChat({
+		transport,
+	});
 
 	const isLoading = status === "submitted" || status === "streaming";
+	const sendDisabled = !input.trim() || isLoading || coolingDown;
 
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-	}, [messages]);
+	});
+
+	useEffect(() => {
+		return () => {
+			if (cooldownRef.current) window.clearTimeout(cooldownRef.current);
+		};
+	}, []);
 
 	const handleLanguageChange = (lang: Language) => {
 		setLanguage(lang);
@@ -115,9 +133,14 @@ export function ChatWidget() {
 	};
 
 	const submitText = (text: string) => {
-		if (!text.trim() || isLoading) return;
-		sendMessage({ text: text.trim() });
+		const trimmed = text.trim().slice(0, MAX_INPUT_CHARS);
+		if (!trimmed || isLoading || coolingDown) return;
+		sendMessage({ text: trimmed });
 		setInput("");
+		setCoolingDown(true);
+		cooldownRef.current = window.setTimeout(() => {
+			setCoolingDown(false);
+		}, SEND_COOLDOWN_MS);
 	};
 
 	const showQuickReplies = messages.length === 0;
@@ -199,8 +222,9 @@ export function ChatWidget() {
 									<button
 										key={reply}
 										type="button"
+										disabled={isLoading || coolingDown}
 										onClick={() => submitText(reply)}
-										className="text-xs px-3 py-1.5 rounded-full border font-medium transition-colors"
+										className="text-xs px-3 py-1.5 rounded-full border font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 										style={{
 											borderColor: "var(--color-coral-glow-500)",
 											color: "var(--color-coral-glow-500)",
@@ -234,7 +258,9 @@ export function ChatWidget() {
 								>
 									<div
 										className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${
-											msg.role === "user" ? "rounded-tr-none" : "rounded-tl-none border"
+											msg.role === "user"
+												? "rounded-tr-none"
+												: "rounded-tl-none border"
 										}`}
 										style={
 											msg.role === "user"
@@ -274,6 +300,21 @@ export function ChatWidget() {
 							</div>
 						)}
 
+						{error && (
+							<div className="flex justify-start">
+								<div
+									className="max-w-[85%] rounded-2xl rounded-tl-none px-4 py-3 text-sm border"
+									style={{
+										background: "var(--surface)",
+										borderColor: "var(--color-coral-glow-500)",
+										color: "var(--foreground)",
+									}}
+								>
+									{ERROR_MESSAGE[language]}
+								</div>
+							</div>
+						)}
+
 						<div ref={messagesEndRef} />
 					</div>
 
@@ -288,8 +329,13 @@ export function ChatWidget() {
 					>
 						<input
 							value={input}
-							onChange={(e) => setInput(e.target.value)}
-							placeholder={language === "en" ? "Type a message…" : "Escreva uma mensagem…"}
+							onChange={(e) =>
+								setInput(e.target.value.slice(0, MAX_INPUT_CHARS))
+							}
+							maxLength={MAX_INPUT_CHARS}
+							placeholder={
+								language === "en" ? "Type a message…" : "Escreva uma mensagem…"
+							}
 							className="flex-1 text-sm rounded-xl px-4 py-2.5 outline-none min-w-0 transition-colors border"
 							style={{
 								background: "var(--background)",
@@ -297,7 +343,8 @@ export function ChatWidget() {
 								borderColor: "var(--border)",
 							}}
 							onFocus={(e) => {
-								e.currentTarget.style.borderColor = "var(--color-coral-glow-500)";
+								e.currentTarget.style.borderColor =
+									"var(--color-coral-glow-500)";
 								e.currentTarget.style.boxShadow =
 									"0 0 0 3px color-mix(in oklab, var(--color-coral-glow-500) 20%, transparent)";
 							}}
@@ -308,7 +355,7 @@ export function ChatWidget() {
 						/>
 						<button
 							type="submit"
-							disabled={!input.trim() || isLoading}
+							disabled={sendDisabled}
 							className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
 							style={{
 								background: "var(--color-coral-glow-500)",
