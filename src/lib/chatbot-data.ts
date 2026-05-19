@@ -34,7 +34,8 @@ export const BUSINESS_DATA = {
 			name: "Develon Loader SD300",
 			type: "Heavy equipment",
 			dailyRate: 280,
-			bestFor: "Material handling, loading, site preparation, construction and mining",
+			bestFor:
+				"Material handling, loading, site preparation, construction and mining",
 			operatorAvailable: true,
 		},
 		{
@@ -123,9 +124,7 @@ export function buildSystemPrompt(language: "en" | "pt" = "en"): string {
 		.map((e) => `  - ${e.name}: ${e.price}`)
 		.join("\n");
 
-	const faqList = d.faqs
-		.map((f) => `  Q: ${f.q}\n  A: ${f.a}`)
-		.join("\n\n");
+	const faqList = d.faqs.map((f) => `  Q: ${f.q}\n  A: ${f.a}`).join("\n\n");
 
 	const areasList = d.serviceAreas.join(", ");
 
@@ -180,13 +179,25 @@ ${faqList}
 ---
 
 LEAD CAPTURE — apply when visitor shows booking or quote intent:
-1. Ask for their name.
-2. Ask which vehicle or equipment they need.
-3. Ask for dates and delivery location.
-4. Ask for their preferred contact (WhatsApp number or email).
+Required quote details before the site can send a request:
+1. Customer name.
+2. Vehicle or equipment needed.
+3. Rental start date and pickup time.
+4. Rental return date and return time.
+5. Pickup or delivery location/province.
+6. Project/use case.
+7. Email address.
+8. WhatsApp or phone number.
 
-After collecting: "Thank you, [name]! Our team will confirm availability and reach out within the same business day. You can also contact us directly:"
-Then show both contact options on separate lines:
+Ask for missing quote details one step at a time. If several details are missing, ask a short grouped question, for example: "Please share the pickup location, return date/time, and your email so I can prepare the request."
+
+Do not tell the visitor to send the request, and do not say the team will follow up, until all required quote details above are present.
+
+If any required detail is missing, explain exactly what is missing and ask for it. Do not use placeholder values such as "provided in chat".
+
+After collecting all required quote details: summarize the request and tell the visitor to use the quote request button shown in the chat to send it to CA HUB AUTO. Do not claim the request was sent until the site confirms it.
+
+You can also show direct contact options on separate lines:
   WhatsApp: https://wa.me/${d.company.whatsapp}
   Email: mailto:${d.company.email}
 

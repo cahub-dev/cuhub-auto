@@ -124,6 +124,62 @@ function getMessageText(message: { parts: unknown[] }) {
 		.trim();
 }
 
+function cleanQuoteText(value: string) {
+	return value.replace(/[.,;:]+$/g, "").trim();
+}
+
+function extractFirstMatch(transcript: string, patterns: RegExp[]) {
+	for (const pattern of patterns) {
+		const match = transcript.match(pattern)?.[1]?.trim();
+		if (match) return cleanQuoteText(match);
+	}
+
+	return "";
+}
+
+function extractContactName(userTexts: string[], transcript: string) {
+	const labelledName = extractFirstMatch(transcript, [
+		/(?:name|nome)\s*(?:is|é|:)?\s*([A-Za-zÀ-ÿ' -]{2,60})/i,
+	]);
+	if (labelledName) return labelledName;
+
+	const standaloneName = userTexts.find((text) =>
+		/^[A-Za-zÀ-ÿ' -]{2,60}$/.test(text),
+	);
+	if (standaloneName) return standaloneName;
+
+	return "";
+}
+
+function extractRentalDates(transcript: string) {
+	const dateRange = transcript.match(
+		/(?:dia\s*)?(\d{1,2})\s*(?:-|to|até|a)\s*(\d{1,2})\s*([A-Za-zÀ-ÿ]+)/i,
+	);
+	const pickupTime = transcript.match(/(\d{1,2}\s*(?:am|pm))\s*pickup/i)?.[1];
+	const returnTime = transcript.match(/(\d{1,2}\s*(?:am|pm))\s*return/i)?.[1];
+
+	if (!dateRange) {
+		return {
+			startDate: extractFirstMatch(transcript, [
+				/(?:start|pickup|início|inicio)\s*(?:date|dia|:)?\s*([^\n,]+)/i,
+			]),
+			returnDate: extractFirstMatch(transcript, [
+				/(?:return|end|fim|devolução|devolucao)\s*(?:date|dia|:)?\s*([^\n,]+)/i,
+			]),
+		};
+	}
+
+	const [, startDay, returnDay, month] = dateRange;
+	return {
+		startDate: cleanQuoteText(
+			`${startDay} ${month}${pickupTime ? `, ${pickupTime}` : ""}`,
+		),
+		returnDate: cleanQuoteText(
+			`${returnDay} ${month}${returnTime ? `, ${returnTime}` : ""}`,
+		),
+	};
+}
+
 function buildChatQuoteRequest(messages: { role: string; parts: unknown[] }[]) {
 	const userTexts = messages
 		.filter((message) => message.role === "user")
@@ -134,33 +190,54 @@ function buildChatQuoteRequest(messages: { role: string; parts: unknown[] }[]) {
 	const phone =
 		transcript.match(/(?:\+?\d[\d\s().-]{6,}\d)/)?.[0]?.trim() ?? "";
 
-	if (!email || !userTexts.length) return null;
+	if (!userTexts.length) return null;
 
 	const vehicle =
 		transcript.match(
 			/Toyota Land Cruiser|Nissan Navara Single Cab|Nissan Navara Double Cab|Develon Loader SD300|Develon Excavator DX220|Scania Mining Truck/i,
-		)?.[0] ?? "Chatbot quote request";
-	const name =
-		transcript
-			.match(/(?:name|nome)\s*(?:is|é|:)?\s*([A-Za-zÀ-ÿ' -]{2,60})/i)?.[1]
-			?.trim() ?? email.split("@")[0].replace(/[._-]+/g, " ");
+		)?.[0] ??
+		transcript.match(
+			/\b(loader|excavator|truck|pickup|machinery|equipment)\b/i,
+		)?.[0] ??
+		"";
+	const name = extractContactName(userTexts, transcript);
+	const rentalDates = extractRentalDates(transcript);
+	const projectUse =
+		extractFirstMatch(transcript, [
+			/(?:for|para)\s+([^\n,.]+?)(?:\s+from|\s+dia|\s+\d{1,2}\s*-|$)/i,
+		]) || "";
+	const location = extractFirstMatch(transcript, [
+		/(?:delivery|pickup|local|location|entrega)\s*(?:in|at|em|:)?\s*([^\n,]+?)(?:\s+\d{1,2}\s*(?:am|pm)|$)/i,
+	]);
+	const hasRequiredQuoteDetails = Boolean(
+		name &&
+			email &&
+			phone &&
+			vehicle &&
+			rentalDates.startDate &&
+			rentalDates.returnDate &&
+			location &&
+			projectUse,
+	);
+
+	if (!hasRequiredQuoteDetails) return null;
 
 	return {
 		fleetRequest: vehicle,
 		category: /loader|excavator|equipment|máquina|maquina/i.test(transcript)
 			? "Heavy equipment"
 			: "Vehicle",
-		province: "Provided in chatbot conversation",
-		location: "Provided in chatbot conversation",
-		startDate: "Provided in chatbot conversation",
-		returnDate: "Provided in chatbot conversation",
-		projectUse: `Chatbot quote request details:\n${transcript}`,
+		province: location,
+		location,
+		startDate: rentalDates.startDate,
+		returnDate: rentalDates.returnDate,
+		projectUse: `${projectUse}\n\nChatbot quote request details:\n${transcript}`,
 		extras: [],
 		companyName: "Provided via chatbot",
 		nuit: "",
 		sector: "Other",
 		contactPerson: name,
-		phone: phone || "Provided by email only",
+		phone,
 		email,
 		address: "",
 	} satisfies BookingRequest;
