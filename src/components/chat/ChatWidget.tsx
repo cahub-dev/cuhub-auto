@@ -2,6 +2,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, isTextUIPart } from "ai";
 import { Loader2, MessageCircle, Send, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { BookingRequest } from "#/lib/booking-message";
 
 type Language = "en" | "pt";
 
@@ -21,6 +22,33 @@ const ERROR_MESSAGE: Record<Language, string> = {
 	en: "The assistant is temporarily unavailable. Please try again in a moment.",
 	pt: "O assistente está temporariamente indisponível. Tente novamente dentro de instantes.",
 };
+const QUOTE_STATUS: Record<
+	Language,
+	{
+		ready: string;
+		send: string;
+		sending: string;
+		success: string;
+		error: string;
+	}
+> = {
+	en: {
+		ready: "Ready to send this quote request to CA HUB AUTO?",
+		send: "Send quote request",
+		sending: "Sending...",
+		success: "Quote request sent. Our team will reply by email.",
+		error: "Unable to send the quote request. Please try again.",
+	},
+	pt: {
+		ready: "Pronto para enviar este pedido de cotação à CA HUB AUTO?",
+		send: "Enviar pedido de cotação",
+		sending: "A enviar...",
+		success: "Pedido de cotação enviado. A nossa equipa responderá por email.",
+		error: "Não foi possível enviar o pedido. Tente novamente.",
+	},
+};
+
+type QuoteSubmitStatus = "idle" | "sending" | "success" | "error";
 
 function MessageContent({ content }: { content: string }) {
 	const lines = content.split("\n");
@@ -88,11 +116,62 @@ function InlineMarkdown({ text }: { text: string }) {
 	});
 }
 
+function getMessageText(message: { parts: unknown[] }) {
+	return message.parts
+		.filter(isTextUIPart)
+		.map((part) => part.text)
+		.join("")
+		.trim();
+}
+
+function buildChatQuoteRequest(messages: { role: string; parts: unknown[] }[]) {
+	const userTexts = messages
+		.filter((message) => message.role === "user")
+		.map(getMessageText)
+		.filter(Boolean);
+	const transcript = userTexts.join("\n");
+	const email = transcript.match(/[\w.+-]+@[\w.-]+\.[a-zA-Z]{2,}/)?.[0] ?? "";
+	const phone =
+		transcript.match(/(?:\+?\d[\d\s().-]{6,}\d)/)?.[0]?.trim() ?? "";
+
+	if (!email || !userTexts.length) return null;
+
+	const vehicle =
+		transcript.match(
+			/Toyota Land Cruiser|Nissan Navara Single Cab|Nissan Navara Double Cab|Develon Loader SD300|Develon Excavator DX220|Scania Mining Truck/i,
+		)?.[0] ?? "Chatbot quote request";
+	const name =
+		transcript
+			.match(/(?:name|nome)\s*(?:is|é|:)?\s*([A-Za-zÀ-ÿ' -]{2,60})/i)?.[1]
+			?.trim() ?? email.split("@")[0].replace(/[._-]+/g, " ");
+
+	return {
+		fleetRequest: vehicle,
+		category: /loader|excavator|equipment|máquina|maquina/i.test(transcript)
+			? "Heavy equipment"
+			: "Vehicle",
+		province: "Provided in chatbot conversation",
+		location: "Provided in chatbot conversation",
+		startDate: "Provided in chatbot conversation",
+		returnDate: "Provided in chatbot conversation",
+		projectUse: `Chatbot quote request details:\n${transcript}`,
+		extras: [],
+		companyName: "Provided via chatbot",
+		nuit: "",
+		sector: "Other",
+		contactPerson: name,
+		phone: phone || "Provided by email only",
+		email,
+		address: "",
+	} satisfies BookingRequest;
+}
+
 export function ChatWidget() {
 	const [open, setOpen] = useState(false);
 	const [language, setLanguage] = useState<Language>("en");
 	const [input, setInput] = useState("");
 	const [coolingDown, setCoolingDown] = useState(false);
+	const [quoteStatus, setQuoteStatus] = useState<QuoteSubmitStatus>("idle");
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const languageRef = useRef(language);
 	const cooldownRef = useRef<number | undefined>(undefined);
@@ -116,6 +195,10 @@ export function ChatWidget() {
 
 	const isLoading = status === "submitted" || status === "streaming";
 	const sendDisabled = !input.trim() || isLoading || coolingDown;
+	const quoteRequest = useMemo(
+		() => buildChatQuoteRequest(messages),
+		[messages],
+	);
 
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -130,6 +213,7 @@ export function ChatWidget() {
 	const handleLanguageChange = (lang: Language) => {
 		setLanguage(lang);
 		setMessages([]);
+		setQuoteStatus("idle");
 	};
 
 	const submitText = (text: string) => {
@@ -137,13 +221,33 @@ export function ChatWidget() {
 		if (!trimmed || isLoading || coolingDown) return;
 		sendMessage({ text: trimmed });
 		setInput("");
+		if (quoteStatus === "error") setQuoteStatus("idle");
 		setCoolingDown(true);
 		cooldownRef.current = window.setTimeout(() => {
 			setCoolingDown(false);
 		}, SEND_COOLDOWN_MS);
 	};
 
+	const submitQuoteRequest = async () => {
+		if (!quoteRequest || quoteStatus === "sending") return;
+		setQuoteStatus("sending");
+
+		try {
+			const response = await fetch("/api/booking", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(quoteRequest),
+			});
+
+			if (!response.ok) throw new Error("Unable to send booking request");
+			setQuoteStatus("success");
+		} catch {
+			setQuoteStatus("error");
+		}
+	};
+
 	const showQuickReplies = messages.length === 0;
+	const showQuoteSubmit = quoteRequest && quoteStatus !== "success";
 
 	return (
 		<div className="fixed inset-x-3 bottom-3 z-50 flex flex-col items-stretch gap-3 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:items-end">
@@ -311,6 +415,55 @@ export function ChatWidget() {
 									}}
 								>
 									{ERROR_MESSAGE[language]}
+								</div>
+							</div>
+						)}
+
+						{showQuoteSubmit && (
+							<div className="flex justify-start">
+								<div
+									className="max-w-[85%] rounded-2xl rounded-tl-none px-4 py-3 text-sm border space-y-2"
+									style={{
+										background: "var(--surface)",
+										borderColor: "var(--line)",
+										color: "var(--foreground)",
+									}}
+								>
+									<p>{QUOTE_STATUS[language].ready}</p>
+									<button
+										type="button"
+										disabled={quoteStatus === "sending"}
+										onClick={submitQuoteRequest}
+										className="rounded-full px-3 py-1.5 text-xs font-semibold transition-opacity disabled:opacity-60"
+										style={{
+											background: "var(--color-coral-glow-500)",
+											color: "#fff",
+										}}
+									>
+										{quoteStatus === "sending"
+											? QUOTE_STATUS[language].sending
+											: QUOTE_STATUS[language].send}
+									</button>
+									{quoteStatus === "error" && (
+										<p style={{ color: "var(--color-coral-glow-500)" }}>
+											{QUOTE_STATUS[language].error}
+										</p>
+									)}
+								</div>
+							</div>
+						)}
+
+						{quoteStatus === "success" && (
+							<div className="flex justify-start">
+								<div
+									className="max-w-[85%] rounded-2xl rounded-tl-none px-4 py-3 text-sm border"
+									style={{
+										background: "var(--surface)",
+										borderColor: "var(--color-coral-glow-500)",
+										color: "var(--foreground)",
+									}}
+								>
+									{QUOTE_STATUS[language].success}
 								</div>
 							</div>
 						)}
