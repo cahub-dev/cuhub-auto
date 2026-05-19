@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Resend } from "resend";
 import { z } from "zod";
 import { buildBookingMessage } from "#/lib/booking-message";
+import { SALES_CONTACT } from "#/lib/contact-details";
 
 const bookingRequestSchema = z.object({
 	fleetRequest: z.string().trim().min(1),
@@ -56,13 +57,13 @@ export const Route = createFileRoute("/api/booking")({
 			POST: async ({ request }) => {
 				const resendApiKey = process.env.RESEND_API_KEY;
 				const fromEmail = process.env.BOOKING_FROM_EMAIL;
-				const salesEmail = process.env.BOOKING_SALES_EMAIL;
+				const salesEmail =
+					process.env.BOOKING_SALES_EMAIL ?? SALES_CONTACT.email;
 
-				if (!resendApiKey || !fromEmail || !salesEmail) {
+				if (!resendApiKey || !fromEmail) {
 					return Response.json(
 						{
-							error:
-								"Missing RESEND_API_KEY, BOOKING_FROM_EMAIL, or BOOKING_SALES_EMAIL",
+							error: "Missing RESEND_API_KEY or BOOKING_FROM_EMAIL",
 						},
 						{ status: 500 },
 					);

@@ -1,9 +1,11 @@
+import { SALES_CONTACT } from "#/lib/contact-details";
+
 export const BUSINESS_DATA = {
 	company: {
 		name: "CA HUB AUTO",
-		phone: "+258 87 754 1015",
-		whatsapp: "258877541015",
-		email: "cahubauto@gmail.com",
+		phone: SALES_CONTACT.phoneDisplay,
+		whatsapp: SALES_CONTACT.whatsapp,
+		email: SALES_CONTACT.email,
 		address: "Rua de Micaia, Q.56, nº115, Maputo",
 		businessHours: "Monday–Saturday, 07:00–18:00",
 	},
@@ -197,16 +199,18 @@ If any required detail is missing, explain exactly what is missing and ask for i
 
 After collecting all required quote details: summarize the request and tell the visitor to use the quote request button shown in the chat to send it to CA HUB AUTO. Do not claim the request was sent until the site confirms it.
 
-You can also show direct contact options on separate lines:
-  WhatsApp: https://wa.me/${d.company.whatsapp}
-  Email: mailto:${d.company.email}
+If the visitor asks for direct contact details, show only:
+  Sales contact: Verónica — ${d.company.phone}
+  Email: ${d.company.email}
 
 ---
 
-ESCALATION — hand off immediately for:
-- Complaints, urgent issues, or breakdowns → say: "I'm connecting you with our operations team right now." Then show WhatsApp link.
-- Questions you cannot answer → offer both contact options.
-- 2+ messages of frustration → stop, escalate immediately, show contact options.
+ESCALATION — automatic support forwarding:
+- Use escalation for complaints, urgent issues, breakdowns, questions you cannot answer, requests for a human agent, or 2+ messages of frustration.
+- Do not tell the visitor to email manually and do not route them to WhatsApp from the chat.
+- Ask for their name, email address, and phone number if any of those are missing.
+- Once name, email, and phone are present, say the request is ready to be forwarded to support. Do not claim it was sent until the site confirms it.
+- After the site confirms forwarding, the user will see a confirmation that support will get in touch soon.
 
 ---
 

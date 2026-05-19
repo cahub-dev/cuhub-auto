@@ -49,6 +49,36 @@ const QUOTE_STATUS: Record<
 };
 
 type QuoteSubmitStatus = "idle" | "sending" | "success" | "error";
+type EscalationStatus = "idle" | "sending" | "success" | "error";
+
+const ESCALATION_STATUS: Record<
+	Language,
+	{
+		missing: string;
+		sending: string;
+		success: string;
+		error: string;
+	}
+> = {
+	en: {
+		missing:
+			"I can forward this to our support team. Please share your name, email, and phone number so they can get back to you.",
+		sending: "Forwarding this to our support team...",
+		success:
+			"I’ve forwarded this to our support team. They will get in touch with you soon.",
+		error:
+			"I couldn’t forward this automatically. Please try again in a moment.",
+	},
+	pt: {
+		missing:
+			"Posso encaminhar isto para a nossa equipa de suporte. Por favor, envie o seu nome, email e telefone para que possam entrar em contacto consigo.",
+		sending: "A encaminhar para a nossa equipa de suporte...",
+		success:
+			"Encaminhei o pedido para a nossa equipa de suporte. Entrarão em contacto consigo em breve.",
+		error:
+			"Não consegui encaminhar automaticamente. Por favor, tente novamente dentro de instantes.",
+	},
+};
 
 function MessageContent({ content }: { content: string }) {
 	const lines = content.split("\n");
@@ -243,12 +273,61 @@ function buildChatQuoteRequest(messages: { role: string; parts: unknown[] }[]) {
 	} satisfies BookingRequest;
 }
 
+function buildTranscript(messages: { role: string; parts: unknown[] }[]) {
+	return messages
+		.map((message) => {
+			const text = getMessageText(message);
+			return text ? `${message.role}: ${text}` : "";
+		})
+		.filter(Boolean)
+		.join("\n\n");
+}
+
+function hasEscalationIntent(messages: { role: string; parts: unknown[] }[]) {
+	const transcript = buildTranscript(messages);
+	return /\b(complaint|urgent|breakdown|broken|frustrated|angry|agent|human|support|can't help|cannot help|unable to help|can't answer|cannot answer|não consigo|nao consigo|reclamação|reclamacao|urgente|avaria|avariado|humano|suporte|atendimento)\b/i.test(
+		transcript,
+	);
+}
+
+function buildEscalationRequest(
+	messages: { role: string; parts: unknown[] }[],
+	language: Language,
+) {
+	if (!hasEscalationIntent(messages)) return null;
+
+	const userTexts = messages
+		.filter((message) => message.role === "user")
+		.map(getMessageText)
+		.filter(Boolean);
+	const transcript = buildTranscript(messages);
+	const userTranscript = userTexts.join("\n");
+	const email =
+		userTranscript.match(/[\w.+-]+@[\w.-]+\.[a-zA-Z]{2,}/)?.[0] ?? "";
+	const phone =
+		userTranscript.match(/(?:\+?\d[\d\s().-]{6,}\d)/)?.[0]?.trim() ?? "";
+	const name = extractContactName(userTexts, userTranscript);
+
+	if (!name || !email || !phone) return null;
+
+	return {
+		name,
+		email,
+		phone,
+		language,
+		reason: "Chatbot support escalation",
+		transcript,
+	};
+}
+
 export function ChatWidget() {
 	const [open, setOpen] = useState(false);
 	const [language, setLanguage] = useState<Language>("en");
 	const [input, setInput] = useState("");
 	const [coolingDown, setCoolingDown] = useState(false);
 	const [quoteStatus, setQuoteStatus] = useState<QuoteSubmitStatus>("idle");
+	const [escalationStatus, setEscalationStatus] =
+		useState<EscalationStatus>("idle");
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const languageRef = useRef(language);
 	const cooldownRef = useRef<number | undefined>(undefined);
@@ -276,6 +355,14 @@ export function ChatWidget() {
 		() => buildChatQuoteRequest(messages),
 		[messages],
 	);
+	const escalationNeeded = useMemo(
+		() => hasEscalationIntent(messages),
+		[messages],
+	);
+	const escalationRequest = useMemo(
+		() => buildEscalationRequest(messages, language),
+		[messages, language],
+	);
 
 	useEffect(() => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -291,6 +378,7 @@ export function ChatWidget() {
 		setLanguage(lang);
 		setMessages([]);
 		setQuoteStatus("idle");
+		setEscalationStatus("idle");
 	};
 
 	const submitText = (text: string) => {
@@ -299,6 +387,7 @@ export function ChatWidget() {
 		sendMessage({ text: trimmed });
 		setInput("");
 		if (quoteStatus === "error") setQuoteStatus("idle");
+		if (escalationStatus === "error") setEscalationStatus("idle");
 		setCoolingDown(true);
 		cooldownRef.current = window.setTimeout(() => {
 			setCoolingDown(false);
@@ -323,8 +412,38 @@ export function ChatWidget() {
 		}
 	};
 
+	useEffect(() => {
+		if (!escalationRequest || escalationStatus !== "idle") return;
+
+		let cancelled = false;
+		setEscalationStatus("sending");
+
+		async function submitEscalation() {
+			try {
+				const response = await fetch("/api/chat-escalation", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(escalationRequest),
+				});
+
+				if (!response.ok) throw new Error("Unable to send support request");
+				if (!cancelled) setEscalationStatus("success");
+			} catch {
+				if (!cancelled) setEscalationStatus("error");
+			}
+		}
+
+		submitEscalation();
+
+		return () => {
+			cancelled = true;
+		};
+	}, [escalationRequest, escalationStatus]);
+
 	const showQuickReplies = messages.length === 0;
 	const showQuoteSubmit = quoteRequest && quoteStatus !== "success";
+	const showEscalationMissing =
+		escalationNeeded && !escalationRequest && escalationStatus !== "success";
 
 	return (
 		<div className="fixed inset-x-3 bottom-3 z-50 flex flex-col items-stretch gap-3 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:items-end">
@@ -492,6 +611,54 @@ export function ChatWidget() {
 									}}
 								>
 									{ERROR_MESSAGE[language]}
+								</div>
+							</div>
+						)}
+
+						{showEscalationMissing && (
+							<div className="flex justify-start">
+								<div
+									className="max-w-[85%] rounded-2xl rounded-tl-none px-4 py-3 text-sm border"
+									style={{
+										background: "var(--surface)",
+										borderColor: "var(--line)",
+										color: "var(--foreground)",
+									}}
+								>
+									{ESCALATION_STATUS[language].missing}
+								</div>
+							</div>
+						)}
+
+						{escalationStatus === "sending" && (
+							<div className="flex justify-start">
+								<div
+									className="max-w-[85%] rounded-2xl rounded-tl-none px-4 py-3 text-sm border"
+									style={{
+										background: "var(--surface)",
+										borderColor: "var(--line)",
+										color: "var(--foreground)",
+									}}
+								>
+									{ESCALATION_STATUS[language].sending}
+								</div>
+							</div>
+						)}
+
+						{(escalationStatus === "success" ||
+							escalationStatus === "error") && (
+							<div className="flex justify-start">
+								<div
+									className="max-w-[85%] rounded-2xl rounded-tl-none px-4 py-3 text-sm border"
+									style={{
+										background: "var(--surface)",
+										borderColor: "var(--color-coral-glow-500)",
+										color: "var(--foreground)",
+									}}
+								>
+									{escalationStatus === "success"
+										? ESCALATION_STATUS[language].success
+										: ESCALATION_STATUS[language].error}
 								</div>
 							</div>
 						)}

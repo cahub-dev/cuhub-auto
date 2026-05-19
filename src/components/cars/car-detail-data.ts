@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 import { EQUIPMENT_DETAILS } from "#/components/cars/equipment-detail-data";
+import { SALES_CONTACT } from "#/lib/contact-details";
 
 export interface CarSpec {
 	label: string;
@@ -43,8 +44,8 @@ export interface CarDetailData {
 }
 
 const CONTACT = {
-	whatsappNumber: "+258877541015",
-	email: "info@cahub.co.mz",
+	whatsappNumber: SALES_CONTACT.phoneE164,
+	email: SALES_CONTACT.email,
 };
 
 const STANDARD_INCLUDED = [
