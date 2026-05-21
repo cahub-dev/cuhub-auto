@@ -10,6 +10,7 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { ChatWidget } from "#/components/chat/ChatWidget";
 import { Header } from "#/components/Header";
 import { Footer } from "#/components/layout/footer";
+import { SALES_CONTACT } from "#/lib/contact-details";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import { SITE_NAME, SITE_URL } from "../lib/seo";
 import appCss from "../styles.css?url";
@@ -25,8 +26,8 @@ const LOCAL_BUSINESS_SCHEMA = {
 	description:
 		"Vehicle and heavy equipment rental for professional operations across Mozambique.",
 	url: SITE_URL,
-	telephone: "+258877541015",
-	email: "cahubauto@gmail.com",
+	telephone: SALES_CONTACT.phoneE164,
+	email: SALES_CONTACT.email,
 	address: {
 		"@type": "PostalAddress",
 		streetAddress: "Rua de Micaia, Q.56, nº115",

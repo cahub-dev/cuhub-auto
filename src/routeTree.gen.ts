@@ -16,6 +16,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CarsIndexRouteImport } from './routes/cars/index'
 import { Route as FleetCarIdRouteImport } from './routes/fleet_/$carId'
 import { Route as BookingNewRouteImport } from './routes/booking/new'
+import { Route as ApiChatEscalationRouteImport } from './routes/api/chat-escalation'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as ApiBookingRouteImport } from './routes/api/booking'
 
@@ -54,6 +55,11 @@ const BookingNewRoute = BookingNewRouteImport.update({
   path: '/booking/new',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiChatEscalationRoute = ApiChatEscalationRouteImport.update({
+  id: '/api/chat-escalation',
+  path: '/api/chat-escalation',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
@@ -72,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/fleet': typeof FleetRoute
   '/api/booking': typeof ApiBookingRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/chat-escalation': typeof ApiChatEscalationRoute
   '/booking/new': typeof BookingNewRoute
   '/fleet/$carId': typeof FleetCarIdRoute
   '/cars/': typeof CarsIndexRoute
@@ -83,6 +90,7 @@ export interface FileRoutesByTo {
   '/fleet': typeof FleetRoute
   '/api/booking': typeof ApiBookingRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/chat-escalation': typeof ApiChatEscalationRoute
   '/booking/new': typeof BookingNewRoute
   '/fleet/$carId': typeof FleetCarIdRoute
   '/cars': typeof CarsIndexRoute
@@ -95,6 +103,7 @@ export interface FileRoutesById {
   '/fleet': typeof FleetRoute
   '/api/booking': typeof ApiBookingRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/chat-escalation': typeof ApiChatEscalationRoute
   '/booking/new': typeof BookingNewRoute
   '/fleet_/$carId': typeof FleetCarIdRoute
   '/cars/': typeof CarsIndexRoute
@@ -108,6 +117,7 @@ export interface FileRouteTypes {
     | '/fleet'
     | '/api/booking'
     | '/api/chat'
+    | '/api/chat-escalation'
     | '/booking/new'
     | '/fleet/$carId'
     | '/cars/'
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/fleet'
     | '/api/booking'
     | '/api/chat'
+    | '/api/chat-escalation'
     | '/booking/new'
     | '/fleet/$carId'
     | '/cars'
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/fleet'
     | '/api/booking'
     | '/api/chat'
+    | '/api/chat-escalation'
     | '/booking/new'
     | '/fleet_/$carId'
     | '/cars/'
@@ -142,6 +154,7 @@ export interface RootRouteChildren {
   FleetRoute: typeof FleetRoute
   ApiBookingRoute: typeof ApiBookingRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiChatEscalationRoute: typeof ApiChatEscalationRoute
   BookingNewRoute: typeof BookingNewRoute
   FleetCarIdRoute: typeof FleetCarIdRoute
   CarsIndexRoute: typeof CarsIndexRoute
@@ -198,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookingNewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/chat-escalation': {
+      id: '/api/chat-escalation'
+      path: '/api/chat-escalation'
+      fullPath: '/api/chat-escalation'
+      preLoaderRoute: typeof ApiChatEscalationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/chat': {
       id: '/api/chat'
       path: '/api/chat'
@@ -222,6 +242,7 @@ const rootRouteChildren: RootRouteChildren = {
   FleetRoute: FleetRoute,
   ApiBookingRoute: ApiBookingRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiChatEscalationRoute: ApiChatEscalationRoute,
   BookingNewRoute: BookingNewRoute,
   FleetCarIdRoute: FleetCarIdRoute,
   CarsIndexRoute: CarsIndexRoute,

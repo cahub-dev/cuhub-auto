@@ -12,10 +12,11 @@ import type {
 	CarDetailData,
 	CarExtra,
 } from "#/components/cars/car-detail-data";
+import { SALES_CONTACT } from "#/lib/contact-details";
 
 const CONTACT = {
-	whatsappNumber: "+258877541015",
-	email: "info@cahub.co.mz",
+	whatsappNumber: SALES_CONTACT.phoneE164,
+	email: SALES_CONTACT.email,
 };
 
 const INCLUDED = [

@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 import type React from "react";
+import { SALES_CONTACT } from "#/lib/contact-details";
 
 const FOOTER_LINKS = [
 	{ label: "Home", to: "/" },
@@ -59,30 +60,23 @@ export function Footer(): React.JSX.Element {
 								</span>
 							</p>
 							<a
-								href="tel:+258877541015"
+								href={`tel:${SALES_CONTACT.phoneE164}`}
 								className="flex items-center gap-3 !text-white no-underline hover:!text-primary"
 							>
 								<Phone className="size-4 text-primary" aria-hidden="true" />
-								+258 87 754 1015
+								{SALES_CONTACT.name} – {SALES_CONTACT.phoneDisplay}
 							</a>
 							<a
-								href="tel:+258877030101"
-								className="flex items-center gap-3 !text-white no-underline hover:!text-primary"
-							>
-								<Phone className="size-4 text-primary" aria-hidden="true" />
-								+258 87 703 0101
-							</a>
-							<a
-								href="mailto:cahubauto@gmail.com"
+								href={`mailto:${SALES_CONTACT.email}`}
 								className="flex items-center gap-3 !text-white no-underline hover:!text-primary"
 							>
 								<Mail className="size-4 text-primary" aria-hidden="true" />
-								cahubauto@gmail.com
+								{SALES_CONTACT.email}
 							</a>
 						</div>
 						<div className="mt-8 flex items-center gap-4">
 							<a
-								href="https://instagram.com"
+								href="https://www.instagram.com/cahub.auto.rental"
 								target="_blank"
 								rel="noopener noreferrer"
 								aria-label="Follow CA HUB AUTO on Instagram"
@@ -91,7 +85,7 @@ export function Footer(): React.JSX.Element {
 								<Instagram className="size-5" aria-hidden="true" />
 							</a>
 							<a
-								href="https://linkedin.com"
+								href="https://www.linkedin.com/in/cahub-auto-rental/"
 								target="_blank"
 								rel="noopener noreferrer"
 								aria-label="Follow CA HUB AUTO on LinkedIn"

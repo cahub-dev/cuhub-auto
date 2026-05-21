@@ -5,8 +5,9 @@ import { useState } from "react";
 import { Button } from "#/components/ui/button";
 import { Input } from "#/components/ui/input";
 import { Textarea } from "#/components/ui/textarea";
+import { SALES_CONTACT } from "#/lib/contact-details";
 
-const CONTACT_EMAIL = "cahubauto@gmail.com";
+const CONTACT_EMAIL = SALES_CONTACT.email;
 
 export function ContactForm(): React.JSX.Element {
 	const [name, setName] = useState("");
@@ -42,10 +43,7 @@ export function ContactForm(): React.JSX.Element {
 					</h2>
 				</div>
 
-				<form
-					onSubmit={handleSubmit}
-					className=" mx-auto max-w-3xl space-y-5"
-				>
+				<form onSubmit={handleSubmit} className=" mx-auto max-w-3xl space-y-5">
 					<div className="grid gap-5 md:grid-cols-2">
 						<Input
 							value={name}

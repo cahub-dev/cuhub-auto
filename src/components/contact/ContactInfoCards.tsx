@@ -1,5 +1,6 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 import type React from "react";
+import { SALES_CONTACT } from "#/lib/contact-details";
 
 const CONTACT_CARDS = [
 	{
@@ -14,12 +15,12 @@ const CONTACT_CARDS = [
 	{
 		title: "Email Address",
 		icon: Mail,
-		lines: ["cahubauto@gmail.com"],
+		lines: [SALES_CONTACT.email],
 	},
 	{
 		title: "Phone Number",
 		icon: Phone,
-		lines: ["+258 87 754 1015", "+258 87 703 0101"],
+		lines: [`${SALES_CONTACT.name} – ${SALES_CONTACT.phoneDisplay}`],
 	},
 ] as const;
 

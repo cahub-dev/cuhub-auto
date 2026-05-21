@@ -1,5 +1,7 @@
-export const BOOKING_WHATSAPP_NUMBER = "+258848630631";
-export const BOOKING_EMAIL = "cahubauto@gmail.com";
+import { SALES_CONTACT } from "#/lib/contact-details";
+
+export const BOOKING_WHATSAPP_NUMBER = SALES_CONTACT.phoneE164;
+export const BOOKING_EMAIL = SALES_CONTACT.email;
 
 export interface BookingRequest {
 	fleetRequest: string;
