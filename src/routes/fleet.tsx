@@ -6,6 +6,7 @@ import { FEATURED_FLEET } from "#/components/cars/FeaturedFleet";
 import { FleetCard } from "#/components/cars/FleetCard";
 import { FleetHero } from "#/components/cars/FleetHero";
 import { Button } from "#/components/ui/button";
+import { useI18n } from "#/lib/i18n";
 import { buildPageMeta } from "#/lib/seo";
 
 export const Route = createFileRoute("/fleet")({
@@ -31,6 +32,7 @@ const SECTORS = [
 ];
 
 function FleetPage(): React.JSX.Element {
+	const { t } = useI18n();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 	const [selectedSectors, setSelectedSectors] = useState<Set<string>>(
@@ -116,13 +118,13 @@ function FleetPage(): React.JSX.Element {
 						<aside className="self-start rounded-2xl bg-white p-6 shadow-[0_10px_28px_rgba(0,0,0,0.05)] lg:sticky lg:top-24">
 							<div className="mb-7">
 								<h2 className="mb-4 text-xl font-bold text-foreground">
-									Search
+									{t.fleetPage.search}
 								</h2>
 								<label className="relative block">
-									<span className="sr-only">Search fleet</span>
+									<span className="sr-only">{t.fleetPage.searchFleet}</span>
 									<input
 										type="search"
-										placeholder="Search..."
+										placeholder={t.fleetPage.searchPlaceholder}
 										value={searchQuery}
 										onChange={(e) => setSearchQuery(e.target.value)}
 										className="h-12 w-full rounded-lg border border-border/70 bg-white px-4 pr-11 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground/40"
@@ -134,7 +136,7 @@ function FleetPage(): React.JSX.Element {
 								</label>
 							</div>
 
-							<FilterGroup title="Select Fleet">
+							<FilterGroup title={t.fleetPage.selectFleet}>
 								{CATEGORIES.map((category) => {
 									const isActive = selectedCategory === category;
 									return (
@@ -164,7 +166,7 @@ function FleetPage(): React.JSX.Element {
 								})}
 							</FilterGroup>
 
-							<FilterGroup title="Filter by Sector">
+							<FilterGroup title={t.fleetPage.sectors}>
 								{SECTORS.map((sector) => (
 									<label
 										key={sector}
@@ -187,44 +189,46 @@ function FleetPage(): React.JSX.Element {
 								disabled={!hasActiveFilters}
 								onClick={clearFilters}
 							>
-								Clear Filters
+								{t.fleetPage.clearFilters}
 							</Button>
 						</aside>
 
-						<section aria-label="Fleet results">
+						<section aria-label={t.fleetPage.resultsLabel}>
 							<div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 								<p className="text-sm font-medium text-muted-foreground">
-									Showing {filteredFleet.length}
+									{t.fleetPage.showing} {filteredFleet.length}
 									{filteredFleet.length !== FEATURED_FLEET.length &&
-										` of ${FEATURED_FLEET.length}`}{" "}
-									fleet options
+										` ${t.fleetPage.of} ${FEATURED_FLEET.length}`}{" "}
+									{t.fleetPage.units}
 								</p>
 								<select
-									aria-label="Sort fleet"
+									aria-label={t.fleetPage.sortFleet}
 									value={sortBy}
 									onChange={(e) => setSortBy(e.target.value)}
 									className="h-10 rounded-lg border border-border/70 bg-white px-3 text-sm text-foreground outline-none focus:border-primary"
 								>
-									<option value="recommended">Recommended</option>
-									<option value="vehicles-first">Vehicles first</option>
-									<option value="heavy-first">Heavy equipment first</option>
+									<option value="recommended">{t.fleetPage.recommended}</option>
+									<option value="vehicles-first">
+										{t.fleetPage.vehiclesFirst}
+									</option>
+									<option value="heavy-first">{t.fleetPage.heavyFirst}</option>
 								</select>
 							</div>
 
 							{filteredFleet.length === 0 ? (
 								<div className="flex flex-col items-center justify-center py-20 text-center">
 									<p className="text-lg font-semibold text-foreground">
-										No results found
+										{t.fleetPage.noResults}
 									</p>
 									<p className="mt-2 text-sm text-muted-foreground">
-										Try adjusting your filters or search query.
+										{t.fleetPage.tryAdjusting}
 									</p>
 									<Button
 										className="mt-6"
 										variant="outline"
 										onClick={clearFilters}
 									>
-										Clear Filters
+										{t.fleetPage.clearFilters}
 									</Button>
 								</div>
 							) : (

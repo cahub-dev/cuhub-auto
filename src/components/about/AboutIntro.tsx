@@ -1,13 +1,13 @@
-import type React from "react";
+"use client";
 
-const STATS = [
-	{ value: "2023", label: "Founded" },
-	{ value: "10", label: "Provinces" },
-	{ value: "3+", label: "Industries" },
-	{ value: "24/7", label: "Support" },
-] as const;
+import type React from "react";
+import { useI18n } from "#/lib/i18n";
+
+const STATS = ["2023", "10", "3+", "24/7"] as const;
 
 export function AboutIntro(): React.JSX.Element {
+	const { t } = useI18n();
+
 	return (
 		<section className="py-16 md:py-24">
 			<div className="page-wrap">
@@ -16,40 +16,29 @@ export function AboutIntro(): React.JSX.Element {
 					<div className="flex flex-col gap-6">
 						<div>
 							<span className="island-kicker inline-block mb-3 px-3 py-1 rounded-full text-primary font-semibold text-xs tracking-wider bg-accent">
-								WHO WE ARE
+								{t.about.introKicker}
 							</span>
 							<h2 className="display-title text-3xl md:text-4xl font-bold text-foreground tracking-tight mt-2">
-								Who is CA HUB AUTO?
+								{t.about.introTitle}
 							</h2>
 						</div>
 
-						<p className="text-base leading-relaxed text-muted-foreground">
-							Founded in 2023, CA HUB AUTO specializes in vehicle rental, providing a wide
-							range of vehicles and machinery adapted to the needs of various sectors. Our
-							fleet includes double-cab vehicles, vehicles for construction and mining,
-							excavators, wheel loaders, and other heavy equipment essential for
-							infrastructure development and mineral exploration.
-						</p>
-
-						<p className="text-base leading-relaxed text-muted-foreground">
-							With operations covering major hubs in Mozambique, CA HUB AUTO is committed
-							to offering reliable, efficient, and customized transport solutions to support
-							projects throughout the country. We cater to sectors in mining, construction,
-							and telecommunications.
-						</p>
-
-						<p className="text-base leading-relaxed text-muted-foreground">
-							Driven by professionalism and customer satisfaction, our goal is to be your
-							trusted partner in mobility and machinery services in Mozambique.
-						</p>
+						{t.about.paragraphs.map((paragraph) => (
+							<p
+								key={paragraph}
+								className="text-base leading-relaxed text-muted-foreground"
+							>
+								{paragraph}
+							</p>
+						))}
 					</div>
 
 					{/* Right: stats */}
 					<div className="flex flex-col gap-4">
 						<div className="grid grid-cols-2 gap-4">
-							{STATS.map(({ value, label }) => (
+							{STATS.map((value, idx) => (
 								<div
-									key={label}
+									key={value}
 									className="flex flex-col items-center justify-center py-8 px-4 rounded-2xl border text-center"
 									style={{
 										borderColor: "var(--line)",
@@ -66,7 +55,7 @@ export function AboutIntro(): React.JSX.Element {
 										className="text-xs font-semibold tracking-widest uppercase mt-1.5"
 										style={{ color: "var(--muted-foreground)" }}
 									>
-										{label}
+										{t.about.stats[idx]}
 									</span>
 								</div>
 							))}
@@ -81,23 +70,21 @@ export function AboutIntro(): React.JSX.Element {
 								className="text-xs font-semibold tracking-widest uppercase mb-3"
 								style={{ color: "var(--muted-foreground)" }}
 							>
-								Sectors We Serve
+								{t.about.sectorsTitle}
 							</p>
 							<div className="flex flex-wrap gap-2">
-								{["Mining", "Construction", "Infrastructure", "Telecommunications", "Rural Logistics"].map(
-									(sector) => (
-										<span
-											key={sector}
-											className="px-3 py-1.5 rounded-full text-sm font-medium border"
-											style={{
-												borderColor: "var(--line)",
-												background: "#fff",
-											}}
-										>
-											{sector}
-										</span>
-									),
-								)}
+								{t.about.sectors.map((sector) => (
+									<span
+										key={sector}
+										className="px-3 py-1.5 rounded-full text-sm font-medium border"
+										style={{
+											borderColor: "var(--line)",
+											background: "#fff",
+										}}
+									>
+										{sector}
+									</span>
+								))}
 							</div>
 						</div>
 					</div>
