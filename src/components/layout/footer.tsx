@@ -76,7 +76,7 @@ export function Footer(): React.JSX.Element {
 						</div>
 						<div className="mt-8 flex items-center gap-4">
 							<a
-								href="https://instagram.com"
+								href="https://www.instagram.com/cahub.auto.rental"
 								target="_blank"
 								rel="noopener noreferrer"
 								aria-label="Follow CA HUB AUTO on Instagram"
@@ -85,7 +85,7 @@ export function Footer(): React.JSX.Element {
 								<Instagram className="size-5" aria-hidden="true" />
 							</a>
 							<a
-								href="https://linkedin.com"
+								href="https://www.linkedin.com/in/cahub-auto-rental/"
 								target="_blank"
 								rel="noopener noreferrer"
 								aria-label="Follow CA HUB AUTO on LinkedIn"
