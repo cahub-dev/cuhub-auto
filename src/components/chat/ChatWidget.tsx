@@ -3,8 +3,7 @@ import { DefaultChatTransport, isTextUIPart } from "ai";
 import { Loader2, MessageCircle, Send, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { BookingRequest } from "#/lib/booking-message";
-
-type Language = "en" | "pt";
+import { type Language, useI18n } from "#/lib/i18n";
 
 const QUICK_REPLIES: Record<Language, string[]> = {
 	en: ["View fleet", "Get a quote", "Service areas", "Contact us"],
@@ -321,8 +320,9 @@ function buildEscalationRequest(
 }
 
 export function ChatWidget() {
+	const { language: siteLanguage, setLanguage: setSiteLanguage } = useI18n();
 	const [open, setOpen] = useState(false);
-	const [language, setLanguage] = useState<Language>("en");
+	const [language, setLanguage] = useState<Language>(siteLanguage);
 	const [input, setInput] = useState("");
 	const [coolingDown, setCoolingDown] = useState(false);
 	const [quoteStatus, setQuoteStatus] = useState<QuoteSubmitStatus>("idle");
@@ -348,6 +348,13 @@ export function ChatWidget() {
 	const { messages, sendMessage, status, setMessages, error } = useChat({
 		transport,
 	});
+
+	useEffect(() => {
+		if (messages.length > 0 || siteLanguage === language) return;
+		setLanguage(siteLanguage);
+		setQuoteStatus("idle");
+		setEscalationStatus("idle");
+	}, [language, messages.length, siteLanguage]);
 
 	const isLoading = status === "submitted" || status === "streaming";
 	const sendDisabled = !input.trim() || isLoading || coolingDown;
@@ -376,6 +383,7 @@ export function ChatWidget() {
 
 	const handleLanguageChange = (lang: Language) => {
 		setLanguage(lang);
+		setSiteLanguage(lang);
 		setMessages([]);
 		setQuoteStatus("idle");
 		setEscalationStatus("idle");
@@ -493,7 +501,7 @@ export function ChatWidget() {
 							onClick={() => setOpen(false)}
 							className="transition-colors ml-1"
 							style={{ color: "var(--muted-foreground)" }}
-							aria-label="Close chat"
+							aria-label={language === "en" ? "Close chat" : "Fechar chat"}
 						>
 							<X size={16} />
 						</button>
@@ -758,7 +766,7 @@ export function ChatWidget() {
 								background: "var(--color-coral-glow-500)",
 								color: "#fff",
 							}}
-							aria-label="Send"
+							aria-label={language === "en" ? "Send" : "Enviar"}
 						>
 							<Send size={14} />
 						</button>
@@ -772,7 +780,15 @@ export function ChatWidget() {
 				onClick={() => setOpen((v) => !v)}
 				className="w-14 h-14 rounded-full shadow-lg flex items-center justify-center self-end transition-all hover:scale-105 active:scale-95"
 				style={{ background: "var(--color-coral-glow-500)", color: "#fff" }}
-				aria-label={open ? "Close chat" : "Open chat"}
+				aria-label={
+					open
+						? language === "en"
+							? "Close chat"
+							: "Fechar chat"
+						: language === "en"
+							? "Open chat"
+							: "Abrir chat"
+				}
 			>
 				{open ? <X size={22} /> : <MessageCircle size={22} />}
 			</button>
