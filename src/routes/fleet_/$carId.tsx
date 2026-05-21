@@ -3,6 +3,7 @@ import type React from "react";
 import { CarDetail } from "#/components/cars/CarDetail";
 import { getCarDetail } from "#/components/cars/car-detail-data";
 import { Button } from "#/components/ui/button";
+import { useI18n } from "#/lib/i18n";
 import { SITE_NAME, SITE_URL } from "#/lib/seo";
 
 export const Route = createFileRoute("/fleet_/$carId")({
@@ -59,6 +60,7 @@ export const Route = createFileRoute("/fleet_/$carId")({
 });
 
 function FleetDetailPage(): React.JSX.Element {
+	const { t } = useI18n();
 	const { carId } = Route.useParams();
 	const car = getCarDetail(carId);
 
@@ -67,13 +69,13 @@ function FleetDetailPage(): React.JSX.Element {
 			<div className="page-wrap py-16">
 				<div className="island-shell rounded-2xl p-8 text-center">
 					<h1 className="display-title mb-3 text-3xl font-bold text-foreground">
-						Vehicle not found
+						{t.carDetail.notFoundTitle}
 					</h1>
 					<p className="mx-auto mb-6 max-w-xl text-muted-foreground">
-						This fleet item is not available in the current catalogue.
+						{t.carDetail.notFoundDescription}
 					</p>
 					<Button asChild>
-						<Link to="/fleet">Back to fleet</Link>
+						<Link to="/fleet">{t.carDetail.backToFleet}</Link>
 					</Button>
 				</div>
 			</div>

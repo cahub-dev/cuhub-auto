@@ -1,13 +1,22 @@
+"use client";
+
 import { Check, X } from "lucide-react";
 import type React from "react";
 import type { CarDetailData } from "#/components/cars/car-detail-data";
+import { useI18n } from "#/lib/i18n";
 
-export function CarDetailContent({ car }: { car: CarDetailData }): React.JSX.Element {
+export function CarDetailContent({
+	car,
+}: {
+	car: CarDetailData;
+}): React.JSX.Element {
+	const { t } = useI18n();
+
 	return (
 		<div className="space-y-10">
 			<section>
 				<h2 className="display-title mb-4 text-2xl font-bold text-foreground">
-					About this Vehicle
+					{t.carDetail.about}
 				</h2>
 				<p className="max-w-3xl text-base leading-7 text-muted-foreground">
 					{car.description}
@@ -16,7 +25,7 @@ export function CarDetailContent({ car }: { car: CarDetailData }): React.JSX.Ele
 
 			<section>
 				<h2 className="display-title mb-5 text-2xl font-bold text-foreground">
-					Included and Excluded
+					{t.carDetail.includedExcluded}
 				</h2>
 				<div className="grid gap-4 md:grid-cols-2">
 					<div className="space-y-4">
@@ -34,7 +43,7 @@ export function CarDetailContent({ car }: { car: CarDetailData }): React.JSX.Ele
 
 			<section>
 				<h2 className="display-title mb-4 text-2xl font-bold text-foreground">
-					Top Highlights
+					{t.carDetail.highlights}
 				</h2>
 				<ul className="space-y-4">
 					{car.highlights.map((item) => (
@@ -63,7 +72,10 @@ function ListItem({
 	return (
 		<div className="flex items-start gap-3">
 			{isIncluded ? (
-				<Check className="mt-0.5 size-5 shrink-0 text-green-500" aria-hidden="true" />
+				<Check
+					className="mt-0.5 size-5 shrink-0 text-green-500"
+					aria-hidden="true"
+				/>
 			) : (
 				<X className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
 			)}

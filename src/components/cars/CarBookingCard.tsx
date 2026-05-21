@@ -11,6 +11,7 @@ import {
 	buildVehicleBookingMailtoUrl,
 	buildVehicleBookingWhatsAppUrl,
 } from "#/lib/booking-message";
+import { useI18n } from "#/lib/i18n";
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
@@ -45,6 +46,7 @@ export function CarBookingCard({
 }: {
 	car: CarDetailData;
 }): React.JSX.Element {
+	const { t } = useI18n();
 	const today = toDateInput(new Date());
 	const tomorrow = toDateInput(addDays(new Date(), 1));
 	const [pickupDate, setPickupDate] = useState(today);
@@ -91,23 +93,23 @@ export function CarBookingCard({
 	return (
 		<aside className="w-full self-start rounded-2xl bg-white p-6 shadow-[0_10px_28px_rgba(0,0,0,0.05)] lg:sticky lg:top-24">
 			<h2 className="display-title mb-5 text-2xl font-bold text-foreground">
-				Reserve this Vehicle
+				{t.carDetail.reserve}
 			</h2>
 
 			<div className="space-y-4">
 				<div className="grid grid-cols-2 gap-3">
-					<Field label="Pickup date">
+					<Field label={t.carDetail.pickupDate}>
 						<Input
-							aria-label="Pickup date"
+							aria-label={t.carDetail.pickupDate}
 							type="date"
 							value={pickupDate}
 							min={today}
 							onChange={(event) => setPickupDate(event.target.value)}
 						/>
 					</Field>
-					<Field label="Return date">
+					<Field label={t.carDetail.returnDate}>
 						<Input
-							aria-label="Return date"
+							aria-label={t.carDetail.returnDate}
 							type="date"
 							value={returnDate}
 							min={pickupDate}
@@ -116,33 +118,33 @@ export function CarBookingCard({
 					</Field>
 				</div>
 				<div className="grid grid-cols-2 gap-3">
-					<Field label="Pickup time">
+					<Field label={t.carDetail.pickupTime}>
 						<Input
-							aria-label="Pickup time"
+							aria-label={t.carDetail.pickupTime}
 							type="time"
 							value={pickupTime}
 							onChange={(event) => setPickupTime(event.target.value)}
 						/>
 					</Field>
-					<Field label="Return time">
+					<Field label={t.carDetail.returnTime}>
 						<Input
-							aria-label="Return time"
+							aria-label={t.carDetail.returnTime}
 							type="time"
 							value={returnTime}
 							onChange={(event) => setReturnTime(event.target.value)}
 						/>
 					</Field>
 				</div>
-				<Field label="Pickup location">
+				<Field label={t.carDetail.pickupLocation}>
 					<LocationSelect
-						label="Pickup location"
+						label={t.carDetail.pickupLocation}
 						value={pickupLocation}
 						onChange={setPickupLocation}
 					/>
 				</Field>
-				<Field label="Return location">
+				<Field label={t.carDetail.returnLocation}>
 					<LocationSelect
-						label="Return location"
+						label={t.carDetail.returnLocation}
 						value={returnLocation}
 						onChange={setReturnLocation}
 					/>
@@ -150,7 +152,9 @@ export function CarBookingCard({
 			</div>
 
 			<div className="my-6 border-t border-border/60 pt-5">
-				<h3 className="mb-3 font-semibold text-foreground">Add Extra</h3>
+				<h3 className="mb-3 font-semibold text-foreground">
+					{t.carDetail.addExtra}
+				</h3>
 				<div className="space-y-3">
 					{car.extras.map((extra) => (
 						<label
@@ -167,7 +171,7 @@ export function CarBookingCard({
 								{extra.label}
 							</span>
 							<span className="text-muted-foreground">
-								{money(extra.pricePerDay)}/day
+								{money(extra.pricePerDay)}/{t.carDetail.perDay}
 							</span>
 						</label>
 					))}
@@ -176,18 +180,25 @@ export function CarBookingCard({
 
 			<div className="space-y-3 border-t border-border/60 pt-5 text-sm">
 				<PriceRow
-					label={`${rentalDays} rental day${rentalDays === 1 ? "" : "s"}`}
+					label={`${rentalDays} ${rentalDays === 1 ? t.carDetail.rentalDay : t.carDetail.rentalDays}`}
 					value={money(baseTotal)}
 				/>
-				<PriceRow label="Selected extras" value={money(extrasTotal)} />
-				<PriceRow label="Estimated total" value={money(total)} strong />
+				<PriceRow
+					label={t.carDetail.selectedExtras}
+					value={money(extrasTotal)}
+				/>
+				<PriceRow
+					label={t.carDetail.estimatedTotal}
+					value={money(total)}
+					strong
+				/>
 			</div>
 
 			<div className="mt-6 grid gap-3">
 				<Button asChild className="h-12 rounded-lg font-semibold">
 					<a href={whatsappHref} target="_blank" rel="noreferrer">
 						<MessageCircle className="size-4" aria-hidden="true" />
-						Book via WhatsApp
+						{t.carDetail.bookWhatsApp}
 					</a>
 				</Button>
 				<Button
@@ -197,7 +208,7 @@ export function CarBookingCard({
 				>
 					<a href={emailHref}>
 						<Mail className="size-4" aria-hidden="true" />
-						Send Email Inquiry
+						{t.carDetail.sendEmail}
 					</a>
 				</Button>
 			</div>

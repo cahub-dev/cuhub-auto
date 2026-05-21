@@ -1,3 +1,5 @@
+"use client";
+
 import { MapPin, Star } from "lucide-react";
 import type React from "react";
 import { CarBookingCard } from "#/components/cars/CarBookingCard";
@@ -5,8 +7,11 @@ import { CarDetailContent } from "#/components/cars/CarDetailContent";
 import { CarDetailGallery } from "#/components/cars/CarDetailGallery";
 import { CarSpecsGrid } from "#/components/cars/CarSpecsGrid";
 import type { CarDetailData } from "#/components/cars/car-detail-data";
+import { useI18n } from "#/lib/i18n";
 
 export function CarDetail({ car }: { car: CarDetailData }): React.JSX.Element {
+	const { t } = useI18n();
+
 	return (
 		<div className="page-wrap py-10 md:py-14">
 			<div className="">
@@ -26,7 +31,7 @@ export function CarDetail({ car }: { car: CarDetailData }): React.JSX.Element {
 									className="size-4 fill-yellow-400 text-yellow-400"
 									aria-hidden="true"
 								/>
-								{car.rating} / 5 ({car.reviewCount} reviews)
+								{car.rating} / 5 ({car.reviewCount} {t.carDetail.reviews})
 							</span>
 						</div>
 						<p className="mb-2 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground">
