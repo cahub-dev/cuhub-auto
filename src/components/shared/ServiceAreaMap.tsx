@@ -1,5 +1,7 @@
 "use client";
 
+import { MapPin } from "lucide-react";
+import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import {
 	ComposableMap,
@@ -7,8 +9,7 @@ import {
 	Geography,
 	Marker,
 } from "react-simple-maps";
-import { MapPin } from "lucide-react";
-import type React from "react";
+import { useI18n } from "#/lib/i18n";
 
 const GEO_URL = "/mozambique-provinces.json";
 
@@ -44,15 +45,12 @@ interface HoverTooltip {
 	y: number;
 }
 
-const STATS = [
-	{ value: "10", label: "Cities" },
-	{ value: "10", label: "Provinces" },
-	{ value: "24/7", label: "Available" },
-] as const;
+const STATS = ["10", "10", "24/7"] as const;
 
 const CYCLE_INTERVAL = 2600;
 
 export function ServiceAreaMap(): React.JSX.Element {
+	const { t } = useI18n();
 	const [mounted, setMounted] = useState(false);
 	const [activeCityPin, setActiveCityPin] = useState<CityPin | null>(null);
 	const [hoverTooltip, setHoverTooltip] = useState<HoverTooltip | null>(null);
@@ -87,11 +85,18 @@ export function ServiceAreaMap(): React.JSX.Element {
 	) => {
 		isHoveringRef.current = true;
 		setActiveCityPin(null);
-		setHoverTooltip({ province: rawName, city, x: evt.clientX, y: evt.clientY });
+		setHoverTooltip({
+			province: rawName,
+			city,
+			x: evt.clientX,
+			y: evt.clientY,
+		});
 	};
 
 	const handleProvinceMove = (evt: React.MouseEvent) => {
-		setHoverTooltip((t) => (t ? { ...t, x: evt.clientX, y: evt.clientY } : null));
+		setHoverTooltip((t) =>
+			t ? { ...t, x: evt.clientX, y: evt.clientY } : null,
+		);
 	};
 
 	const handleProvinceLeave = () => {
@@ -110,11 +115,10 @@ export function ServiceAreaMap(): React.JSX.Element {
 		<section className="py-20" style={{ background: "#f9f8f7" }}>
 			<div className="page-wrap">
 				<div className="grid gap-12 lg:grid-cols-[5fr_7fr] lg:gap-16 items-start">
-
 					{/* ── Left column ── */}
 					<div className="flex flex-col gap-8">
 						<div>
-							<p className="island-kicker mb-3">Our Service Areas</p>
+							<p className="island-kicker mb-3">{t.serviceAreas.kicker}</p>
 							<h2
 								className="display-title font-extrabold tracking-tight mb-4"
 								style={{
@@ -122,19 +126,21 @@ export function ServiceAreaMap(): React.JSX.Element {
 									lineHeight: 1.1,
 								}}
 							>
-								10 Cities Across All of Mozambique
+								{t.serviceAreas.title}
 							</h2>
-							<p className="text-base leading-relaxed" style={{ color: "var(--muted-foreground)" }}>
-								Wherever your project takes you — from Maputo to Pemba — our
-								fleet is ready to serve every province in the country.
+							<p
+								className="text-base leading-relaxed"
+								style={{ color: "var(--muted-foreground)" }}
+							>
+								{t.serviceAreas.description}
 							</p>
 						</div>
 
 						{/* Stats */}
 						<div className="flex gap-4">
-							{STATS.map(({ value, label }) => (
+							{STATS.map((value, idx) => (
 								<div
-									key={label}
+									key={value}
 									className="flex flex-col items-center flex-1 py-4 rounded-2xl border"
 									style={{
 										borderColor: "var(--line)",
@@ -151,7 +157,7 @@ export function ServiceAreaMap(): React.JSX.Element {
 										className="text-xs font-semibold tracking-widest uppercase mt-1"
 										style={{ color: "var(--muted-foreground)" }}
 									>
-										{label}
+										{t.serviceAreas.stats[idx]}
 									</span>
 								</div>
 							))}
@@ -163,7 +169,7 @@ export function ServiceAreaMap(): React.JSX.Element {
 								className="text-xs font-semibold tracking-widest uppercase mb-3"
 								style={{ color: "var(--muted-foreground)" }}
 							>
-								Cities we serve
+								{t.serviceAreas.cities}
 							</p>
 							<div className="flex flex-wrap gap-2">
 								{CITY_PINS.map(({ city, province }) => (
@@ -180,7 +186,12 @@ export function ServiceAreaMap(): React.JSX.Element {
 											style={{ background: "#ff8549" }}
 										/>
 										<span className="font-medium">{city}</span>
-										<span style={{ color: "var(--muted-foreground)", fontSize: "0.72rem" }}>
+										<span
+											style={{
+												color: "var(--muted-foreground)",
+												fontSize: "0.72rem",
+											}}
+										>
 											{province}
 										</span>
 									</div>
@@ -212,7 +223,10 @@ export function ServiceAreaMap(): React.JSX.Element {
 							<div className="absolute inset-0 flex items-center justify-center">
 								<div
 									className="size-7 rounded-full border-2 animate-spin"
-									style={{ borderColor: "#ff8549", borderTopColor: "transparent" }}
+									style={{
+										borderColor: "#ff8549",
+										borderTopColor: "transparent",
+									}}
 								/>
 							</div>
 						)}
@@ -270,7 +284,8 @@ export function ServiceAreaMap(): React.JSX.Element {
 															outline: "none",
 															cursor: "pointer",
 															transition: "fill 140ms ease",
-															filter: "drop-shadow(0 4px 10px rgba(255,133,73,0.30))",
+															filter:
+																"drop-shadow(0 4px 10px rgba(255,133,73,0.30))",
 														},
 														pressed: {
 															fill: "#ff5906",
@@ -316,14 +331,23 @@ export function ServiceAreaMap(): React.JSX.Element {
 						{/* Auto-cycle info card — bottom-left of map */}
 						{activeCityPin && !hoverTooltip && (
 							<div className="absolute bottom-5 left-5 z-10 ">
-								<div className="island-shell rounded-xl px-3.5 py-2.5" style={{ minWidth: "148px" }}>
+								<div
+									className="island-shell rounded-xl px-3.5 py-2.5"
+									style={{ minWidth: "148px" }}
+								>
 									<div className="flex items-center gap-1.5 mb-0.5">
-										<MapPin className="size-3.5 shrink-0" style={{ color: "#ff8549" }} />
+										<MapPin
+											className="size-3.5 shrink-0"
+											style={{ color: "#ff8549" }}
+										/>
 										<span className="text-sm font-semibold leading-tight">
 											{activeCityPin.province}
 										</span>
 									</div>
-									<p className="text-xs pl-5" style={{ color: "var(--muted-foreground)" }}>
+									<p
+										className="text-xs pl-5"
+										style={{ color: "var(--muted-foreground)" }}
+									>
 										{activeCityPin.city}
 									</p>
 								</div>
@@ -340,21 +364,29 @@ export function ServiceAreaMap(): React.JSX.Element {
 									transform: "translateY(calc(-100% - 8px))",
 								}}
 							>
-								<div className="island-shell rounded-xl px-3.5 py-2.5" style={{ minWidth: "148px" }}>
+								<div
+									className="island-shell rounded-xl px-3.5 py-2.5"
+									style={{ minWidth: "148px" }}
+								>
 									<div className="flex items-center gap-1.5 mb-0.5">
-										<MapPin className="size-3.5 shrink-0" style={{ color: "#ff8549" }} />
+										<MapPin
+											className="size-3.5 shrink-0"
+											style={{ color: "#ff8549" }}
+										/>
 										<span className="text-sm font-semibold leading-tight">
 											{hoverTooltip.province}
 										</span>
 									</div>
-									<p className="text-xs pl-5" style={{ color: "var(--muted-foreground)" }}>
+									<p
+										className="text-xs pl-5"
+										style={{ color: "var(--muted-foreground)" }}
+									>
 										{hoverTooltip.city}
 									</p>
 								</div>
 							</div>
 						)}
 					</div>
-
 				</div>
 			</div>
 		</section>

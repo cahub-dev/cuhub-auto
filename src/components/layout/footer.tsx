@@ -1,16 +1,21 @@
+"use client";
+
 import { Link } from "@tanstack/react-router";
 import { Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
 import type React from "react";
 import { SALES_CONTACT } from "#/lib/contact-details";
+import { useI18n } from "#/lib/i18n";
 
 const FOOTER_LINKS = [
-	{ label: "Home", to: "/" },
-	{ label: "Fleet", to: "/fleet" },
-	{ label: "About", to: "/about" },
-	{ label: "Contact", to: "/contact" },
+	{ key: "home", to: "/" },
+	{ key: "fleet", to: "/fleet" },
+	{ key: "about", to: "/about" },
+	{ key: "contact", to: "/contact" },
 ] as const;
 
 export function Footer(): React.JSX.Element {
+	const { t } = useI18n();
+
 	return (
 		<footer className="bg-[#171717] px-5 py-14 text-white md:py-18">
 			<div className="page-wrap">
@@ -22,14 +27,13 @@ export function Footer(): React.JSX.Element {
 							className="mb-6 h-12 w-auto rounded-sm bg-white"
 						/>
 						<p className="max-w-sm text-sm leading-6 text-white/70">
-							Vehicle and heavy equipment rental support for professional
-							operations across Mozambique.
+							{t.footer.description}
 						</p>
 					</div>
 
 					<nav aria-label="Footer navigation">
 						<h2 className="mb-5 text-sm font-semibold text-white/65">
-							Quick Links
+							{t.footer.quickLinks}
 						</h2>
 						<div className="flex flex-col gap-3 text-sm font-semibold">
 							{FOOTER_LINKS.map((link) => (
@@ -38,7 +42,7 @@ export function Footer(): React.JSX.Element {
 									to={link.to}
 									className="!text-white no-underline hover:!text-primary"
 								>
-									{link.label}
+									{t.nav[link.key]}
 								</Link>
 							))}
 						</div>
@@ -46,7 +50,7 @@ export function Footer(): React.JSX.Element {
 
 					<div>
 						<h2 className="mb-5 text-sm font-semibold text-white/65">
-							Contact
+							{t.footer.contact}
 						</h2>
 						<div className="flex flex-col gap-4 text-sm font-semibold text-white">
 							<p className="flex items-start gap-3 leading-6">
@@ -79,7 +83,7 @@ export function Footer(): React.JSX.Element {
 								href="https://www.instagram.com/cahub.auto.rental"
 								target="_blank"
 								rel="noopener noreferrer"
-								aria-label="Follow CA HUB AUTO on Instagram"
+								aria-label={t.footer.instagram}
 								className="inline-flex size-10 items-center justify-center rounded-full border border-white/20 !text-white transition-colors hover:border-primary hover:!text-primary"
 							>
 								<Instagram className="size-5" aria-hidden="true" />
@@ -88,7 +92,7 @@ export function Footer(): React.JSX.Element {
 								href="https://www.linkedin.com/in/cahub-auto-rental/"
 								target="_blank"
 								rel="noopener noreferrer"
-								aria-label="Follow CA HUB AUTO on LinkedIn"
+								aria-label={t.footer.linkedin}
 								className="inline-flex size-10 items-center justify-center rounded-full border border-white/20 !text-white transition-colors hover:border-primary hover:!text-primary"
 							>
 								<Linkedin className="size-5" aria-hidden="true" />
@@ -98,7 +102,7 @@ export function Footer(): React.JSX.Element {
 				</div>
 
 				<div className="mt-12 border-t border-white/10 pt-6 text-sm text-white/55">
-					&copy; {new Date().getFullYear()} CA HUB AUTO. All rights reserved.
+					&copy; {new Date().getFullYear()} CA HUB AUTO. {t.footer.rights}
 				</div>
 			</div>
 		</footer>

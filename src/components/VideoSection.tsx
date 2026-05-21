@@ -2,8 +2,11 @@
 
 import { Play } from "lucide-react";
 import type React from "react";
+import { useI18n } from "#/lib/i18n";
 
 export function VideoSection(): React.JSX.Element {
+	const { t } = useI18n();
+
 	return (
 		<section className=" relative w-full h-[320px] md:h-[420px] lg:h-[500px] overflow-hidden">
 			{/* Background image */}
@@ -22,7 +25,7 @@ export function VideoSection(): React.JSX.Element {
 					<Play className="ml-1 size-8 fill-primary text-primary md:size-10" />
 				</div>
 				<p className="max-w-xs px-4 text-sm font-semibold md:text-base">
-					Company video coming soon
+					{t.video.comingSoon}
 				</p>
 			</div>
 		</section>

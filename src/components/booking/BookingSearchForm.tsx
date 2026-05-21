@@ -4,10 +4,11 @@ import { Plus, X } from "lucide-react";
 import type React from "react";
 import { useMemo, useState } from "react";
 import { BookingContactDialog } from "#/components/booking/BookingContactDialog";
+import { BOOKING_CATEGORIES } from "#/components/booking/booking-request-options";
 import { DateTimeField } from "#/components/booking/DateTimeField";
 import { LOCATIONS, LocationField } from "#/components/booking/LocationField";
-import { BOOKING_CATEGORIES } from "#/components/booking/booking-request-options";
 import { Button } from "#/components/ui/button";
+import { useI18n } from "#/lib/i18n";
 
 function startOfToday(): Date {
 	const d = new Date();
@@ -22,6 +23,7 @@ function addDays(date: Date, days: number): Date {
 }
 
 export function BookingSearchForm(): React.JSX.Element {
+	const { t } = useI18n();
 	const [category, setCategory] = useState<string>(BOOKING_CATEGORIES[0]);
 	const [pickupLocation, setPickupLocation] = useState<string>(LOCATIONS[0]);
 	const [returnLocation, setReturnLocation] = useState<string>(LOCATIONS[0]);
@@ -56,7 +58,7 @@ export function BookingSearchForm(): React.JSX.Element {
 			<div className="booking-form motion-fade-in">
 				<div className="booking-field">
 					<label htmlFor="vehicle-category" className="booking-field-label">
-						Vehicle type
+						{t.bookingSearch.vehicleType}
 					</label>
 					<div className="booking-field-control">
 						<select
@@ -66,7 +68,9 @@ export function BookingSearchForm(): React.JSX.Element {
 							onChange={(e) => setCategory(e.target.value)}
 						>
 							{BOOKING_CATEGORIES.map((c) => (
-								<option key={c} value={c}>{c}</option>
+								<option key={c} value={c}>
+									{c}
+								</option>
 							))}
 						</select>
 					</div>
@@ -75,14 +79,14 @@ export function BookingSearchForm(): React.JSX.Element {
 				<div className="booking-form-locations">
 					<LocationField
 						id="pickup-location"
-						label="Pickup & return"
+						label={t.bookingSearch.pickupReturn}
 						value={pickupLocation}
 						onChange={setPickupLocation}
 					/>
 					{hasDifferentReturn && (
 						<LocationField
 							id="return-location"
-							label="Return location"
+							label={t.bookingSearch.returnLocation}
 							value={returnLocation}
 							onChange={setReturnLocation}
 						/>
@@ -96,19 +100,19 @@ export function BookingSearchForm(): React.JSX.Element {
 						{hasDifferentReturn ? (
 							<>
 								<X className="size-3.5" aria-hidden="true" />
-								Same return location
+								{t.bookingSearch.sameReturn}
 							</>
 						) : (
 							<>
 								<Plus className="size-3.5" aria-hidden="true" />
-								Different return location
+								{t.bookingSearch.differentReturn}
 							</>
 						)}
 					</button>
 				</div>
 
 				<DateTimeField
-					label="Pickup date"
+					label={t.bookingSearch.pickupDate}
 					date={pickupDate}
 					time={pickupTime}
 					onDateChange={handlePickupDate}
@@ -116,7 +120,7 @@ export function BookingSearchForm(): React.JSX.Element {
 					minDate={startOfToday()}
 				/>
 				<DateTimeField
-					label="Return date"
+					label={t.bookingSearch.returnDate}
 					date={returnDate}
 					time={returnTime}
 					onDateChange={setReturnDate}
@@ -129,7 +133,7 @@ export function BookingSearchForm(): React.JSX.Element {
 					className="booking-submit"
 					onClick={() => setDialogOpen(true)}
 				>
-					Start booking request
+					{t.bookingSearch.startRequest}
 				</Button>
 			</div>
 

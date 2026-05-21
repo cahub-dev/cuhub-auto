@@ -11,6 +11,7 @@ import { ChatWidget } from "#/components/chat/ChatWidget";
 import { Header } from "#/components/Header";
 import { Footer } from "#/components/layout/footer";
 import { SALES_CONTACT } from "#/lib/contact-details";
+import { I18nProvider } from "#/lib/i18n";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import { SITE_NAME, SITE_URL } from "../lib/seo";
 import appCss from "../styles.css?url";
@@ -93,10 +94,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<Header />
-				<main>{children}</main>
-				<Footer />
-				<ChatWidget />
+				<I18nProvider>
+					<Header />
+					<main>{children}</main>
+					<Footer />
+					<ChatWidget />
+				</I18nProvider>
 				<TanStackDevtools
 					config={{ position: "bottom-right" }}
 					plugins={[

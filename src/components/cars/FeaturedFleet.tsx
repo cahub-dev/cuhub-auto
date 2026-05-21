@@ -1,5 +1,8 @@
+"use client";
+
 import type React from "react";
 import { FleetCard, type FleetCardData } from "#/components/cars/FleetCard";
+import { useI18n } from "#/lib/i18n";
 
 export const FEATURED_FLEET: FleetCardData[] = [
 	{
@@ -59,16 +62,18 @@ export const FEATURED_FLEET: FleetCardData[] = [
 ];
 
 export function FeaturedFleet(): React.JSX.Element {
+	const { t } = useI18n();
+
 	return (
 		<section className="py-16 md:py-24" style={{ backgroundColor: "#f6f6f6" }}>
 			<div className="page-wrap">
 				{/* Header */}
 				<div className=" flex flex-col items-center text-center mb-10 md:mb-14">
 					<span className="island-kicker inline-block mb-3 px-3 py-1 rounded-full text-primary font-semibold text-xs tracking-wider bg-accent">
-						OUR SERVICES
+						{t.featuredFleet.kicker}
 					</span>
 					<h2 className="display-title text-3xl md:text-4xl font-bold text-foreground tracking-tight">
-						Featured Fleet
+						{t.featuredFleet.title}
 					</h2>
 				</div>
 

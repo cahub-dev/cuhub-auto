@@ -1,6 +1,9 @@
+"use client";
+
 import { Link } from "@tanstack/react-router";
 import type React from "react";
 import { Button } from "#/components/ui/button";
+import { useI18n } from "#/lib/i18n";
 
 export interface FleetCardData {
 	id: string;
@@ -12,6 +15,8 @@ export interface FleetCardData {
 }
 
 export function FleetCard({ car }: { car: FleetCardData }): React.JSX.Element {
+	const { t } = useI18n();
+
 	return (
 		<Link
 			to="/fleet/$carId"
@@ -55,7 +60,7 @@ export function FleetCard({ car }: { car: FleetCardData }): React.JSX.Element {
 					tabIndex={-1}
 					aria-hidden="true"
 				>
-					Request Quote
+					{t.featuredFleet.requestQuote}
 				</Button>
 			</div>
 		</Link>
