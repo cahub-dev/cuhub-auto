@@ -8,6 +8,7 @@ import { LOCATIONS } from "#/components/booking/LocationField";
 import { Input } from "#/components/ui/input";
 import { Textarea } from "#/components/ui/textarea";
 import type { BookingRequest } from "#/lib/booking-message";
+import { useI18n } from "#/lib/i18n";
 
 export function BookingRentalStep({
 	request,
@@ -18,10 +19,12 @@ export function BookingRentalStep({
 	update: UpdateBookingRequest;
 	toggleExtra: (extra: string) => void;
 }): React.JSX.Element {
+	const { t } = useI18n();
+
 	return (
 		<div className="grid gap-5">
 			<div className="grid gap-5 md:grid-cols-2">
-				<BookingField label="Province">
+				<BookingField label={t.bookingFlow.province}>
 					<select
 						value={request.province}
 						onChange={(event) => update("province", event.target.value)}
@@ -32,18 +35,18 @@ export function BookingRentalStep({
 						))}
 					</select>
 				</BookingField>
-				<BookingField label="Pickup / delivery location">
+				<BookingField label={t.bookingFlow.pickupDelivery}>
 					<Input
 						value={request.location}
 						onChange={(event) => update("location", event.target.value)}
-						placeholder="Site, office, or project area"
+						placeholder={t.bookingFlow.pickupPlaceholder}
 						className="h-12 bg-white"
 					/>
 				</BookingField>
 			</div>
 
 			<div className="grid gap-5 md:grid-cols-2">
-				<BookingField label="Start date">
+				<BookingField label={t.bookingFlow.startDate}>
 					<Input
 						type="date"
 						value={request.startDate}
@@ -51,7 +54,7 @@ export function BookingRentalStep({
 						className="h-12 bg-white"
 					/>
 				</BookingField>
-				<BookingField label="Return date">
+				<BookingField label={t.bookingFlow.returnDate}>
 					<Input
 						type="date"
 						value={request.returnDate}
@@ -61,20 +64,20 @@ export function BookingRentalStep({
 				</BookingField>
 			</div>
 
-			<BookingField label="Project / intended use">
+			<BookingField label={t.bookingFlow.projectUse}>
 				<Textarea
 					value={request.projectUse}
 					onChange={(event) => update("projectUse", event.target.value)}
-					placeholder="Tell us what the vehicle or equipment will support."
+					placeholder={t.bookingFlow.projectPlaceholder}
 					className="min-h-28 bg-white resize-none"
 				/>
 			</BookingField>
 
 			<div>
 				<p className="mb-3 text-sm font-semibold text-foreground">
-					Add-ons
+					{t.bookingFlow.addons}
 					<span className="ml-2 text-xs font-normal text-muted-foreground">
-						optional
+						{t.bookingFlow.optional}
 					</span>
 				</p>
 				<div className="flex flex-wrap gap-2">

@@ -1,11 +1,10 @@
 import { Check, HelpCircle } from "lucide-react";
 import type React from "react";
-import {
-	type UpdateBookingRequest,
-} from "#/components/booking/booking-request-options";
+import type { UpdateBookingRequest } from "#/components/booking/booking-request-options";
 import { FEATURED_FLEET } from "#/components/cars/FeaturedFleet";
 import type { FleetCardData } from "#/components/cars/FleetCard";
 import type { BookingRequest } from "#/lib/booking-message";
+import { useI18n } from "#/lib/i18n";
 
 const CATEGORY_MAP: Record<string, string> = {
 	"toyota-land-cruiser": "Vehicle",
@@ -25,6 +24,8 @@ export function BookingFleetStep({
 	request: BookingRequest;
 	update: UpdateBookingRequest;
 }): React.JSX.Element {
+	const { t } = useI18n();
+
 	function handleSelect(item: FleetCardData): void {
 		update("fleetRequest", item.name);
 		update("category", CATEGORY_MAP[item.id] ?? "Vehicle");
@@ -39,7 +40,7 @@ export function BookingFleetStep({
 	return (
 		<div className="grid gap-5">
 			<p className="text-sm font-semibold text-foreground">
-				Select a vehicle or equipment
+				{t.bookingFlow.selectFleet}
 			</p>
 
 			<div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -81,10 +82,7 @@ export function BookingFleetStep({
 								</p>
 								<div className="flex flex-wrap gap-x-2 mt-1">
 									{item.sectors.slice(0, 2).map((s) => (
-										<span
-											key={s}
-											className="text-[10px] text-muted-foreground"
-										>
+										<span key={s} className="text-[10px] text-muted-foreground">
 											{s}
 										</span>
 									))}
@@ -113,9 +111,9 @@ export function BookingFleetStep({
 				>
 					<HelpCircle className="size-6" />
 					<span className="text-xs font-semibold leading-snug">
-						Not sure,
+						{t.bookingFlow.notSureLine1}
 						<br />
-						advise me
+						{t.bookingFlow.notSureLine2}
 					</span>
 				</button>
 			</div>
