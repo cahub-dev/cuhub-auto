@@ -2,6 +2,7 @@
 
 import type React from "react";
 import { FleetCard, type FleetCardData } from "#/components/cars/FleetCard";
+import { localizeFleetCard } from "#/components/cars/fleet-translations";
 import { useI18n } from "#/lib/i18n";
 
 export const FEATURED_FLEET: FleetCardData[] = [
@@ -62,7 +63,7 @@ export const FEATURED_FLEET: FleetCardData[] = [
 ];
 
 export function FeaturedFleet(): React.JSX.Element {
-	const { t } = useI18n();
+	const { language, t } = useI18n();
 
 	return (
 		<section className="py-16 md:py-24" style={{ backgroundColor: "#f6f6f6" }}>
@@ -80,7 +81,7 @@ export function FeaturedFleet(): React.JSX.Element {
 				{/* Grid */}
 				<div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
 					{FEATURED_FLEET.map((car) => (
-						<FleetCard key={car.id} car={car} />
+						<FleetCard key={car.id} car={localizeFleetCard(car, language)} />
 					))}
 				</div>
 			</div>

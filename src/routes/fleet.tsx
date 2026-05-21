@@ -5,6 +5,11 @@ import { useMemo, useState } from "react";
 import { FEATURED_FLEET } from "#/components/cars/FeaturedFleet";
 import { FleetCard } from "#/components/cars/FleetCard";
 import { FleetHero } from "#/components/cars/FleetHero";
+import {
+	localizeCategory,
+	localizeFleetCard,
+	localizeSector,
+} from "#/components/cars/fleet-translations";
 import { Button } from "#/components/ui/button";
 import { useI18n } from "#/lib/i18n";
 import { buildPageMeta } from "#/lib/seo";
@@ -32,7 +37,7 @@ const SECTORS = [
 ];
 
 function FleetPage(): React.JSX.Element {
-	const { t } = useI18n();
+	const { language, t } = useI18n();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 	const [selectedSectors, setSelectedSectors] = useState<Set<string>>(
@@ -152,7 +157,7 @@ function FleetPage(): React.JSX.Element {
 													: "bg-[#f3f3f3] text-foreground hover:bg-accent"
 											}`}
 										>
-											{category}
+											{localizeCategory(category, language)}
 											{isActive ? (
 												<X className="size-4" aria-hidden="true" />
 											) : (
@@ -178,7 +183,7 @@ function FleetPage(): React.JSX.Element {
 											onChange={() => toggleSector(sector)}
 											className="size-4 accent-foreground"
 										/>
-										{sector}
+										{localizeSector(sector, language)}
 									</label>
 								))}
 							</FilterGroup>
@@ -234,7 +239,10 @@ function FleetPage(): React.JSX.Element {
 							) : (
 								<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 									{filteredFleet.map((car) => (
-										<FleetCard key={car.id} car={car} />
+										<FleetCard
+											key={car.id}
+											car={localizeFleetCard(car, language)}
+										/>
 									))}
 								</div>
 							)}
