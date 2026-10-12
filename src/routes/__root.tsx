@@ -10,7 +10,8 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { ChatWidget } from "#/components/chat/ChatWidget";
 import { Header } from "#/components/Header";
 import { Footer } from "#/components/layout/footer";
-import { SALES_CONTACT } from "#/lib/contact-details";
+import { COMPANY_ADDRESS, SALES_CONTACT } from "#/lib/contact-details";
+import { I18nProvider } from "#/lib/i18n";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import { SITE_NAME, SITE_URL } from "../lib/seo";
 import appCss from "../styles.css?url";
@@ -24,24 +25,22 @@ const LOCAL_BUSINESS_SCHEMA = {
 	"@type": "LocalBusiness",
 	name: SITE_NAME,
 	description:
-		"Vehicle and heavy equipment rental for professional operations across Mozambique.",
+		"Mining machinery and equipment rental across Mozambique: crushers, excavators, wheel loaders, generators, dump trucks, drilling rigs and ball mills.",
 	url: SITE_URL,
 	telephone: SALES_CONTACT.phoneE164,
 	email: SALES_CONTACT.email,
 	address: {
 		"@type": "PostalAddress",
-		streetAddress: "Rua de Micaia, Q.56, nº115",
-		addressLocality: "Maputo",
-		addressRegion: "Maputo City",
-		addressCountry: "MZ",
+		streetAddress: COMPANY_ADDRESS.street,
+		addressLocality: COMPANY_ADDRESS.locality,
+		addressRegion: COMPANY_ADDRESS.region,
+		addressCountry: COMPANY_ADDRESS.country,
 	},
 	geo: {
 		"@type": "GeoCoordinates",
-		latitude: -25.9655,
-		longitude: 32.5832,
+		...COMPANY_ADDRESS.geo,
 	},
 	areaServed: { "@type": "Country", name: "Mozambique" },
-	priceRange: "$$",
 };
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
@@ -49,11 +48,14 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 		meta: [
 			{ charSet: "utf-8" },
 			{ name: "viewport", content: "width=device-width, initial-scale=1" },
-			{ title: "CA HUB AUTO — Vehicle & Equipment Rental in Mozambique" },
+			{
+				title:
+					"CA HUB AUTO — Mining Machinery & Equipment Rental in Mozambique",
+			},
 			{
 				name: "description",
 				content:
-					"Rent vehicles and heavy equipment in Mozambique. Toyota Land Cruiser, Nissan Navara, Develon loaders, excavators, and Scania trucks — daily and project rates available in Maputo.",
+					"Rent mining machinery in Mozambique: crushers, excavators, wheel loaders, diesel generators, dump trucks, drilling rigs and ball mills. Delivery to site and certified operators.",
 			},
 			{ property: "og:site_name", content: SITE_NAME },
 			{ property: "og:locale", content: "en_US" },
@@ -93,10 +95,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
-				<Header />
-				<main>{children}</main>
-				<Footer />
-				<ChatWidget />
+				<I18nProvider>
+					<Header />
+					<main>{children}</main>
+					<Footer />
+					<ChatWidget />
+				</I18nProvider>
 				<TanStackDevtools
 					config={{ position: "bottom-right" }}
 					plugins={[

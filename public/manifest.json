@@ -1,10 +1,10 @@
 {
   "name": "CA HUB AUTO",
   "short_name": "CA HUB",
-  "description": "Vehicle and heavy equipment rental in Mozambique",
+  "description": "Mining machinery and equipment rental in Mozambique",
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#ff5906",
+  "theme_color": "#e76126",
   "background_color": "#ffffff",
   "icons": [
     {

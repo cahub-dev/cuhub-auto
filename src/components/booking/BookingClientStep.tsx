@@ -6,6 +6,7 @@ import {
 } from "#/components/booking/booking-request-options";
 import { Input } from "#/components/ui/input";
 import type { BookingRequest } from "#/lib/booking-message";
+import { useI18n } from "#/lib/i18n";
 
 export function BookingClientStep({
 	request,
@@ -14,27 +15,29 @@ export function BookingClientStep({
 	request: BookingRequest;
 	update: UpdateBookingRequest;
 }): React.JSX.Element {
+	const { t } = useI18n();
+
 	return (
 		<div className="grid gap-5">
 			<div className="grid gap-5 md:grid-cols-2">
-				<BookingField label="Company name">
+				<BookingField label={t.bookingFlow.companyName}>
 					<Input
 						value={request.companyName}
 						onChange={(event) => update("companyName", event.target.value)}
 						className="h-12 bg-white"
 					/>
 				</BookingField>
-				<BookingField label="NUIT">
+				<BookingField label={t.bookingFlow.nuit}>
 					<Input
 						value={request.nuit}
 						onChange={(event) => update("nuit", event.target.value)}
-						placeholder="Optional for initial request"
+						placeholder={t.bookingFlow.optionalInitial}
 						className="h-12 bg-white"
 					/>
 				</BookingField>
 			</div>
 			<div className="grid gap-5 md:grid-cols-2">
-				<BookingField label="Industry sector">
+				<BookingField label={t.bookingFlow.industrySector}>
 					<select
 						value={request.sector}
 						onChange={(event) => update("sector", event.target.value)}
@@ -45,7 +48,7 @@ export function BookingClientStep({
 						))}
 					</select>
 				</BookingField>
-				<BookingField label="Contact person">
+				<BookingField label={t.bookingFlow.contactPerson}>
 					<Input
 						value={request.contactPerson}
 						onChange={(event) => update("contactPerson", event.target.value)}
@@ -54,7 +57,7 @@ export function BookingClientStep({
 				</BookingField>
 			</div>
 			<div className="grid gap-5 md:grid-cols-2">
-				<BookingField label="Phone">
+				<BookingField label={t.bookingFlow.phone}>
 					<Input
 						type="tel"
 						value={request.phone}
@@ -62,7 +65,7 @@ export function BookingClientStep({
 						className="h-12 bg-white"
 					/>
 				</BookingField>
-				<BookingField label="Email">
+				<BookingField label={t.bookingFlow.email}>
 					<Input
 						type="email"
 						value={request.email}
@@ -71,11 +74,11 @@ export function BookingClientStep({
 					/>
 				</BookingField>
 			</div>
-			<BookingField label="Physical address">
+			<BookingField label={t.bookingFlow.physicalAddress}>
 				<Input
 					value={request.address}
 					onChange={(event) => update("address", event.target.value)}
-					placeholder="Optional for initial request"
+					placeholder={t.bookingFlow.optionalInitial}
 					className="h-12 bg-white"
 				/>
 			</BookingField>

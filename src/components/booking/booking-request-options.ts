@@ -1,27 +1,31 @@
-import { LOCATIONS } from "#/components/booking/LocationField";
+import { LOCATIONS } from "#/components/booking/locations";
+import { EQUIPMENT_CATEGORIES } from "#/data/equipment";
 import type { BookingRequest } from "#/lib/booking-message";
 
-export const BOOKING_STEPS = ["Fleet", "Rental", "Client", "Review"] as const;
-export const BOOKING_CATEGORIES = [
-	"Vehicle",
-	"Heavy equipment",
-	"Truck",
-	"Machinery",
-];
+export const BOOKING_STEPS = [
+	"Equipment",
+	"Project",
+	"Client",
+	"Review",
+] as const;
+export const BOOKING_CATEGORIES = EQUIPMENT_CATEGORIES.map(
+	(category) => category.name.en,
+);
 export const BOOKING_SECTORS = [
 	"Mining",
+	"Quarrying",
+	"Mineral processing",
 	"Construction",
-	"Telecom",
 	"Infrastructure",
-	"Logistics",
 	"Other",
 ];
+// Values are sent to sales in English; labels come from t.bookingFlow.extraLabels.
 export const BOOKING_EXTRAS = [
-	"Driver",
 	"Certified operator",
-	"Delivery",
-	"Premium insurance",
-	"Priority support",
+	"Delivery & mobilisation",
+	"Maintenance & servicing",
+	"Fuel supply",
+	"Insurance",
 ];
 
 export type UpdateBookingRequest = <K extends keyof BookingRequest>(
@@ -31,7 +35,7 @@ export type UpdateBookingRequest = <K extends keyof BookingRequest>(
 
 export const DEFAULT_BOOKING_REQUEST: BookingRequest = {
 	fleetRequest: "Not sure, advise me",
-	category: "Vehicle",
+	category: "Not specified",
 	province: LOCATIONS[0],
 	location: "",
 	startDate: "",
@@ -40,7 +44,7 @@ export const DEFAULT_BOOKING_REQUEST: BookingRequest = {
 	extras: [],
 	companyName: "",
 	nuit: "",
-	sector: "Construction",
+	sector: "Mining",
 	contactPerson: "",
 	phone: "",
 	email: "",

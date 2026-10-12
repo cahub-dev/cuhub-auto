@@ -1,258 +1,224 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Phone, Search } from "lucide-react";
 import type React from "react";
 import { useMemo, useState } from "react";
-import { FEATURED_FLEET } from "#/components/cars/FeaturedFleet";
-import { FleetCard } from "#/components/cars/FleetCard";
-import { FleetHero } from "#/components/cars/FleetHero";
-import { Button } from "#/components/ui/button";
+import { EquipmentTile } from "#/components/equipment/EquipmentTile";
+import { PageHero } from "#/components/equipment/PageHero";
+import {
+	EQUIPMENT_CATEGORIES,
+	getCategory,
+	getEquipmentByCategory,
+	getEquipmentInPriorityOrder,
+} from "#/data/equipment";
+import { SALES_CONTACT } from "#/lib/contact-details";
+import { useI18n } from "#/lib/i18n";
 import { buildPageMeta } from "#/lib/seo";
+import { cn } from "#/lib/utils";
 
 export const Route = createFileRoute("/fleet")({
+	validateSearch: (search: Record<string, unknown>): { category?: string } =>
+		typeof search.category === "string" && getCategory(search.category)
+			? { category: search.category }
+			: {},
 	head: () => ({
 		meta: buildPageMeta({
-			title: "Fleet — Vehicles & Equipment for Hire",
+			title: "Mining Equipment for Rent",
 			description:
-				"Browse CA HUB AUTO's full rental fleet in Mozambique. SUVs, single and double cab pickups, wheel loaders, excavators, and heavy mining trucks — available for daily or project-based hire.",
+				"Rent mining machinery in Mozambique: jaw and cone crushers, excavators, wheel loaders, diesel generators, dump trucks, drill rigs, ball mills and water bowsers. Quotes within 24 hours.",
 			path: "/fleet",
-			ogImage: "/car_types/toyota_landcruiser.webp",
+			ogImage: "/equipment/excavators/develon-dx220-1.webp",
 		}),
 	}),
 	component: FleetPage,
 });
 
-const CATEGORIES = ["Vehicles", "Heavy Equipment", "Trucks"];
-const SECTORS = [
-	"Mining",
-	"Construction",
-	"Infrastructure",
-	"Rural",
-	"Heavy Industry",
-];
+const ALL_EQUIPMENT = getEquipmentInPriorityOrder();
 
 function FleetPage(): React.JSX.Element {
+	const { language, t } = useI18n();
+	const { category: selectedCategory } = Route.useSearch();
+	const navigate = Route.useNavigate();
 	const [searchQuery, setSearchQuery] = useState("");
-	const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-	const [selectedSectors, setSelectedSectors] = useState<Set<string>>(
-		new Set(),
-	);
-	const [sortBy, setSortBy] = useState("recommended");
+	const [sortBy, setSortBy] = useState<"default" | "name">("default");
 
-	const filteredFleet = useMemo(() => {
-		let result = FEATURED_FLEET;
-
-		if (searchQuery.trim()) {
-			const q = searchQuery.toLowerCase();
-			result = result.filter(
-				(item) =>
-					item.name.toLowerCase().includes(q) ||
-					item.description.toLowerCase().includes(q),
-			);
-		}
-
+	const filtered = useMemo(() => {
+		let result = ALL_EQUIPMENT;
 		if (selectedCategory) {
-			result = result.filter((item) => item.category === selectedCategory);
+			result = result.filter((item) => item.categoryId === selectedCategory);
 		}
-
-		if (selectedSectors.size > 0) {
+		const q = searchQuery.trim().toLowerCase();
+		if (q) {
+			// Match both languages so a PT visitor can type "excavator" and vice versa.
 			result = result.filter((item) =>
-				item.sectors.some((s) => selectedSectors.has(s)),
+				[item.name.en, item.name.pt, item.summary.en, item.summary.pt]
+					.join(" ")
+					.toLowerCase()
+					.includes(q),
 			);
 		}
-
-		if (sortBy === "vehicles-first") {
-			result = [...result].sort((a, b) => {
-				if (a.category === "Vehicles" && b.category !== "Vehicles") return -1;
-				if (a.category !== "Vehicles" && b.category === "Vehicles") return 1;
-				return 0;
-			});
-		} else if (sortBy === "heavy-first") {
-			result = [...result].sort((a, b) => {
-				if (
-					a.category === "Heavy Equipment" &&
-					b.category !== "Heavy Equipment"
-				)
-					return -1;
-				if (
-					a.category !== "Heavy Equipment" &&
-					b.category === "Heavy Equipment"
-				)
-					return 1;
-				return 0;
-			});
+		if (sortBy === "name") {
+			result = [...result].sort((a, b) =>
+				a.name[language].localeCompare(b.name[language]),
+			);
 		}
-
 		return result;
-	}, [searchQuery, selectedCategory, selectedSectors, sortBy]);
+	}, [searchQuery, selectedCategory, sortBy, language]);
 
-	function toggleSector(sector: string): void {
-		setSelectedSectors((prev) => {
-			const next = new Set(prev);
-			if (next.has(sector)) {
-				next.delete(sector);
-			} else {
-				next.add(sector);
-			}
-			return next;
-		});
+	function selectCategory(category?: string): void {
+		navigate({ search: category ? { category } : {}, replace: true });
 	}
-
-	function clearFilters(): void {
-		setSearchQuery("");
-		setSelectedCategory(null);
-		setSelectedSectors(new Set());
-		setSortBy("recommended");
-	}
-
-	const hasActiveFilters =
-		searchQuery !== "" || selectedCategory !== null || selectedSectors.size > 0;
 
 	return (
 		<>
-			<FleetHero />
-			<div className="bg-[#f6f6f6] py-14 md:py-20">
-				<div className="page-wrap">
-					<div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
-						<aside className="self-start rounded-2xl bg-white p-6 shadow-[0_10px_28px_rgba(0,0,0,0.05)] lg:sticky lg:top-24">
-							<div className="mb-7">
-								<h2 className="mb-4 text-xl font-bold text-foreground">
-									Search
-								</h2>
-								<label className="relative block">
-									<span className="sr-only">Search fleet</span>
-									<input
-										type="search"
-										placeholder="Search..."
-										value={searchQuery}
-										onChange={(e) => setSearchQuery(e.target.value)}
-										className="h-12 w-full rounded-lg border border-border/70 bg-white px-4 pr-11 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground/40"
-									/>
-									<Search
-										className="absolute right-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-										aria-hidden="true"
-									/>
-								</label>
-							</div>
+			<PageHero title={t.fleetPage.pageTitle} />
+			<div className="page-wrap grid gap-12 py-14 md:py-20 lg:grid-cols-[250px_minmax(0,1fr)]">
+				<aside className="order-2 flex flex-col gap-10 lg:order-1">
+					<label className="relative block">
+						<span className="sr-only">{t.fleetPage.searchFleet}</span>
+						<input
+							type="search"
+							placeholder={t.fleetPage.searchPlaceholder}
+							value={searchQuery}
+							onChange={(e) => setSearchQuery(e.target.value)}
+							className="h-11 w-full border border-[#ddd] bg-white px-4 pr-10 text-sm outline-none placeholder:text-[#999] focus:border-primary"
+						/>
+						<Search
+							className="absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-[#777]"
+							aria-hidden="true"
+						/>
+					</label>
 
-							<FilterGroup title="Select Fleet">
-								{CATEGORIES.map((category) => {
-									const isActive = selectedCategory === category;
-									return (
-										<button
-											key={category}
-											type="button"
-											onClick={() =>
-												setSelectedCategory(isActive ? null : category)
-											}
-											className={`flex h-11 w-full items-center justify-between rounded-lg px-4 text-left text-sm font-medium transition-colors ${
-												isActive
-													? "bg-foreground text-background"
-													: "bg-[#f3f3f3] text-foreground hover:bg-accent"
-											}`}
-										>
-											{category}
-											{isActive ? (
-												<X className="size-4" aria-hidden="true" />
-											) : (
-												<SlidersHorizontal
-													className="size-4 text-muted-foreground"
-													aria-hidden="true"
-												/>
-											)}
-										</button>
-									);
-								})}
-							</FilterGroup>
-
-							<FilterGroup title="Filter by Sector">
-								{SECTORS.map((sector) => (
-									<label
-										key={sector}
-										className="flex cursor-pointer items-center gap-2 text-sm text-muted-foreground"
-									>
-										<input
-											type="checkbox"
-											checked={selectedSectors.has(sector)}
-											onChange={() => toggleSector(sector)}
-											className="size-4 accent-foreground"
-										/>
-										{sector}
-									</label>
-								))}
-							</FilterGroup>
-
-							<Button
-								className="mt-1 h-11 w-full rounded-lg font-semibold"
-								variant={hasActiveFilters ? "default" : "outline"}
-								disabled={!hasActiveFilters}
-								onClick={clearFilters}
-							>
-								Clear Filters
-							</Button>
-						</aside>
-
-						<section aria-label="Fleet results">
-							<div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-								<p className="text-sm font-medium text-muted-foreground">
-									Showing {filteredFleet.length}
-									{filteredFleet.length !== FEATURED_FLEET.length &&
-										` of ${FEATURED_FLEET.length}`}{" "}
-									fleet options
-								</p>
-								<select
-									aria-label="Sort fleet"
-									value={sortBy}
-									onChange={(e) => setSortBy(e.target.value)}
-									className="h-10 rounded-lg border border-border/70 bg-white px-3 text-sm text-foreground outline-none focus:border-primary"
-								>
-									<option value="recommended">Recommended</option>
-									<option value="vehicles-first">Vehicles first</option>
-									<option value="heavy-first">Heavy equipment first</option>
-								</select>
-							</div>
-
-							{filteredFleet.length === 0 ? (
-								<div className="flex flex-col items-center justify-center py-20 text-center">
-									<p className="text-lg font-semibold text-foreground">
-										No results found
-									</p>
-									<p className="mt-2 text-sm text-muted-foreground">
-										Try adjusting your filters or search query.
-									</p>
-									<Button
-										className="mt-6"
-										variant="outline"
-										onClick={clearFilters}
-									>
-										Clear Filters
-									</Button>
-								</div>
-							) : (
-								<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-									{filteredFleet.map((car) => (
-										<FleetCard key={car.id} car={car} />
-									))}
-								</div>
-							)}
-						</section>
+					<div>
+						<WidgetTitle>{t.fleetPage.categoriesTitle}</WidgetTitle>
+						<ul className="space-y-2 text-sm">
+							<CategoryLink
+								label={t.fleetPage.allCategories}
+								count={ALL_EQUIPMENT.length}
+								active={!selectedCategory}
+								onClick={() => selectCategory(undefined)}
+							/>
+							{EQUIPMENT_CATEGORIES.map((category) => (
+								<CategoryLink
+									key={category.id}
+									label={category.name[language]}
+									count={getEquipmentByCategory(category.id).length}
+									active={selectedCategory === category.id}
+									onClick={() => selectCategory(category.id)}
+								/>
+							))}
+						</ul>
 					</div>
-				</div>
+
+					<div>
+						<WidgetTitle>{t.fleetPage.helpTitle}</WidgetTitle>
+						<p className="text-sm leading-6 text-[#555]">
+							{t.fleetPage.helpDescription}
+						</p>
+						<a
+							href={`tel:${SALES_CONTACT.phoneE164}`}
+							className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-primary no-underline"
+						>
+							<Phone className="size-4" aria-hidden="true" />
+							{SALES_CONTACT.phoneDisplay}
+						</a>
+					</div>
+				</aside>
+
+				<section
+					aria-label={t.fleetPage.resultsLabel}
+					className="order-1 lg:order-2"
+				>
+					<h2 className="display-title text-4xl font-extrabold tracking-tight text-[#313131] md:text-5xl">
+						{selectedCategory
+							? getCategory(selectedCategory)?.name[language]
+							: t.fleetPage.pageTitle}
+					</h2>
+					<div className="mt-4 mb-8 flex flex-wrap items-center justify-between gap-4">
+						<p className="text-sm text-[#555]">
+							{t.fleetPage.showing} {filtered.length} {t.fleetPage.of}{" "}
+							{ALL_EQUIPMENT.length} {t.fleetPage.results}
+						</p>
+						<select
+							aria-label={t.fleetPage.sortBy}
+							value={sortBy}
+							onChange={(e) => setSortBy(e.target.value as "default" | "name")}
+							className="h-10 border border-[#ddd] bg-white px-3 text-sm text-[#202020] outline-none focus:border-primary"
+						>
+							<option value="default">{t.fleetPage.sortDefault}</option>
+							<option value="name">{t.fleetPage.sortName}</option>
+						</select>
+					</div>
+
+					{filtered.length === 0 ? (
+						<div className="border border-dashed border-[#ddd] py-20 text-center">
+							<p className="text-lg font-semibold text-[#313131]">
+								{t.fleetPage.noResults}
+							</p>
+							<p className="mt-2 text-sm text-[#777]">
+								{t.fleetPage.tryAdjusting}
+							</p>
+							<button
+								type="button"
+								onClick={() => {
+									setSearchQuery("");
+									selectCategory(undefined);
+								}}
+								className="mt-6 h-10 bg-primary px-6 text-xs font-bold uppercase tracking-wide text-white"
+							>
+								{t.fleetPage.clearFilters}
+							</button>
+						</div>
+					) : (
+						<ul className="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3">
+							{filtered.map((item) => (
+								<li key={item.id}>
+									<EquipmentTile item={item} />
+								</li>
+							))}
+						</ul>
+					)}
+				</section>
 			</div>
 		</>
 	);
 }
 
-function FilterGroup({
-	title,
+function WidgetTitle({
 	children,
 }: {
-	title: string;
 	children: React.ReactNode;
 }): React.JSX.Element {
 	return (
-		<div className="border-t border-border/70 py-7 first:border-t-0 first:pt-0">
-			<h2 className="mb-4 text-xl font-bold text-foreground">{title}</h2>
-			<div className="flex flex-col gap-3">{children}</div>
-		</div>
+		<h2 className="display-title mb-5 border-b border-primary pb-2.5 text-lg font-bold text-[#313131]">
+			{children}
+		</h2>
+	);
+}
+
+function CategoryLink({
+	label,
+	count,
+	active,
+	onClick,
+}: {
+	label: string;
+	count: number;
+	active: boolean;
+	onClick: () => void;
+}): React.JSX.Element {
+	return (
+		<li>
+			<button
+				type="button"
+				onClick={onClick}
+				aria-pressed={active}
+				className={cn(
+					"text-left transition-colors hover:text-primary",
+					active ? "font-semibold text-primary" : "text-[#202020]",
+				)}
+			>
+				· {label} ({count})
+			</button>
+		</li>
 	);
 }

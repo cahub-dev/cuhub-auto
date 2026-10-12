@@ -1,13 +1,6 @@
 "use client";
 
-import {
-	Clock,
-	Mail,
-	MapPin,
-	MessageCircle,
-	Phone,
-	ShieldCheck,
-} from "lucide-react";
+import { Clock, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
 import type React from "react";
 import { useMemo, useState } from "react";
 import { BookingClientStep } from "#/components/booking/BookingClientStep";
@@ -20,22 +13,47 @@ import {
 	DEFAULT_BOOKING_REQUEST,
 	type UpdateBookingRequest,
 } from "#/components/booking/booking-request-options";
+import { WhatsAppIcon } from "#/components/shared/WhatsAppIcon";
 import { Button } from "#/components/ui/button";
+import { getCategory, getEquipment } from "#/data/equipment";
 import {
 	BOOKING_EMAIL,
 	BOOKING_WHATSAPP_NUMBER,
 	type BookingRequest,
 	buildBookingWhatsAppUrl,
 } from "#/lib/booking-message";
+import { useI18n } from "#/lib/i18n";
 
-export function BookingRequestFlow(): React.JSX.Element {
+function initialRequest(
+	equipmentId?: string,
+	startDate?: string,
+): BookingRequest {
+	const base = { ...DEFAULT_BOOKING_REQUEST, startDate: startDate ?? "" };
+	const equipment = equipmentId ? getEquipment(equipmentId) : undefined;
+	if (!equipment) return base;
+
+	return {
+		...base,
+		fleetRequest: equipment.name.en,
+		category: getCategory(equipment.categoryId)?.name.en ?? "Not specified",
+	};
+}
+
+export function BookingRequestFlow({
+	initialEquipmentId,
+	initialStartDate,
+}: {
+	initialEquipmentId?: string;
+	initialStartDate?: string;
+}): React.JSX.Element {
+	const { t } = useI18n();
 	const [step, setStep] = useState(0);
 	const [submitStatus, setSubmitStatus] = useState<
 		"idle" | "sending" | "success" | "error"
 	>("idle");
 	const [submitError, setSubmitError] = useState("");
-	const [request, setRequest] = useState<BookingRequest>(
-		DEFAULT_BOOKING_REQUEST,
+	const [request, setRequest] = useState<BookingRequest>(() =>
+		initialRequest(initialEquipmentId, initialStartDate),
 	);
 
 	const canContinue = useMemo(() => {
@@ -86,16 +104,14 @@ export function BookingRequestFlow(): React.JSX.Element {
 
 			if (!response.ok) {
 				const body = await response.json().catch(() => null);
-				throw new Error(body?.error ?? "Unable to send booking request");
+				throw new Error(body?.error ?? t.bookingFlow.error);
 			}
 
 			setSubmitStatus("success");
 		} catch (error) {
 			setSubmitStatus("error");
 			setSubmitError(
-				error instanceof Error
-					? error.message
-					: "Unable to send booking request",
+				error instanceof Error ? error.message : t.bookingFlow.error,
 			);
 		}
 	}
@@ -103,7 +119,7 @@ export function BookingRequestFlow(): React.JSX.Element {
 	return (
 		<div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[minmax(0,1fr)_320px]">
 			{/* Main form panel */}
-			<section className="rounded-2xl bg-white p-6 shadow-[0_2px_16px_rgba(0,0,0,0.06)] md:p-8">
+			<section className="shadow-card p-6 md:p-10">
 				<BookingStepIndicator step={step} />
 				<form className="mt-8" onSubmit={(event) => event.preventDefault()}>
 					{step === 0 && <BookingFleetStep request={request} update={update} />}
@@ -134,8 +150,11 @@ export function BookingRequestFlow(): React.JSX.Element {
 
 			{/* Sidebar */}
 			<aside
-				className="self-start rounded-2xl p-6 lg:sticky lg:top-24"
-				style={{ background: "#f9f8f7", border: "1px solid var(--line)" }}
+				className="self-start p-6 lg:sticky lg:top-6"
+				style={{
+					background: "var(--surface-muted)",
+					border: "1px solid var(--line)",
+				}}
 			>
 				{/* Quote-only notice */}
 				<div className="flex items-start gap-3">
@@ -144,11 +163,10 @@ export function BookingRequestFlow(): React.JSX.Element {
 					</div>
 					<div>
 						<p className="text-sm font-semibold text-foreground">
-							Quote request only
+							{t.bookingFlow.quoteOnly}
 						</p>
 						<p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-							No payment online. We confirm availability and send a proposal
-							first.
+							{t.bookingFlow.quoteOnlyDescription}
 						</p>
 					</div>
 				</div>
@@ -160,13 +178,13 @@ export function BookingRequestFlow(): React.JSX.Element {
 					<div className="flex items-center gap-2.5">
 						<Clock className="size-4 text-primary shrink-0" />
 						<span className="text-sm text-foreground">
-							Reply within 24 hours
+							{t.bookingFlow.reply24}
 						</span>
 					</div>
 					<div className="flex items-center gap-2.5">
 						<MapPin className="size-4 text-primary shrink-0" />
 						<span className="text-sm text-foreground">
-							All 10 provinces covered
+							{t.bookingFlow.allProvinces}
 						</span>
 					</div>
 				</div>
@@ -175,7 +193,7 @@ export function BookingRequestFlow(): React.JSX.Element {
 
 				{/* Direct contact */}
 				<p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
-					Direct contact
+					{t.bookingFlow.directContact}
 				</p>
 				<div className="flex flex-col gap-3">
 					<a
@@ -199,15 +217,15 @@ export function BookingRequestFlow(): React.JSX.Element {
 					<>
 						<div className="my-5 h-px" style={{ background: "var(--line)" }} />
 						<p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
-							Your request
+							{t.bookingFlow.yourRequest}
 						</p>
 						<div className="flex flex-col gap-2">
 							{[
-								["Fleet", request.fleetRequest],
-								["Province", step >= 1 ? request.province : ""],
-								["From", step >= 1 ? request.startDate : ""],
-								["Until", step >= 1 ? request.returnDate : ""],
-								["Company", step >= 2 ? request.companyName : ""],
+								[t.bookingFlow.steps[0], request.fleetRequest],
+								[t.bookingFlow.province, step >= 1 ? request.province : ""],
+								[t.bookingFlow.from, step >= 1 ? request.startDate : ""],
+								[t.bookingFlow.until, step >= 1 ? request.returnDate : ""],
+								[t.bookingFlow.company, step >= 2 ? request.companyName : ""],
 							]
 								.filter(([, v]) => v)
 								.map(([label, value]) => (
@@ -250,16 +268,18 @@ function BookingActions({
 	onNext: () => void;
 	onSubmitRequest: () => void;
 }): React.JSX.Element {
+	const { t } = useI18n();
+
 	return (
 		<div className="mt-8 flex flex-col gap-3 border-t border-border/50 pt-5">
 			{submitStatus === "success" && (
 				<p className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
-					Request sent. We emailed you a copy and notified our sales team.
+					{t.bookingFlow.success}
 				</p>
 			)}
 			{submitStatus === "error" && (
 				<p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-					{submitError || "Unable to send booking request. Please try again."}
+					{submitError || t.bookingFlow.error}
 				</p>
 			)}
 
@@ -271,7 +291,7 @@ function BookingActions({
 					onClick={onBack}
 					className="sm:w-auto"
 				>
-					Back
+					{t.bookingFlow.back}
 				</Button>
 
 				{step < BOOKING_STEPS.length - 1 ? (
@@ -281,7 +301,7 @@ function BookingActions({
 						onClick={onNext}
 						className="sm:w-auto"
 					>
-						Continue
+						{t.bookingFlow.continue}
 					</Button>
 				) : (
 					<div className="flex flex-col gap-2 sm:flex-row">
@@ -294,18 +314,19 @@ function BookingActions({
 							onClick={onSubmitRequest}
 						>
 							<Mail className="size-4" aria-hidden="true" />
-							{submitStatus === "sending" ? "Sending..." : "Send via Email"}
+							{submitStatus === "sending"
+								? t.bookingFlow.sending
+								: t.bookingFlow.sendEmail}
 						</Button>
-						<Button asChild>
-							<a
-								href={buildBookingWhatsAppUrl(request)}
-								target="_blank"
-								rel="noreferrer"
-							>
-								<MessageCircle className="size-4" aria-hidden="true" />
-								Send via WhatsApp
-							</a>
-						</Button>
+						<a
+							href={buildBookingWhatsAppUrl(request)}
+							target="_blank"
+							rel="noreferrer"
+							className="btn-whatsapp h-9 px-4 text-xs"
+						>
+							<WhatsAppIcon className="size-4" />
+							{t.bookingFlow.sendWhatsApp}
+						</a>
 					</div>
 				)}
 			</div>

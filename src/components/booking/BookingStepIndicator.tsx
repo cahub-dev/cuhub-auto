@@ -1,17 +1,20 @@
 import { Check } from "lucide-react";
-import { Fragment } from "react";
 import type React from "react";
-import { BOOKING_STEPS } from "#/components/booking/booking-request-options";
+import { Fragment } from "react";
+import { useI18n } from "#/lib/i18n";
 
 export function BookingStepIndicator({
 	step,
 }: {
 	step: number;
 }): React.JSX.Element {
+	const { t } = useI18n();
+	const steps = t.bookingFlow.steps;
+
 	return (
-		<nav aria-label="Booking steps">
+		<nav aria-label={t.bookingFlow.stepsLabel}>
 			<ol className="flex items-center">
-				{BOOKING_STEPS.map((label, index) => {
+				{steps.map((label, index) => {
 					const isCompleted = index < step;
 					const isActive = index === step;
 					return (
@@ -44,7 +47,7 @@ export function BookingStepIndicator({
 									{label}
 								</span>
 							</li>
-							{index < BOOKING_STEPS.length - 1 && (
+							{index < steps.length - 1 && (
 								<div
 									aria-hidden="true"
 									className={`flex-1 h-0.5 mx-2 mb-5 sm:mb-0 rounded-full transition-colors ${

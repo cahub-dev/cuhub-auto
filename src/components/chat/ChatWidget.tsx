@@ -2,18 +2,24 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, isTextUIPart } from "ai";
 import { Loader2, MessageCircle, Send, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { WhatsAppIcon } from "#/components/shared/WhatsAppIcon";
+import { EQUIPMENT, getCategory } from "#/data/equipment";
 import type { BookingRequest } from "#/lib/booking-message";
-
-type Language = "en" | "pt";
+import { type Language, useI18n } from "#/lib/i18n";
 
 const QUICK_REPLIES: Record<Language, string[]> = {
-	en: ["View fleet", "Get a quote", "Service areas", "Contact us"],
-	pt: ["Ver frota", "Obter cotação", "Áreas de serviço", "Contacte-nos"],
+	en: ["Equipment available", "Get a quote", "Service areas", "Contact us"],
+	pt: [
+		"Equipamentos disponíveis",
+		"Obter cotação",
+		"Áreas de serviço",
+		"Contacte-nos",
+	],
 };
 
 const WELCOME: Record<Language, string> = {
-	en: "Hello! I'm the CA HUB AUTO assistant. How can I help you today?",
-	pt: "Olá! Sou o assistente da CA HUB AUTO. Como posso ajudá-lo hoje?",
+	en: "Hello! I'm the CA HUB AUTO assistant. Looking for crushers, excavators, loaders, generators or other mining equipment? How can I help?",
+	pt: "Olá! Sou o assistente da CA HUB AUTO. Procura britadores, escavadoras, pás carregadoras, geradores ou outro equipamento de mineração? Como posso ajudar?",
 };
 
 const MAX_INPUT_CHARS = 1000;
@@ -130,9 +136,10 @@ function InlineMarkdown({ text }: { text: string }) {
 					href={part}
 					target="_blank"
 					rel="noopener noreferrer"
-					className="underline font-medium"
-					style={{ color: "var(--color-coral-glow-400)" }}
+					className="inline-flex items-center gap-1 underline font-medium"
+					style={{ color: isWhatsApp ? "#1da851" : "var(--primary)" }}
 				>
+					{isWhatsApp && <WhatsAppIcon className="size-3.5" />}
 					{isWhatsApp ? "Open WhatsApp" : "Send Email"}
 				</a>
 			);
@@ -210,6 +217,40 @@ function extractRentalDates(transcript: string) {
 	};
 }
 
+// Generic words map to a category when the visitor names no specific unit.
+const GENERIC_EQUIPMENT: [RegExp, string][] = [
+	[/crusher|britador/i, "Crushers"],
+	[/excavator|escavadora/i, "Excavators"],
+	[/loader|pá carregadora|pa carregadora/i, "Wheel Loaders"],
+	[/generator|genset|gerador/i, "Generators"],
+	[/dump truck|tipper|haul truck|basculante|camião|camiao/i, "Dump Trucks"],
+	[/drill|perfuradora/i, "Drilling Rigs"],
+	[/ball mill|mill|moinho/i, "Ball Mills"],
+	[/bowser|water truck|cisterna/i, "Site Support"],
+];
+
+function findRequestedEquipment(
+	transcript: string,
+): { name: string; category: string } | null {
+	const lower = transcript.toLowerCase();
+	for (const item of EQUIPMENT) {
+		if (
+			lower.includes(item.name.en.toLowerCase()) ||
+			lower.includes(item.name.pt.toLowerCase())
+		) {
+			return {
+				name: item.name.en,
+				category: getCategory(item.categoryId)?.name.en ?? "Not specified",
+			};
+		}
+	}
+	for (const [pattern, category] of GENERIC_EQUIPMENT) {
+		const match = transcript.match(pattern);
+		if (match) return { name: match[0], category };
+	}
+	return null;
+}
+
 function buildChatQuoteRequest(messages: { role: string; parts: unknown[] }[]) {
 	const userTexts = messages
 		.filter((message) => message.role === "user")
@@ -222,14 +263,7 @@ function buildChatQuoteRequest(messages: { role: string; parts: unknown[] }[]) {
 
 	if (!userTexts.length) return null;
 
-	const vehicle =
-		transcript.match(
-			/Toyota Land Cruiser|Nissan Navara Single Cab|Nissan Navara Double Cab|Develon Loader SD300|Develon Excavator DX220|Scania Mining Truck/i,
-		)?.[0] ??
-		transcript.match(
-			/\b(loader|excavator|truck|pickup|machinery|equipment)\b/i,
-		)?.[0] ??
-		"";
+	const equipment = findRequestedEquipment(transcript);
 	const name = extractContactName(userTexts, transcript);
 	const rentalDates = extractRentalDates(transcript);
 	const projectUse =
@@ -237,26 +271,24 @@ function buildChatQuoteRequest(messages: { role: string; parts: unknown[] }[]) {
 			/(?:for|para)\s+([^\n,.]+?)(?:\s+from|\s+dia|\s+\d{1,2}\s*-|$)/i,
 		]) || "";
 	const location = extractFirstMatch(transcript, [
-		/(?:delivery|pickup|local|location|entrega)\s*(?:in|at|em|:)?\s*([^\n,]+?)(?:\s+\d{1,2}\s*(?:am|pm)|$)/i,
+		/(?:site|obra|mine|mina|delivery|pickup|local|location|entrega)\s*(?:in|at|em|:)?\s*([^\n,]+?)(?:\s+\d{1,2}\s*(?:am|pm)|$)/i,
 	]);
 	const hasRequiredQuoteDetails = Boolean(
 		name &&
 			email &&
 			phone &&
-			vehicle &&
+			equipment &&
 			rentalDates.startDate &&
 			rentalDates.returnDate &&
 			location &&
 			projectUse,
 	);
 
-	if (!hasRequiredQuoteDetails) return null;
+	if (!hasRequiredQuoteDetails || !equipment) return null;
 
 	return {
-		fleetRequest: vehicle,
-		category: /loader|excavator|equipment|máquina|maquina/i.test(transcript)
-			? "Heavy equipment"
-			: "Vehicle",
+		fleetRequest: equipment.name,
+		category: equipment.category,
 		province: location,
 		location,
 		startDate: rentalDates.startDate,
@@ -321,8 +353,9 @@ function buildEscalationRequest(
 }
 
 export function ChatWidget() {
+	const { language: siteLanguage, setLanguage: setSiteLanguage } = useI18n();
 	const [open, setOpen] = useState(false);
-	const [language, setLanguage] = useState<Language>("en");
+	const [language, setLanguage] = useState<Language>(siteLanguage);
 	const [input, setInput] = useState("");
 	const [coolingDown, setCoolingDown] = useState(false);
 	const [quoteStatus, setQuoteStatus] = useState<QuoteSubmitStatus>("idle");
@@ -348,6 +381,13 @@ export function ChatWidget() {
 	const { messages, sendMessage, status, setMessages, error } = useChat({
 		transport,
 	});
+
+	useEffect(() => {
+		if (messages.length > 0 || siteLanguage === language) return;
+		setLanguage(siteLanguage);
+		setQuoteStatus("idle");
+		setEscalationStatus("idle");
+	}, [language, messages.length, siteLanguage]);
 
 	const isLoading = status === "submitted" || status === "streaming";
 	const sendDisabled = !input.trim() || isLoading || coolingDown;
@@ -376,6 +416,7 @@ export function ChatWidget() {
 
 	const handleLanguageChange = (lang: Language) => {
 		setLanguage(lang);
+		setSiteLanguage(lang);
 		setMessages([]);
 		setQuoteStatus("idle");
 		setEscalationStatus("idle");
@@ -474,7 +515,7 @@ export function ChatWidget() {
 									style={
 										language === lang
 											? {
-													background: "var(--color-coral-glow-500)",
+													background: "var(--primary)",
 													color: "#fff",
 												}
 											: {
@@ -493,7 +534,7 @@ export function ChatWidget() {
 							onClick={() => setOpen(false)}
 							className="transition-colors ml-1"
 							style={{ color: "var(--muted-foreground)" }}
-							aria-label="Close chat"
+							aria-label={language === "en" ? "Close chat" : "Fechar chat"}
 						>
 							<X size={16} />
 						</button>
@@ -526,13 +567,12 @@ export function ChatWidget() {
 										onClick={() => submitText(reply)}
 										className="text-xs px-3 py-1.5 rounded-full border font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 										style={{
-											borderColor: "var(--color-coral-glow-500)",
-											color: "var(--color-coral-glow-500)",
+											borderColor: "var(--primary)",
+											color: "var(--primary)",
 											background: "transparent",
 										}}
 										onMouseEnter={(e) => {
-											e.currentTarget.style.background =
-												"var(--color-coral-glow-900)";
+											e.currentTarget.style.background = "var(--accent)";
 										}}
 										onMouseLeave={(e) => {
 											e.currentTarget.style.background = "transparent";
@@ -565,7 +605,7 @@ export function ChatWidget() {
 										style={
 											msg.role === "user"
 												? {
-														background: "var(--color-coral-glow-500)",
+														background: "var(--primary)",
 														color: "#fff",
 													}
 												: {
@@ -606,7 +646,7 @@ export function ChatWidget() {
 									className="max-w-[85%] rounded-2xl rounded-tl-none px-4 py-3 text-sm border"
 									style={{
 										background: "var(--surface)",
-										borderColor: "var(--color-coral-glow-500)",
+										borderColor: "var(--primary)",
 										color: "var(--foreground)",
 									}}
 								>
@@ -652,7 +692,7 @@ export function ChatWidget() {
 									className="max-w-[85%] rounded-2xl rounded-tl-none px-4 py-3 text-sm border"
 									style={{
 										background: "var(--surface)",
-										borderColor: "var(--color-coral-glow-500)",
+										borderColor: "var(--primary)",
 										color: "var(--foreground)",
 									}}
 								>
@@ -680,7 +720,7 @@ export function ChatWidget() {
 										onClick={submitQuoteRequest}
 										className="rounded-full px-3 py-1.5 text-xs font-semibold transition-opacity disabled:opacity-60"
 										style={{
-											background: "var(--color-coral-glow-500)",
+											background: "var(--primary)",
 											color: "#fff",
 										}}
 									>
@@ -689,7 +729,7 @@ export function ChatWidget() {
 											: QUOTE_STATUS[language].send}
 									</button>
 									{quoteStatus === "error" && (
-										<p style={{ color: "var(--color-coral-glow-500)" }}>
+										<p style={{ color: "var(--primary)" }}>
 											{QUOTE_STATUS[language].error}
 										</p>
 									)}
@@ -703,7 +743,7 @@ export function ChatWidget() {
 									className="max-w-[85%] rounded-2xl rounded-tl-none px-4 py-3 text-sm border"
 									style={{
 										background: "var(--surface)",
-										borderColor: "var(--color-coral-glow-500)",
+										borderColor: "var(--primary)",
 										color: "var(--foreground)",
 									}}
 								>
@@ -740,10 +780,9 @@ export function ChatWidget() {
 								borderColor: "var(--border)",
 							}}
 							onFocus={(e) => {
-								e.currentTarget.style.borderColor =
-									"var(--color-coral-glow-500)";
+								e.currentTarget.style.borderColor = "var(--primary)";
 								e.currentTarget.style.boxShadow =
-									"0 0 0 3px color-mix(in oklab, var(--color-coral-glow-500) 20%, transparent)";
+									"0 0 0 3px color-mix(in oklab, var(--primary) 20%, transparent)";
 							}}
 							onBlur={(e) => {
 								e.currentTarget.style.borderColor = "var(--border)";
@@ -755,10 +794,10 @@ export function ChatWidget() {
 							disabled={sendDisabled}
 							className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
 							style={{
-								background: "var(--color-coral-glow-500)",
+								background: "var(--primary)",
 								color: "#fff",
 							}}
-							aria-label="Send"
+							aria-label={language === "en" ? "Send" : "Enviar"}
 						>
 							<Send size={14} />
 						</button>
@@ -771,8 +810,16 @@ export function ChatWidget() {
 				type="button"
 				onClick={() => setOpen((v) => !v)}
 				className="w-14 h-14 rounded-full shadow-lg flex items-center justify-center self-end transition-all hover:scale-105 active:scale-95"
-				style={{ background: "var(--color-coral-glow-500)", color: "#fff" }}
-				aria-label={open ? "Close chat" : "Open chat"}
+				style={{ background: "var(--primary)", color: "#fff" }}
+				aria-label={
+					open
+						? language === "en"
+							? "Close chat"
+							: "Fechar chat"
+						: language === "en"
+							? "Open chat"
+							: "Abrir chat"
+				}
 			>
 				{open ? <X size={22} /> : <MessageCircle size={22} />}
 			</button>

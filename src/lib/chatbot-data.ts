@@ -1,4 +1,13 @@
-import { SALES_CONTACT } from "#/lib/contact-details";
+import {
+	EQUIPMENT_CATEGORIES,
+	getEquipmentByCategory,
+	localize,
+} from "#/data/equipment";
+import {
+	BUSINESS_HOURS,
+	COMPANY_ADDRESS,
+	SALES_CONTACT,
+} from "#/lib/contact-details";
 
 export const BUSINESS_DATA = {
 	company: {
@@ -6,67 +15,32 @@ export const BUSINESS_DATA = {
 		phone: SALES_CONTACT.phoneDisplay,
 		whatsapp: SALES_CONTACT.whatsapp,
 		email: SALES_CONTACT.email,
-		address: "Rua de Micaia, Q.56, nº115, Maputo",
-		businessHours: "Monday–Saturday, 07:00–18:00",
+		address: `${COMPANY_ADDRESS.street}, ${COMPANY_ADDRESS.locality}`,
+		businessHours: BUSINESS_HOURS.en,
 	},
-	fleet: [
-		{
-			name: "Toyota Land Cruiser",
-			type: "4x4 SUV",
-			capacity: "7 people",
-			dailyRate: 120,
-			weeklyRateNote: "Weekly and project rates available on request",
-			bestFor: "Executive travel, site visits, long-distance operations",
-		},
-		{
-			name: "Nissan Navara Single Cab",
-			type: "Light truck / Pickup",
-			capacity: "2 people",
-			dailyRate: 85,
-			bestFor: "Light cargo movement, site mobility, operational teams",
-		},
-		{
-			name: "Nissan Navara Double Cab",
-			type: "Light truck / Pickup",
-			capacity: "5 people",
-			dailyRate: 95,
-			bestFor: "Field teams needing passenger and cargo capacity",
-		},
-		{
-			name: "Develon Loader SD300",
-			type: "Heavy equipment",
-			dailyRate: 280,
-			bestFor:
-				"Material handling, loading, site preparation, construction and mining",
-			operatorAvailable: true,
-		},
-		{
-			name: "Develon Excavator DX220",
-			type: "Heavy equipment",
-			dailyRate: 340,
-			bestFor: "Excavation, trenching, heavy site preparation",
-			operatorAvailable: true,
-		},
-		{
-			name: "Scania Mining Truck",
-			type: "Heavy vehicle",
-			dailyRate: 420,
-			bestFor: "Mining and industrial hauling operations",
-		},
-	],
-	extras: [
-		{ name: "Professional driver", price: "$45/day" },
-		{ name: "Certified operator (heavy equipment)", price: "$80/day" },
-		{ name: "Vehicle delivery to site", price: "$25 per delivery" },
-		{ name: "Premium insurance", price: "$18/day" },
-		{ name: "Site transport (equipment)", price: "$65 per deployment" },
+	// Built from the catalogue so the bot never drifts from the website.
+	fleet: EQUIPMENT_CATEGORIES.flatMap((category) =>
+		getEquipmentByCategory(category.id).map((item) => ({
+			name: item.name.en,
+			category: category.name.en,
+			specs: item.specs
+				.map((spec) => `${spec.label.en}: ${localize(spec.value, "en")}`)
+				.join("; "),
+			bestFor: item.applications.map((a) => a.en).join(", "),
+		})),
+	),
+	services: [
+		"Certified operator (optional, quoted per project)",
+		"Delivery & mobilisation to site",
+		"Maintenance & servicing during the rental",
+		"Fuel supply (on request)",
+		"Insurance",
 	],
 	included: [
-		"Scheduled maintenance support during rental period",
-		"Basic comprehensive insurance",
-		"Roadworthy inspection before handover",
-		"Flexible pickup coordination in Maputo",
-		"24/7 rental assistance for active bookings",
+		"Inspection before mobilisation",
+		"Scheduled maintenance support during the rental period",
+		"Breakdown response and replacement support",
+		"Technical advice to size the right equipment",
 	],
 	serviceAreas: [
 		"Maputo City",
@@ -83,31 +57,27 @@ export const BUSINESS_DATA = {
 	faqs: [
 		{
 			q: "What is the minimum rental period?",
-			a: "Minimum rental is 1 day. Weekly and monthly rates are available for longer projects.",
+			a: "Rentals are usually weekly, monthly or for the full project. Short rentals are possible depending on availability and site location.",
 		},
 		{
-			q: "Is a driver or operator included?",
-			a: "Driver/operator is optional and can be added as an extra. Vehicles can be rented with or without a driver.",
+			q: "Is an operator included?",
+			a: "A certified operator is optional and can be added to any machine. It is included in the quote when requested.",
 		},
 		{
-			q: "What documents are required to rent?",
-			a: "Valid ID or passport, driver's licence (for vehicle rentals), and a signed rental agreement. Corporate clients may provide a company letter.",
+			q: "How are prices calculated?",
+			a: "Every rental is quoted individually. Price depends on the equipment, quantity, duration, site location, mobilisation and operator needs. The team sends a proposal within 24 hours.",
 		},
 		{
-			q: "Are long-term or project-based rates available?",
-			a: "Yes. For projects lasting weeks or months we offer customised rates. Contact us for a quote.",
+			q: "Do you deliver to remote mine sites?",
+			a: "Yes. We mobilise equipment to mines, quarries and plants in all 10 provinces. Transport is included in the quote.",
 		},
 		{
-			q: "Is insurance included?",
-			a: "Basic comprehensive insurance is included. Premium insurance is available as an add-on.",
+			q: "Who maintains the equipment?",
+			a: "CA HUB AUTO handles scheduled maintenance and breakdown response during the rental.",
 		},
 		{
-			q: "What happens in case of a breakdown?",
-			a: "We provide 24/7 assistance for active rentals. Our team coordinates replacement or repair support on site.",
-		},
-		{
-			q: "Do you offer cross-border rentals?",
-			a: "Cross-border rentals are available but must be approved and quoted in advance.",
+			q: "What documents are required?",
+			a: "Company details (NUIT), a signed rental agreement and site access information. The team confirms the full list with the proposal.",
 		},
 	],
 };
@@ -117,32 +87,30 @@ export function buildSystemPrompt(language: "en" | "pt" = "en"): string {
 
 	const fleetList = d.fleet
 		.map(
-			(v) =>
-				`  - ${v.name} (${v.type}): $${v.dailyRate}/day${v.operatorAvailable ? " — operator available" : ""}. Best for: ${v.bestFor}.`,
+			(item) =>
+				`  - ${item.name} [${item.category}] — ${item.specs}. Best for: ${item.bestFor}.`,
 		)
 		.join("\n");
 
-	const extrasList = d.extras
-		.map((e) => `  - ${e.name}: ${e.price}`)
-		.join("\n");
+	const servicesList = d.services.map((service) => `  - ${service}`).join("\n");
 
 	const faqList = d.faqs.map((f) => `  Q: ${f.q}\n  A: ${f.a}`).join("\n\n");
 
 	const areasList = d.serviceAreas.join(", ");
 
-	return `You are the CA HUB AUTO virtual assistant — a specialist in vehicle and heavy equipment rental in Mozambique.
+	return `You are the CA HUB AUTO virtual assistant — a specialist in mining machinery and equipment rental in Mozambique.
 
 LANGUAGE BEHAVIOUR:
 - Default reply language: ${language === "pt" ? "Portuguese (Mozambican/European)" : "English"}.
 - If the user writes in a different language mid-conversation, automatically switch and continue in that language. No confirmation needed.
 
 YOUR STRICT SCOPE — ONLY answer about:
-- CA HUB AUTO fleet, pricing, availability enquiries, service areas, rental process, and FAQs below.
-- Helping a visitor decide which vehicle fits their need.
+- CA HUB AUTO equipment catalogue, availability enquiries, service areas, rental process, and FAQs below.
+- Helping a visitor decide which equipment fits their job (crushing, excavation, loading, haulage, drilling, milling, site power).
 - Collecting contact details when they are ready to proceed.
 
-NEVER answer questions about competitors, vehicle purchases, general mechanics, weather, news, or any topic not listed above.
-If asked something out of scope, reply: "I can only help with CA HUB AUTO rentals. Is there something about our fleet or service I can assist with?"
+NEVER answer questions about competitors, equipment purchases, general mechanics, weather, news, or any topic not listed above.
+If asked something out of scope, reply: "I can only help with CA HUB AUTO equipment rentals. Is there something about our equipment or service I can assist with?"
 
 ---
 
@@ -156,14 +124,15 @@ Business hours: ${d.company.businessHours}
 
 ---
 
-FLEET & DAILY RATES (USD — all rates are per calendar day):
+EQUIPMENT CATALOGUE (priority order — mining equipment first; specs are indicative):
 ${fleetList}
 
-Rates exclude: fuel, driver/operator (optional extra), cross-border fees, toll fees.
-Weekly and project-based rates are negotiable — direct to team for quote.
+PRICING POLICY — IMPORTANT:
+- CA HUB AUTO does not publish prices. Never quote, estimate or invent a price, rate or range.
+- If asked about price, explain that every rental is quoted to the project (equipment, quantity, duration, site, operator) and offer to prepare a quote request.
 
-OPTIONAL EXTRAS:
-${extrasList}
+OPTIONAL SERVICES:
+${servicesList}
 
 INCLUDED IN ALL RENTALS:
 ${d.included.map((i) => `  - ${i}`).join("\n")}
@@ -183,15 +152,15 @@ ${faqList}
 LEAD CAPTURE — apply when visitor shows booking or quote intent:
 Required quote details before the site can send a request:
 1. Customer name.
-2. Vehicle or equipment needed.
-3. Rental start date and pickup time.
-4. Rental return date and return time.
-5. Pickup or delivery location/province.
-6. Project/use case.
+2. Equipment needed (and quantity).
+3. Rental start date.
+4. Rental end date or expected duration.
+5. Site location/province.
+6. Project/scope of work (and whether an operator is needed).
 7. Email address.
 8. WhatsApp or phone number.
 
-Ask for missing quote details one step at a time. If several details are missing, ask a short grouped question, for example: "Please share the pickup location, return date/time, and your email so I can prepare the request."
+Ask for missing quote details one step at a time. If several details are missing, ask a short grouped question, for example: "Please share the site location, the end date, and your email so I can prepare the request."
 
 Do not tell the visitor to send the request, and do not say the team will follow up, until all required quote details above are present.
 
@@ -200,7 +169,7 @@ If any required detail is missing, explain exactly what is missing and ask for i
 After collecting all required quote details: summarize the request and tell the visitor to use the quote request button shown in the chat to send it to CA HUB AUTO. Do not claim the request was sent until the site confirms it.
 
 If the visitor asks for direct contact details, show only:
-  Sales contact: Verónica — ${d.company.phone}
+  Sales contact: ${SALES_CONTACT.name} — ${d.company.phone}
   Email: ${d.company.email}
 
 ---
@@ -217,6 +186,6 @@ ESCALATION — automatic support forwarding:
 TONE & FORMAT:
 - Professional, warm, direct. Never start a reply with "Certainly!", "Of course!", or "Great question!".
 - Keep replies to 2–4 sentences unless listing options. Use bullet points for comparisons or lists.
-- For pricing questions: give the daily rate and note that project rates can be arranged.
+- For pricing questions: never give a number. Explain that rentals are quoted per project and offer to start a quote request.
 `;
 }

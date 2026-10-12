@@ -1,6 +1,7 @@
 import { Info } from "lucide-react";
 import type React from "react";
 import type { BookingRequest } from "#/lib/booking-message";
+import { useI18n } from "#/lib/i18n";
 
 function ReviewSection({
 	title,
@@ -36,39 +37,45 @@ export function BookingReviewStep({
 }: {
 	request: BookingRequest;
 }): React.JSX.Element {
+	const { t } = useI18n();
 	const fleetRows = [
-		["Fleet", request.fleetRequest],
-		["Category", request.category],
-		["Start date", request.startDate || "—"],
-		["Return date", request.returnDate || "—"],
-		["Province", request.province],
-		["Location", request.location || "—"],
-		["Project / use", request.projectUse],
-		["Add-ons", request.extras.length > 0 ? request.extras.join(", ") : "None"],
+		[t.bookingFlow.steps[0], request.fleetRequest],
+		[t.bookingFlow.category, request.category],
+		[t.bookingFlow.startDate, request.startDate || "—"],
+		[t.bookingFlow.returnDate, request.returnDate || "—"],
+		[t.bookingFlow.province, request.province],
+		[t.bookingFlow.location, request.location || "—"],
+		[t.bookingFlow.projectUse, request.projectUse],
+		[
+			t.bookingFlow.addons,
+			request.extras.length > 0
+				? request.extras.join(", ")
+				: t.bookingFlow.none,
+		],
 	] as const;
 
 	const clientRows = [
-		["Company", request.companyName],
-		["NUIT", request.nuit || "—"],
-		["Sector", request.sector],
-		["Contact", request.contactPerson],
-		["Phone", request.phone],
-		["Email", request.email],
-		["Address", request.address || "—"],
+		[t.bookingFlow.company, request.companyName],
+		[t.bookingFlow.nuit, request.nuit || "—"],
+		[t.bookingFlow.sector, request.sector],
+		[t.bookingFlow.contact, request.contactPerson],
+		[t.bookingFlow.phone, request.phone],
+		[t.bookingFlow.email, request.email],
+		[t.bookingFlow.address, request.address || "—"],
 	] as const;
 
 	return (
 		<div className="flex flex-col gap-4">
 			<div className="flex items-start gap-3 rounded-xl border border-primary/25 bg-accent px-4 py-3 text-sm text-accent-foreground">
-				<Info className="size-4 text-primary shrink-0 mt-0.5" aria-hidden="true" />
-				<span>
-					This sends a quote request only — no payment is taken online. CA HUB AUTO
-					will confirm availability and send a proposal.
-				</span>
+				<Info
+					className="size-4 text-primary shrink-0 mt-0.5"
+					aria-hidden="true"
+				/>
+				<span>{t.bookingFlow.reviewNotice}</span>
 			</div>
 
-			<ReviewSection title="Fleet & Rental" rows={fleetRows} />
-			<ReviewSection title="Contact Details" rows={clientRows} />
+			<ReviewSection title={t.bookingFlow.fleetRental} rows={fleetRows} />
+			<ReviewSection title={t.bookingFlow.contactDetails} rows={clientRows} />
 		</div>
 	);
 }
