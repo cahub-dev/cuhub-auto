@@ -1,42 +1,57 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type React from "react";
-import { BookingPanel } from "#/components/booking/BookingPanel";
-import { FeaturedFleet } from "#/components/cars/FeaturedFleet";
-import { Hero } from "#/components/Hero";
-import { ServiceAreaMap } from "#/components/shared/ServiceAreaMap";
+import { EquipmentCategories } from "#/components/equipment/EquipmentCategories";
+import { FeaturedEquipment } from "#/components/equipment/FeaturedEquipment";
+import { BenefitsBlock } from "#/components/home/BenefitsBlock";
+import { HERO_IMAGE, Hero } from "#/components/home/Hero";
+import { HowItWorks } from "#/components/home/HowItWorks";
+import { StatsBand } from "#/components/home/StatsBand";
+import { Testimonials } from "#/components/home/Testimonials";
+import { Updates } from "#/components/home/Updates";
 import { TrustedPartners } from "#/components/shared/TrustedPartners";
 import { WhyChooseUs } from "#/components/shared/WhyChooseUs";
-import { VideoSection } from "#/components/VideoSection";
+import { useI18n } from "#/lib/i18n";
 import { buildPageMeta } from "#/lib/seo";
 
 export const Route = createFileRoute("/")({
 	head: () => ({
 		meta: buildPageMeta({
-			title: "Vehicle & Equipment Rental in Mozambique",
+			title: "Mining Machinery & Equipment Rental in Mozambique",
 			description:
-				"Rent vehicles and heavy equipment in Mozambique. Toyota Land Cruiser, Nissan Navara pickups, Develon loaders, excavators, and Scania mining trucks — daily and project rates from Maputo.",
+				"Rent mining equipment in Mozambique: jaw and cone crushers, excavators, wheel loaders, diesel generators, dump trucks, drill rigs and ball mills. Delivery to site, certified operators, quotes within 24 hours.",
 			path: "/",
 		}),
+		links: [{ rel: "preload", as: "image", href: HERO_IMAGE }],
 	}),
 	component: Home,
 });
 
+// Section order follows the Backhoe reference layout.
 function Home(): React.JSX.Element {
+	const { t } = useI18n();
+
 	return (
 		<div>
 			<Hero />
-			<div className="booking-card-wrapper">
-				<div className="page-wrap">
-					<div className="">
-						<BookingPanel />
-					</div>
-				</div>
+			<EquipmentCategories />
+			<BenefitsBlock
+				copy={t.home.benefitsA}
+				image="/equipment/wheel-loaders/develon-sd300-2.webp"
+			/>
+			<div className="mt-12 md:mt-16">
+				<TrustedPartners />
 			</div>
-			<FeaturedFleet />
 			<WhyChooseUs />
-			<ServiceAreaMap />
-			<VideoSection />
-			<TrustedPartners />
+			<BenefitsBlock
+				copy={t.home.benefitsB}
+				image="/equipment/dump-trucks/scania-tipper-1.webp"
+				reverse
+			/>
+			<FeaturedEquipment />
+			<HowItWorks />
+			<StatsBand />
+			<Testimonials />
+			<Updates />
 		</div>
 	);
 }

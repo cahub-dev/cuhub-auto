@@ -1,13 +1,28 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { BookingRequestFlow } from "#/components/booking/BookingRequestFlow";
+import { ContactItems } from "#/components/contact/ContactSection";
+import { PageHero } from "#/components/equipment/PageHero";
+import { SectionHeading } from "#/components/shared/SectionHeading";
+import { useI18n } from "#/lib/i18n";
 import { buildPageMeta } from "#/lib/seo";
 
 export const Route = createFileRoute("/booking/new")({
+	validateSearch: (
+		search: Record<string, unknown>,
+	): { equipment?: string; start?: string } => ({
+		...(typeof search.equipment === "string"
+			? { equipment: search.equipment }
+			: {}),
+		...(typeof search.start === "string" &&
+		/^\d{4}-\d{2}-\d{2}$/.test(search.start)
+			? { start: search.start }
+			: {}),
+	}),
 	head: () => ({
 		meta: buildPageMeta({
-			title: "Book a Vehicle",
+			title: "Request an Equipment Quote",
 			description:
-				"Submit a rental request for vehicles or heavy equipment in Mozambique. CA HUB AUTO will confirm availability and provide a quote within 24 hours.",
+				"Request a rental quote for mining machinery in Mozambique: crushers, excavators, wheel loaders, generators, dump trucks and drill rigs. CA HUB AUTO replies within 24 hours.",
 			path: "/booking/new",
 		}),
 	}),
@@ -15,23 +30,27 @@ export const Route = createFileRoute("/booking/new")({
 });
 
 function NewBookingPage() {
-	return (
-		<div className="min-h-screen py-12 md:py-20" style={{ background: "#f6f6f6" }}>
-			<div className="page-wrap">
-				<header className="mb-10 max-w-2xl">
-					<span className="island-kicker inline-block rounded-full bg-accent px-3 py-1 text-primary text-xs font-semibold tracking-wider">
-						Rental Request
-					</span>
-					<h1 className="mt-4 display-title text-4xl font-bold tracking-tight text-foreground md:text-5xl">
-						Request a Quote
-					</h1>
-					<p className="mt-3 text-base leading-7 text-muted-foreground">
-						Fill in your rental details and send directly via WhatsApp or email —
-						no payment online. We confirm availability and prepare a proposal first.
-					</p>
-				</header>
+	const { t } = useI18n();
+	const { equipment, start } = Route.useSearch();
 
-				<BookingRequestFlow />
+	return (
+		<div>
+			<PageHero title={t.bookingPage.title} />
+			<div className="page-wrap py-20 md:py-28">
+				<SectionHeading
+					ghost={t.bookingPage.ghost}
+					title={t.contact.getInTouch}
+				/>
+				<p className="mt-8 max-w-2xl text-[15px] leading-7 text-[#202020]">
+					{t.bookingPage.description}
+				</p>
+				<div className="mt-12 mb-14">
+					<ContactItems layout="row" />
+				</div>
+				<BookingRequestFlow
+					initialEquipmentId={equipment}
+					initialStartDate={start}
+				/>
 			</div>
 		</div>
 	);

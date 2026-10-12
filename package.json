@@ -12,7 +12,9 @@
     "test": "vitest run",
     "format": "biome format",
     "lint": "biome lint",
-    "check": "biome check"
+    "check": "biome check",
+    "test:e2e": "pnpm --dir e2e --ignore-workspace test",
+    "capture:ref": "pnpm --dir e2e --ignore-workspace capture:ref"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.63",

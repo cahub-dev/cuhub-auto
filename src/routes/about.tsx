@@ -1,11 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AboutHero } from "#/components/about/AboutHero";
-import { AboutIntro } from "#/components/about/AboutIntro";
-import { MissionVisionValues } from "#/components/about/MissionVisionValues";
-import { RentalProcess } from "#/components/about/RentalProcess";
-import { ServiceAreaMap } from "#/components/shared/ServiceAreaMap";
+import {
+	AboutFeatures,
+	AboutIndustries,
+	AboutIntro,
+	AboutSplit,
+	AboutStatBox,
+} from "#/components/about/AboutSections";
+import { StatsBand } from "#/components/home/StatsBand";
 import { TrustedPartners } from "#/components/shared/TrustedPartners";
-import { WhyChooseUs } from "#/components/shared/WhyChooseUs";
 import { buildPageMeta } from "#/lib/seo";
 
 export const Route = createFileRoute("/about")({
@@ -13,23 +16,25 @@ export const Route = createFileRoute("/about")({
 		meta: buildPageMeta({
 			title: "About Us",
 			description:
-				"CA HUB AUTO is a Mozambique-based vehicle and heavy equipment rental company. We support mining, construction, and infrastructure teams with reliable, well-maintained fleets — based in Maputo and operating nationwide.",
+				"CA HUB AUTO is a Mozambican company specialising in mining machinery and equipment rental — crushers, excavators, loaders, generators, haul trucks and drill rigs — based in Maputo and operating nationwide.",
 			path: "/about",
 		}),
 	}),
 	component: AboutPage,
 });
 
+// Section order follows the Backhoe "About us" page.
 function AboutPage() {
 	return (
 		<div>
 			<AboutHero />
 			<AboutIntro />
-			<MissionVisionValues />
-			<RentalProcess />
-			<WhyChooseUs />
-			<ServiceAreaMap />
+			<AboutFeatures />
+			<AboutStatBox />
 			<TrustedPartners />
+			<AboutSplit />
+			<AboutIndustries />
+			<StatsBand image="/equipment/wheel-loaders/develon-sd300-3.webp" />
 		</div>
 	);
 }

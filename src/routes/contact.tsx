@@ -1,9 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type React from "react";
-import { ContactForm } from "#/components/contact/ContactForm";
 import { ContactHero } from "#/components/contact/ContactHero";
-import { ContactInfoCards } from "#/components/contact/ContactInfoCards";
 import { ContactMap } from "#/components/contact/ContactMap";
+import { ContactSection } from "#/components/contact/ContactSection";
 import { buildPageMeta } from "#/lib/seo";
 
 export const Route = createFileRoute("/contact")({
@@ -11,7 +10,7 @@ export const Route = createFileRoute("/contact")({
 		meta: buildPageMeta({
 			title: "Contact & Quote",
 			description:
-				"Get a rental quote from CA HUB AUTO. Reach us by phone, WhatsApp, or email for vehicle and equipment availability, pricing, and booking support — based in Maputo, Mozambique.",
+				"Get a mining equipment rental quote from CA HUB AUTO. Reach our sales team by phone, WhatsApp or email for availability and pricing — based in Maputo, Mozambique.",
 			path: "/contact",
 		}),
 	}),
@@ -22,9 +21,8 @@ function ContactPage(): React.JSX.Element {
 	return (
 		<>
 			<ContactHero />
-			<ContactInfoCards />
+			<ContactSection />
 			<ContactMap />
-			<ContactForm />
 		</>
 	);
 }

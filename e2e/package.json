@@ -1,0 +1,13 @@
+{
+  "name": "cahub-public-e2e",
+  "private": true,
+  "type": "module",
+  "description": "Playwright checks for the public site. Kept separate so the app's lockfile is not re-resolved.",
+  "scripts": {
+    "test": "playwright test",
+    "capture:ref": "playwright test --project=reference"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0"
+  }
+}

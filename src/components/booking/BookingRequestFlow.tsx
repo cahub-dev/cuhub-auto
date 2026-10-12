@@ -21,6 +21,7 @@ import {
 	type UpdateBookingRequest,
 } from "#/components/booking/booking-request-options";
 import { Button } from "#/components/ui/button";
+import { getCategory, getEquipment } from "#/data/equipment";
 import {
 	BOOKING_EMAIL,
 	BOOKING_WHATSAPP_NUMBER,
@@ -29,15 +30,36 @@ import {
 } from "#/lib/booking-message";
 import { useI18n } from "#/lib/i18n";
 
-export function BookingRequestFlow(): React.JSX.Element {
+function initialRequest(
+	equipmentId?: string,
+	startDate?: string,
+): BookingRequest {
+	const base = { ...DEFAULT_BOOKING_REQUEST, startDate: startDate ?? "" };
+	const equipment = equipmentId ? getEquipment(equipmentId) : undefined;
+	if (!equipment) return base;
+
+	return {
+		...base,
+		fleetRequest: equipment.name.en,
+		category: getCategory(equipment.categoryId)?.name.en ?? "Not specified",
+	};
+}
+
+export function BookingRequestFlow({
+	initialEquipmentId,
+	initialStartDate,
+}: {
+	initialEquipmentId?: string;
+	initialStartDate?: string;
+}): React.JSX.Element {
 	const { t } = useI18n();
 	const [step, setStep] = useState(0);
 	const [submitStatus, setSubmitStatus] = useState<
 		"idle" | "sending" | "success" | "error"
 	>("idle");
 	const [submitError, setSubmitError] = useState("");
-	const [request, setRequest] = useState<BookingRequest>(
-		DEFAULT_BOOKING_REQUEST,
+	const [request, setRequest] = useState<BookingRequest>(() =>
+		initialRequest(initialEquipmentId, initialStartDate),
 	);
 
 	const canContinue = useMemo(() => {
@@ -103,7 +125,7 @@ export function BookingRequestFlow(): React.JSX.Element {
 	return (
 		<div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[minmax(0,1fr)_320px]">
 			{/* Main form panel */}
-			<section className="rounded-2xl bg-white p-6 shadow-[0_2px_16px_rgba(0,0,0,0.06)] md:p-8">
+			<section className="shadow-card p-6 md:p-10">
 				<BookingStepIndicator step={step} />
 				<form className="mt-8" onSubmit={(event) => event.preventDefault()}>
 					{step === 0 && <BookingFleetStep request={request} update={update} />}
@@ -134,8 +156,11 @@ export function BookingRequestFlow(): React.JSX.Element {
 
 			{/* Sidebar */}
 			<aside
-				className="self-start rounded-2xl p-6 lg:sticky lg:top-24"
-				style={{ background: "#f9f8f7", border: "1px solid var(--line)" }}
+				className="self-start p-6 lg:sticky lg:top-6"
+				style={{
+					background: "var(--surface-muted)",
+					border: "1px solid var(--line)",
+				}}
 			>
 				{/* Quote-only notice */}
 				<div className="flex items-start gap-3">

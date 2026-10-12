@@ -1,54 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Update loc values with https://cuhub-auto.vercel.app when domain is confirmed -->
+  <!-- Equipment URLs must match src/data/equipment.ts (checked by src/data/equipment.test.ts). -->
   <url>
-    <loc>https://cuhub-auto.vercel.app/</loc>
+    <loc>https://www.cahubauto.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://cuhub-auto.vercel.app/fleet</loc>
+    <loc>https://www.cahubauto.com/fleet</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://cuhub-auto.vercel.app/fleet/toyota-land-cruiser</loc>
+    <loc>https://www.cahubauto.com/fleet/mobile-jaw-crusher</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cuhub-auto.vercel.app/fleet/nissan-navara-single</loc>
+    <loc>https://www.cahubauto.com/fleet/mobile-cone-crusher</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cuhub-auto.vercel.app/fleet/nissan-navara-double</loc>
+    <loc>https://www.cahubauto.com/fleet/develon-excavator</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cuhub-auto.vercel.app/fleet/develon-loader</loc>
+    <loc>https://www.cahubauto.com/fleet/develon-loader</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cuhub-auto.vercel.app/fleet/develon-excavator</loc>
+    <loc>https://www.cahubauto.com/fleet/diesel-generator</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cuhub-auto.vercel.app/fleet/scania-mining</loc>
+    <loc>https://www.cahubauto.com/fleet/scania-mining</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cuhub-auto.vercel.app/about</loc>
+    <loc>https://www.cahubauto.com/fleet/surface-drill-rig</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cahubauto.com/fleet/ball-mill</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cahubauto.com/fleet/water-bowser</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cahubauto.com/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://cuhub-auto.vercel.app/contact</loc>
+    <loc>https://www.cahubauto.com/contact</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.cahubauto.com/booking/new</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>

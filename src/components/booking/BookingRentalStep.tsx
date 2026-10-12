@@ -4,7 +4,7 @@ import {
 	BOOKING_EXTRAS,
 	type UpdateBookingRequest,
 } from "#/components/booking/booking-request-options";
-import { LOCATIONS } from "#/components/booking/LocationField";
+import { LOCATIONS } from "#/components/booking/locations";
 import { Input } from "#/components/ui/input";
 import { Textarea } from "#/components/ui/textarea";
 import type { BookingRequest } from "#/lib/booking-message";
@@ -81,7 +81,7 @@ export function BookingRentalStep({
 					</span>
 				</p>
 				<div className="flex flex-wrap gap-2">
-					{BOOKING_EXTRAS.map((extra) => {
+					{BOOKING_EXTRAS.map((extra, index) => {
 						const isOn = request.extras.includes(extra);
 						return (
 							<button
@@ -94,7 +94,7 @@ export function BookingRentalStep({
 										: "bg-white border-border/70 text-muted-foreground hover:border-foreground hover:text-foreground"
 								}`}
 							>
-								{extra}
+								{t.bookingFlow.extraLabels[index] ?? extra}
 							</button>
 						);
 					})}

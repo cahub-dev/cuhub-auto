@@ -1,9 +1,14 @@
 "use client";
 
 import { Link } from "@tanstack/react-router";
-import { Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react";
+import { ChevronRight, Clock, Mail, MapPin, Smartphone } from "lucide-react";
 import type React from "react";
-import { SALES_CONTACT } from "#/lib/contact-details";
+import { EQUIPMENT_CATEGORIES } from "#/data/equipment";
+import {
+	BUSINESS_HOURS,
+	COMPANY_ADDRESS,
+	SALES_CONTACT,
+} from "#/lib/contact-details";
 import { useI18n } from "#/lib/i18n";
 
 const FOOTER_LINKS = [
@@ -14,97 +19,129 @@ const FOOTER_LINKS = [
 ] as const;
 
 export function Footer(): React.JSX.Element {
-	const { t } = useI18n();
+	const { language, t } = useI18n();
 
 	return (
-		<footer className="bg-[#171717] px-5 py-14 text-white md:py-18">
-			<div className="page-wrap">
-				<div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr_1.4fr] lg:gap-16">
-					<div>
-						<img
-							src="/logo.webp"
-							alt="CA HUB AUTO"
-							className="mb-6 h-12 w-auto rounded-sm bg-white"
-						/>
-						<p className="max-w-sm text-sm leading-6 text-white/70">
-							{t.footer.description}
-						</p>
-					</div>
+		<footer className="bg-black text-white">
+			<div className="page-wrap grid gap-12 py-16 sm:grid-cols-2 md:py-20 lg:grid-cols-[1.15fr_0.8fr_1.1fr_1.1fr]">
+				<div>
+					<FooterHeading>{t.footer.aboutCompany}</FooterHeading>
+					<img
+						src="/logo-light.webp"
+						alt="CA HUB AUTO"
+						className="h-11 w-auto"
+					/>
+					<p className="mt-5 max-w-xs text-sm leading-6 text-white/70">
+						{t.footer.description}
+					</p>
+				</div>
 
-					<nav aria-label="Footer navigation">
-						<h2 className="mb-5 text-sm font-semibold text-white/65">
-							{t.footer.quickLinks}
-						</h2>
-						<div className="flex flex-col gap-3 text-sm font-semibold">
-							{FOOTER_LINKS.map((link) => (
+				<nav aria-label={t.footer.information}>
+					<FooterHeading>{t.footer.information}</FooterHeading>
+					<ul className="space-y-3 text-sm">
+						{FOOTER_LINKS.map((link) => (
+							<li key={link.to}>
 								<Link
-									key={link.to}
 									to={link.to}
-									className="!text-white no-underline hover:!text-primary"
+									className="inline-flex items-center gap-2 text-white/75 no-underline hover:text-primary"
 								>
+									<ChevronRight className="size-3.5" aria-hidden="true" />
 									{t.nav[link.key]}
 								</Link>
-							))}
-						</div>
-					</nav>
+							</li>
+						))}
+					</ul>
+				</nav>
 
-					<div>
-						<h2 className="mb-5 text-sm font-semibold text-white/65">
-							{t.footer.contact}
-						</h2>
-						<div className="flex flex-col gap-4 text-sm font-semibold text-white">
-							<p className="flex items-start gap-3 leading-6">
-								<MapPin
-									className="mt-1 size-4 shrink-0 text-primary"
-									aria-hidden="true"
-								/>
-								<span>
-									Moçambique, Cidade de Maputo, Distrito de Kamavota, Costa do
-									Sol, Rua de Micaia, Q.56, nº115
-								</span>
-							</p>
+				<div>
+					<FooterHeading>{t.footer.contactInfo}</FooterHeading>
+					<ul className="space-y-4 text-sm leading-6 text-white/75">
+						<li className="flex gap-3">
+							<MapPin
+								className="mt-0.5 size-5 shrink-0 text-primary"
+								aria-hidden="true"
+							/>
+							<span>
+								{t.footer.address}: {COMPANY_ADDRESS.lines.join(", ")}
+							</span>
+						</li>
+						<li className="flex gap-3">
+							<Smartphone
+								className="mt-0.5 size-5 shrink-0 text-primary"
+								aria-hidden="true"
+							/>
 							<a
 								href={`tel:${SALES_CONTACT.phoneE164}`}
-								className="flex items-center gap-3 !text-white no-underline hover:!text-primary"
+								className="text-white/75 no-underline hover:text-primary"
 							>
-								<Phone className="size-4 text-primary" aria-hidden="true" />
-								{SALES_CONTACT.name} – {SALES_CONTACT.phoneDisplay}
+								{t.footer.support}: {SALES_CONTACT.name} –{" "}
+								{SALES_CONTACT.phoneDisplay}
 							</a>
-							<a
-								href={`mailto:${SALES_CONTACT.email}`}
-								className="flex items-center gap-3 !text-white no-underline hover:!text-primary"
-							>
-								<Mail className="size-4 text-primary" aria-hidden="true" />
-								{SALES_CONTACT.email}
-							</a>
-						</div>
-						<div className="mt-8 flex items-center gap-4">
-							<a
-								href="https://www.instagram.com/cahub.auto.rental"
-								target="_blank"
-								rel="noopener noreferrer"
-								aria-label={t.footer.instagram}
-								className="inline-flex size-10 items-center justify-center rounded-full border border-white/20 !text-white transition-colors hover:border-primary hover:!text-primary"
-							>
-								<Instagram className="size-5" aria-hidden="true" />
-							</a>
-							<a
-								href="https://www.linkedin.com/in/cahub-auto-rental/"
-								target="_blank"
-								rel="noopener noreferrer"
-								aria-label={t.footer.linkedin}
-								className="inline-flex size-10 items-center justify-center rounded-full border border-white/20 !text-white transition-colors hover:border-primary hover:!text-primary"
-							>
-								<Linkedin className="size-5" aria-hidden="true" />
-							</a>
-						</div>
-					</div>
+						</li>
+						<li className="flex gap-3">
+							<Clock
+								className="mt-0.5 size-5 shrink-0 text-primary"
+								aria-hidden="true"
+							/>
+							<span>
+								{t.footer.workingTime}: {BUSINESS_HOURS[language]}
+							</span>
+						</li>
+						<li className="flex gap-3">
+							<Mail
+								className="mt-0.5 size-5 shrink-0 text-primary"
+								aria-hidden="true"
+							/>
+							<span>
+								{t.footer.emailLabel}:
+								<br />
+								<a
+									href={`mailto:${SALES_CONTACT.email}`}
+									className="text-primary no-underline hover:underline"
+								>
+									{SALES_CONTACT.email}
+								</a>
+							</span>
+						</li>
+					</ul>
 				</div>
 
-				<div className="mt-12 border-t border-white/10 pt-6 text-sm text-white/55">
-					&copy; {new Date().getFullYear()} CA HUB AUTO. {t.footer.rights}
-				</div>
+				<nav aria-label={t.footer.equipment}>
+					<FooterHeading>{t.footer.equipment}</FooterHeading>
+					<ul className="text-sm">
+						{EQUIPMENT_CATEGORIES.slice(0, 6).map((category) => (
+							<li
+								key={category.id}
+								className="border-b border-dashed border-white/15 py-2.5 first:pt-0"
+							>
+								<Link
+									to="/fleet"
+									search={{ category: category.id }}
+									className="font-semibold text-white/80 no-underline hover:text-primary"
+								>
+									{category.name[language]}
+								</Link>
+							</li>
+						))}
+					</ul>
+				</nav>
 			</div>
+
+			<p className="pb-8 text-center text-sm text-white">
+				&copy; {new Date().getFullYear()} CA HUB AUTO. {t.footer.rights}
+			</p>
 		</footer>
+	);
+}
+
+function FooterHeading({
+	children,
+}: {
+	children: React.ReactNode;
+}): React.JSX.Element {
+	return (
+		<h2 className="display-title mb-6 text-2xl font-bold text-white">
+			{children}
+		</h2>
 	);
 }

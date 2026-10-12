@@ -21,27 +21,14 @@ export interface BookingRequest {
 	address: string;
 }
 
-export interface VehicleBookingRequest {
-	vehicleName: string;
-	pickupDate: string;
-	pickupTime: string;
-	pickupLocation: string;
-	returnDate: string;
-	returnTime: string;
-	returnLocation: string;
-	rentalDays: number;
-	extras: string[];
-	estimatedTotal: string;
-}
-
-export interface QuickBookingRequest {
-	categoryLabel: string;
-	pickupLocation: string;
-	returnLocation: string;
-	pickupDate: string;
-	pickupTime: string;
-	returnDate: string;
-	returnTime: string;
+export interface EquipmentQuoteRequest {
+	equipmentName: string;
+	quantity: number;
+	startDate: string;
+	duration: string;
+	province: string;
+	siteLocation: string;
+	operatorRequired: boolean;
 }
 
 export function buildWhatsAppUrl(
@@ -99,58 +86,33 @@ export function buildBookingMailtoUrl(request: BookingRequest): string {
 	return buildMailtoUrl(subject, buildBookingMessage(request));
 }
 
-export function buildVehicleBookingMessage(
-	request: VehicleBookingRequest,
+export function buildEquipmentQuoteMessage(
+	request: EquipmentQuoteRequest,
 ): string {
-	return [
-		`Hello CA HUB AUTO, I would like to book the ${request.vehicleName}.`,
-		`Pickup: ${request.pickupDate} at ${request.pickupTime} from ${request.pickupLocation}`,
-		`Return: ${request.returnDate} at ${request.returnTime} to ${request.returnLocation}`,
-		`Rental period: ${request.rentalDays} day${request.rentalDays === 1 ? "" : "s"}`,
-		`Extras: ${request.extras.length > 0 ? request.extras.join(", ") : "None"}`,
-		`Estimated total: ${request.estimatedTotal}`,
-	].join("\n");
-}
-
-export function buildVehicleBookingWhatsAppUrl(
-	request: VehicleBookingRequest,
-): string {
-	return buildWhatsAppUrl(buildVehicleBookingMessage(request));
-}
-
-export function buildVehicleBookingMailtoUrl(
-	request: VehicleBookingRequest,
-): string {
-	return buildMailtoUrl(
-		`${request.vehicleName} booking inquiry`,
-		buildVehicleBookingMessage(request),
-	);
-}
-
-export function buildQuickBookingMessage(request: QuickBookingRequest): string {
 	return [
 		"Hello CA HUB AUTO,",
 		"",
-		`I'd like to rent a ${request.categoryLabel}.`,
+		`I would like a rental quote for: ${request.quantity} x ${request.equipmentName}`,
+		`Start date: ${request.startDate || "To be confirmed"}`,
+		`Duration: ${request.duration}`,
+		`Site: ${request.siteLocation ? `${request.siteLocation}, ` : ""}${request.province}`,
+		`Certified operator: ${request.operatorRequired ? "Yes" : "No"}`,
 		"",
-		`Pickup: ${request.pickupLocation}, ${request.pickupDate} at ${request.pickupTime}`,
-		`Return: ${request.returnLocation}, ${request.returnDate} at ${request.returnTime}`,
-		"",
-		"Please confirm availability. Thank you.",
+		"Please confirm availability and send a proposal.",
 	].join("\n");
 }
 
-export function buildQuickBookingWhatsAppUrl(
-	request: QuickBookingRequest,
+export function buildEquipmentQuoteWhatsAppUrl(
+	request: EquipmentQuoteRequest,
 ): string {
-	return buildWhatsAppUrl(buildQuickBookingMessage(request));
+	return buildWhatsAppUrl(buildEquipmentQuoteMessage(request));
 }
 
-export function buildQuickBookingMailtoUrl(
-	request: QuickBookingRequest,
+export function buildEquipmentQuoteMailtoUrl(
+	request: EquipmentQuoteRequest,
 ): string {
 	return buildMailtoUrl(
-		`Booking request: ${request.categoryLabel}`,
-		buildQuickBookingMessage(request),
+		`Quote request: ${request.equipmentName}`,
+		buildEquipmentQuoteMessage(request),
 	);
 }
