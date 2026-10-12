@@ -9,24 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as FleetRouteImport } from './routes/fleet'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as FleetEquipmentIdRouteImport } from './routes/fleet_/$equipmentId'
-import { Route as BookingNewRouteImport } from './routes/booking/new'
-import { Route as ApiChatEscalationRouteImport } from './routes/api/chat-escalation'
-import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as FleetRouteImport } from './routes/fleet'
 import { Route as ApiBookingRouteImport } from './routes/api/booking'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as ApiChatEscalationRouteImport } from './routes/api/chat-escalation'
+import { Route as BookingNewRouteImport } from './routes/booking/new'
+import { Route as FleetEquipmentIdRouteImport } from './routes/fleet_/$equipmentId'
 
-const FleetRoute = FleetRouteImport.update({
-  id: '/fleet',
-  path: '/fleet',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -34,24 +29,19 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FleetEquipmentIdRoute = FleetEquipmentIdRouteImport.update({
-  id: '/fleet_/$equipmentId',
-  path: '/fleet/$equipmentId',
+const FleetRoute = FleetRouteImport.update({
+  id: '/fleet',
+  path: '/fleet',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BookingNewRoute = BookingNewRouteImport.update({
-  id: '/booking/new',
-  path: '/booking/new',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiChatEscalationRoute = ApiChatEscalationRouteImport.update({
-  id: '/api/chat-escalation',
-  path: '/api/chat-escalation',
+const ApiBookingRoute = ApiBookingRouteImport.update({
+  id: '/api/booking',
+  path: '/api/booking',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
@@ -59,9 +49,19 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiBookingRoute = ApiBookingRouteImport.update({
-  id: '/api/booking',
-  path: '/api/booking',
+const ApiChatEscalationRoute = ApiChatEscalationRouteImport.update({
+  id: '/api/chat-escalation',
+  path: '/api/chat-escalation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingNewRoute = BookingNewRouteImport.update({
+  id: '/booking/new',
+  path: '/booking/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FleetEquipmentIdRoute = FleetEquipmentIdRouteImport.update({
+  id: '/fleet_/$equipmentId',
+  path: '/fleet/$equipmentId',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -149,18 +149,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/fleet': {
-      id: '/fleet'
-      path: '/fleet'
-      fullPath: '/fleet'
-      preLoaderRoute: typeof FleetRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -170,32 +163,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/fleet_/$equipmentId': {
-      id: '/fleet_/$equipmentId'
-      path: '/fleet/$equipmentId'
-      fullPath: '/fleet/$equipmentId'
-      preLoaderRoute: typeof FleetEquipmentIdRouteImport
+    '/fleet': {
+      id: '/fleet'
+      path: '/fleet'
+      fullPath: '/fleet'
+      preLoaderRoute: typeof FleetRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/booking/new': {
-      id: '/booking/new'
-      path: '/booking/new'
-      fullPath: '/booking/new'
-      preLoaderRoute: typeof BookingNewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/chat-escalation': {
-      id: '/api/chat-escalation'
-      path: '/api/chat-escalation'
-      fullPath: '/api/chat-escalation'
-      preLoaderRoute: typeof ApiChatEscalationRouteImport
+    '/api/booking': {
+      id: '/api/booking'
+      path: '/api/booking'
+      fullPath: '/api/booking'
+      preLoaderRoute: typeof ApiBookingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
@@ -205,11 +191,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/booking': {
-      id: '/api/booking'
-      path: '/api/booking'
-      fullPath: '/api/booking'
-      preLoaderRoute: typeof ApiBookingRouteImport
+    '/api/chat-escalation': {
+      id: '/api/chat-escalation'
+      path: '/api/chat-escalation'
+      fullPath: '/api/chat-escalation'
+      preLoaderRoute: typeof ApiChatEscalationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/booking/new': {
+      id: '/booking/new'
+      path: '/booking/new'
+      fullPath: '/booking/new'
+      preLoaderRoute: typeof BookingNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fleet_/$equipmentId': {
+      id: '/fleet_/$equipmentId'
+      path: '/fleet/$equipmentId'
+      fullPath: '/fleet/$equipmentId'
+      preLoaderRoute: typeof FleetEquipmentIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
