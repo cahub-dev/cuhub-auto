@@ -1,10 +1,11 @@
 "use client";
 
 import { Link } from "@tanstack/react-router";
-import { Mail, MessageCircle } from "lucide-react";
+import { Mail } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { LOCATIONS } from "#/components/booking/locations";
+import { WhatsAppIcon } from "#/components/shared/WhatsAppIcon";
 import type { Equipment } from "#/data/equipment";
 import {
 	buildEquipmentQuoteMailtoUrl,
@@ -129,9 +130,9 @@ export function QuoteRequestCard({
 					href={buildEquipmentQuoteWhatsAppUrl(request)}
 					target="_blank"
 					rel="noreferrer"
-					className="bh-button-dark"
+					className="btn-whatsapp"
 				>
-					<MessageCircle className="size-4" aria-hidden="true" />
+					<WhatsAppIcon className="size-5" />
 					{t.equipmentDetail.sendWhatsApp}
 				</a>
 				<a

@@ -2,6 +2,7 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, isTextUIPart } from "ai";
 import { Loader2, MessageCircle, Send, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { WhatsAppIcon } from "#/components/shared/WhatsAppIcon";
 import { EQUIPMENT, getCategory } from "#/data/equipment";
 import type { BookingRequest } from "#/lib/booking-message";
 import { type Language, useI18n } from "#/lib/i18n";
@@ -135,9 +136,10 @@ function InlineMarkdown({ text }: { text: string }) {
 					href={part}
 					target="_blank"
 					rel="noopener noreferrer"
-					className="underline font-medium"
-					style={{ color: "var(--primary)" }}
+					className="inline-flex items-center gap-1 underline font-medium"
+					style={{ color: isWhatsApp ? "#1da851" : "var(--primary)" }}
 				>
+					{isWhatsApp && <WhatsAppIcon className="size-3.5" />}
 					{isWhatsApp ? "Open WhatsApp" : "Send Email"}
 				</a>
 			);

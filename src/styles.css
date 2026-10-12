@@ -790,3 +790,28 @@ textarea.bh-input {
   background: var(--primary);
   color: #fff;
 }
+
+/* WhatsApp brand button */
+.btn-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  height: 3rem;
+  padding: 0 1.75rem;
+  border: 0;
+  background: #25d366;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.btn-whatsapp:hover {
+  background: #1ebe5a;
+  color: #fff;
+}

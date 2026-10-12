@@ -1,13 +1,6 @@
 "use client";
 
-import {
-	Clock,
-	Mail,
-	MapPin,
-	MessageCircle,
-	Phone,
-	ShieldCheck,
-} from "lucide-react";
+import { Clock, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
 import type React from "react";
 import { useMemo, useState } from "react";
 import { BookingClientStep } from "#/components/booking/BookingClientStep";
@@ -20,6 +13,7 @@ import {
 	DEFAULT_BOOKING_REQUEST,
 	type UpdateBookingRequest,
 } from "#/components/booking/booking-request-options";
+import { WhatsAppIcon } from "#/components/shared/WhatsAppIcon";
 import { Button } from "#/components/ui/button";
 import { getCategory, getEquipment } from "#/data/equipment";
 import {
@@ -324,16 +318,15 @@ function BookingActions({
 								? t.bookingFlow.sending
 								: t.bookingFlow.sendEmail}
 						</Button>
-						<Button asChild>
-							<a
-								href={buildBookingWhatsAppUrl(request)}
-								target="_blank"
-								rel="noreferrer"
-							>
-								<MessageCircle className="size-4" aria-hidden="true" />
-								{t.bookingFlow.sendWhatsApp}
-							</a>
-						</Button>
+						<a
+							href={buildBookingWhatsAppUrl(request)}
+							target="_blank"
+							rel="noreferrer"
+							className="btn-whatsapp h-9 px-4 text-xs"
+						>
+							<WhatsAppIcon className="size-4" />
+							{t.bookingFlow.sendWhatsApp}
+						</a>
 					</div>
 				)}
 			</div>
