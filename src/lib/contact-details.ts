@@ -1,10 +1,9 @@
-// TODO_SIMAO_PHONE: replace the placeholder phone fields with Simão's number
-// before the production deploy. Every phone link on the site reads from here.
+// Sales contact. Every phone, WhatsApp and email link on the site reads from here.
 export const SALES_CONTACT = {
 	name: "Simão",
-	phoneDisplay: "TODO_SIMAO_PHONE",
-	phoneE164: "TODO_SIMAO_PHONE",
-	whatsapp: "TODO_SIMAO_PHONE",
+	phoneDisplay: "+258 84 663 4635",
+	phoneE164: "+258846634635",
+	whatsapp: "258846634635",
 	email: "info@cahubauto.com",
 } as const;
 

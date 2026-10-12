@@ -67,7 +67,15 @@ test("all phone links use the single sales contact", async ({ page }) => {
 		.locator('a[href^="tel:"]')
 		.evaluateAll((links) => links.map((link) => link.getAttribute("href")));
 	expect(hrefs.length).toBeGreaterThan(0);
-	expect(new Set(hrefs).size).toBe(1);
+	expect([...new Set(hrefs)]).toEqual(["tel:+258846634635"]);
+});
+
+test("WhatsApp quote links go to Simão's number", async ({ page }) => {
+	await open(page, "/fleet/mobile-jaw-crusher");
+	await page.getByRole("button", { name: "Request a quote" }).click();
+	await expect(
+		page.getByRole("link", { name: "Send via WhatsApp" }),
+	).toHaveAttribute("href", /^https:\/\/wa\.me\/258846634635\?text=/);
 });
 
 test("hero search filters the catalogue by category", async ({ page }) => {
