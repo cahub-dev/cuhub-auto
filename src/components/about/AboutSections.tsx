@@ -110,7 +110,13 @@ export function AboutStatBox(): React.JSX.Element {
 	return (
 		<section className="pb-20 md:pb-28">
 			<div className="page-wrap relative">
-				<div className="shadow-card grid gap-10 p-8 pt-56 md:p-12 lg:ml-[24%] lg:grid-cols-2 lg:pl-[18%]">
+				<div className="relative z-10 bg-primary p-8 text-white md:p-10 lg:absolute lg:left-4 lg:top-[-2rem] lg:w-[40%]">
+					<h2 className="block-title !text-white">{t.about.statBoxTitle}</h2>
+					<p className="mt-4 text-sm leading-6 text-white/90">
+						{t.about.statBoxText}
+					</p>
+				</div>
+				<div className="shadow-card grid grid-cols-2 gap-8 p-6 sm:p-8 md:p-12 lg:ml-[24%] lg:gap-10 lg:pl-[18%]">
 					{t.home.stats.map((stat, index) => {
 						const Icon = icons[index] ?? Clock;
 						return (
@@ -129,12 +135,6 @@ export function AboutStatBox(): React.JSX.Element {
 							</div>
 						);
 					})}
-				</div>
-				<div className="absolute left-4 right-4 top-[-1.5rem] bg-primary p-8 text-white md:p-10 lg:right-auto lg:top-[-2rem] lg:w-[40%]">
-					<h2 className="block-title !text-white">{t.about.statBoxTitle}</h2>
-					<p className="mt-4 text-sm leading-6 text-white/90">
-						{t.about.statBoxText}
-					</p>
 				</div>
 			</div>
 		</section>

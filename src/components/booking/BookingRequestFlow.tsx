@@ -22,6 +22,7 @@ import {
 	type BookingRequest,
 	buildBookingWhatsAppUrl,
 } from "#/lib/booking-message";
+import { SALES_CONTACT } from "#/lib/contact-details";
 import { useI18n } from "#/lib/i18n";
 
 function initialRequest(
@@ -201,7 +202,7 @@ export function BookingRequestFlow({
 						className="flex items-center gap-2.5 text-sm text-foreground hover:text-primary transition-colors"
 					>
 						<Phone className="size-4 text-primary shrink-0" />
-						{BOOKING_WHATSAPP_NUMBER}
+						{SALES_CONTACT.phoneDisplay}
 					</a>
 					<a
 						href={`mailto:${BOOKING_EMAIL}`}

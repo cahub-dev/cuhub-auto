@@ -262,6 +262,11 @@ body,
   min-height: 100%;
 }
 
+/* Safety net: no section may make the page wider than the phone screen. */
+main {
+  overflow-x: clip;
+}
+
 body {
   margin: 0;
   color: var(--foreground);
@@ -480,6 +485,9 @@ a {
 .section-heading {
   position: relative;
   padding-top: 0.5rem;
+  /* The ghost word is wider than a phone screen; clip it sideways only. */
+  overflow-x: clip;
+  overflow-clip-margin: 0.5rem;
 }
 
 .section-heading-ghost {
@@ -495,7 +503,7 @@ a {
   text-transform: uppercase;
   line-height: 1;
   letter-spacing: -0.02em;
-  font-size: clamp(4rem, 2rem + 6.5vw, 7.5rem);
+  font-size: clamp(3rem, 1.5rem + 6.5vw, 7.5rem);
   color: transparent;
   -webkit-text-stroke: 1px rgba(32, 32, 32, 0.13);
 }
