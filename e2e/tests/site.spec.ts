@@ -173,15 +173,28 @@ test("quote request flow submits with the equipment preselected", async ({
 	});
 });
 
-test("pages fit the viewport without horizontal scroll", async ({ page }) => {
-	for (const path of ["/", "/fleet", "/fleet/develon-excavator", "/booking/new"]) {
-		await page.goto(path);
-		const overflow = await page.evaluate(
-			() => document.documentElement.scrollWidth - window.innerWidth,
-		);
-		expect(overflow, path).toBeLessThanOrEqual(0);
-	}
-});
+for (const width of [360, 390]) {
+	test(`no element is wider than a ${width}px phone`, async ({ page }) => {
+		await page.setViewportSize({ width, height: 800 });
+		for (const path of [
+			"/",
+			"/fleet",
+			"/fleet/develon-excavator",
+			"/about",
+			"/contact",
+			"/booking/new",
+		]) {
+			await open(page, path);
+			// body hides sideways overflow on desktop browsers but not reliably on
+			// iOS Safari, so measure with that mask switched off.
+			const overflow = await page.evaluate(() => {
+				document.body.style.overflowX = "visible";
+				return document.documentElement.scrollWidth - window.innerWidth;
+			});
+			expect(overflow, path).toBeLessThanOrEqual(0);
+		}
+	});
+}
 
 test("capture review screenshots", async ({ page }, testInfo) => {
 	for (const [name, path] of [

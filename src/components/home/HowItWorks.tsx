@@ -67,7 +67,7 @@ function QuoteMock(): React.JSX.Element {
 					))}
 				</div>
 			</div>
-			<span className="absolute -right-5 -top-6 flex size-16 items-center justify-center rounded-full border-4 border-white bg-[#5cb85c] text-white shadow-lg">
+			<span className="absolute -top-6 right-0 flex size-14 sm:-right-5 sm:size-16 items-center justify-center rounded-full border-4 border-white bg-[#5cb85c] text-white shadow-lg">
 				<Check className="size-8" strokeWidth={3} aria-hidden="true" />
 			</span>
 		</div>
@@ -135,7 +135,7 @@ export function HowItWorks(): React.JSX.Element {
 					className="mb-14 md:mb-20"
 				/>
 
-				<ol>
+				<ol className="space-y-16 md:space-y-0">
 					{t.howItWorks.steps.map((step, index) => {
 						const Visual = VISUALS[index] ?? BrowserMock;
 						const reverse = index % 2 === 1;

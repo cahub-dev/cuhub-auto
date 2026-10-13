@@ -151,7 +151,7 @@ export function EquipmentDetail({
 				<div ref={tabsRef} className="mt-16 scroll-mt-6">
 					<div
 						role="tablist"
-						className="flex flex-wrap gap-8 border-b border-[#e5e5e5]"
+						className="flex gap-5 overflow-x-auto border-b border-[#e5e5e5] sm:gap-8"
 					>
 						{tabs.map((entry) => (
 							<button
@@ -161,7 +161,7 @@ export function EquipmentDetail({
 								aria-selected={tab === entry.id}
 								onClick={() => setTab(entry.id)}
 								className={cn(
-									"-mb-px border-b-2 pb-3 text-[15px] font-semibold transition-colors",
+									"-mb-px shrink-0 whitespace-nowrap border-b-2 pb-3 text-sm font-semibold transition-colors sm:text-[15px]",
 									tab === entry.id
 										? "border-primary text-[#202020]"
 										: "border-transparent text-[#999] hover:text-[#202020]",
