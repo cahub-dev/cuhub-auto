@@ -667,6 +667,127 @@ a:hover .machine-box img,
   }
 }
 
+/* ─── Motion ──────────────────────────────────────────── */
+/* Everything here is gated by html.motion-ready, which the boot script adds
+   only when the visitor allows motion (see src/lib/motion.tsx). */
+
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Lenis recommended base styles */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* Scroll reveal */
+.motion-ready [data-reveal] {
+  opacity: 0;
+  transition:
+    opacity 800ms var(--ease-out),
+    transform 900ms var(--ease-out);
+  will-change: opacity, transform;
+}
+.motion-ready [data-reveal="up"] { transform: translateY(32px); }
+.motion-ready [data-reveal="left"] { transform: translateX(-48px); }
+.motion-ready [data-reveal="right"] { transform: translateX(48px); }
+.motion-ready [data-reveal="zoom"] { transform: scale(0.94); }
+.motion-ready [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero intro: staggered fade-up over a slow background zoom */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes slow-zoom {
+  from { transform: scale(1.12); }
+  to { transform: scale(1); }
+}
+.motion-ready .hero-bg {
+  animation: slow-zoom 14s var(--ease-out) both;
+}
+.motion-ready .hero-intro > * {
+  animation: rise-in 900ms var(--ease-out) both;
+}
+.motion-ready .hero-intro > :nth-child(1) { animation-delay: 150ms; }
+.motion-ready .hero-intro > :nth-child(2) { animation-delay: 300ms; }
+.motion-ready .hero-intro > :nth-child(3) { animation-delay: 450ms; }
+
+/* Inner page banner title */
+.motion-ready .page-hero-title {
+  animation: rise-in 800ms var(--ease-out) both;
+}
+
+/* Page cross-fade (View Transitions API). Header stays put. */
+::view-transition-old(root) {
+  animation: 220ms ease both vt-fade-out;
+}
+::view-transition-new(root) {
+  animation: 320ms var(--ease-out) both vt-fade-in;
+}
+@keyframes vt-fade-out { to { opacity: 0; } }
+@keyframes vt-fade-in { from { opacity: 0; transform: translateY(10px); } }
+.site-header { view-transition-name: site-header; }
+
+/* Sticky header slides down once the page is scrolled */
+@keyframes header-drop {
+  from { transform: translateY(-100%); }
+  to { transform: none; }
+}
+.header-stuck {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 60;
+  background: #151515 !important;
+  box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.5);
+  animation: header-drop 420ms var(--ease-out) both;
+}
+
+/* Hover polish */
+.nav-underline {
+  position: relative;
+}
+.nav-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  background: var(--primary);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 300ms var(--ease-out);
+}
+.nav-underline:hover::after,
+.nav-underline[data-status="active"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+a:hover .machine-box,
+.group:hover .machine-box {
+  transform: translateY(-4px);
+}
+.machine-box {
+  transition:
+    box-shadow 300ms var(--ease-out),
+    border-color 300ms ease,
+    transform 300ms var(--ease-out);
+}
+.shadow-card {
+  transition: box-shadow 300ms ease, transform 300ms var(--ease-out);
+}
+
 /* ─── Backhoe form controls ───────────────────────────── */
 
 .bh-input {

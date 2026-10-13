@@ -19,24 +19,26 @@ export function Hero(): React.JSX.Element {
 				draggable={false}
 			/>
 			<div className="page-wrap hero-inner">
-				<h1 id="hero-title" className="hero-title">
-					{t.hero.title}
-				</h1>
-				<p className="hero-subtitle">{t.hero.subtitle}</p>
+				<div className="hero-intro flex flex-col items-center">
+					<h1 id="hero-title" className="hero-title">
+						{t.hero.title}
+					</h1>
+					<p className="hero-subtitle">{t.hero.subtitle}</p>
 
-				<div className="mt-9 flex flex-col gap-3 sm:flex-row sm:gap-4">
-					<Link
-						to="/fleet"
-						className="inline-flex h-12 items-center justify-center bg-primary px-8 text-xs font-bold uppercase tracking-wider text-white no-underline transition-colors hover:bg-primary-hover"
-					>
-						{t.hero.viewEquipment}
-					</Link>
-					<Link
-						to="/booking/new"
-						className="inline-flex h-12 items-center justify-center border-2 border-white px-8 text-xs font-bold uppercase tracking-wider text-white no-underline transition-colors hover:bg-white hover:text-[#202020]"
-					>
-						{t.hero.requestQuote}
-					</Link>
+					<div className="mt-9 flex flex-col gap-3 sm:flex-row sm:gap-4">
+						<Link
+							to="/fleet"
+							className="inline-flex h-12 items-center justify-center bg-primary px-8 text-xs font-bold uppercase tracking-wider text-white no-underline transition-colors hover:bg-primary-hover"
+						>
+							{t.hero.viewEquipment}
+						</Link>
+						<Link
+							to="/booking/new"
+							className="inline-flex h-12 items-center justify-center border-2 border-white px-8 text-xs font-bold uppercase tracking-wider text-white no-underline transition-colors hover:bg-white hover:text-[#202020]"
+						>
+							{t.hero.requestQuote}
+						</Link>
+					</div>
 				</div>
 			</div>
 		</section>

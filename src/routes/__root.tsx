@@ -12,6 +12,7 @@ import { Header } from "#/components/Header";
 import { Footer } from "#/components/layout/footer";
 import { COMPANY_ADDRESS, SALES_CONTACT } from "#/lib/contact-details";
 import { I18nProvider } from "#/lib/i18n";
+import { MOTION_BOOT_SCRIPT, SmoothScroll } from "#/lib/motion";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import { SITE_NAME, SITE_URL } from "../lib/seo";
 import appCss from "../styles.css?url";
@@ -79,6 +80,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			{ rel: "manifest", href: "/manifest.json" },
 		],
 		scripts: [
+			{ children: MOTION_BOOT_SCRIPT },
 			{
 				type: "application/ld+json",
 				children: JSON.stringify(LOCAL_BUSINESS_SCHEMA),
@@ -95,6 +97,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<HeadContent />
 			</head>
 			<body>
+				<SmoothScroll />
 				<I18nProvider>
 					<Header />
 					<main>{children}</main>

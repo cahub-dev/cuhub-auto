@@ -7,6 +7,7 @@ import { EquipmentTile } from "#/components/equipment/EquipmentTile";
 import { SectionHeading } from "#/components/shared/SectionHeading";
 import { getEquipmentInPriorityOrder } from "#/data/equipment";
 import { useI18n } from "#/lib/i18n";
+import { Reveal } from "#/lib/motion";
 
 const FEATURED_COUNT = 8;
 
@@ -32,10 +33,10 @@ export function FeaturedEquipment(): React.JSX.Element {
 				</div>
 
 				<ul className="grid grid-cols-2 gap-x-5 gap-y-8 lg:grid-cols-4">
-					{items.map((item) => (
-						<li key={item.id}>
+					{items.map((item, index) => (
+						<Reveal as="li" key={item.id} delay={(index % 4) * 90}>
 							<EquipmentTile item={item} />
-						</li>
+						</Reveal>
 					))}
 				</ul>
 			</div>

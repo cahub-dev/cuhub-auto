@@ -6,6 +6,7 @@ import { useState } from "react";
 import { SectionHeading } from "#/components/shared/SectionHeading";
 import { COMPANY_ADDRESS, SALES_CONTACT } from "#/lib/contact-details";
 import { useI18n } from "#/lib/i18n";
+import { Reveal } from "#/lib/motion";
 import { cn } from "#/lib/utils";
 
 /** Contact details with an icon, used on Contact and Request-a-quote pages. */
@@ -106,7 +107,7 @@ export function ContactSection(): React.JSX.Element {
 	return (
 		<section className="py-20 md:py-28">
 			<div className="page-wrap grid items-start gap-14 lg:grid-cols-2">
-				<div className="lg:pl-10">
+				<Reveal variant="left" className="lg:pl-10">
 					<SectionHeading
 						ghost={t.contact.ghost}
 						title={t.contact.getInTouch}
@@ -117,56 +118,58 @@ export function ContactSection(): React.JSX.Element {
 					<div className="mt-12">
 						<ContactItems />
 					</div>
-				</div>
+				</Reveal>
 
-				<form
-					onSubmit={handleSubmit}
-					className="shadow-card grid gap-5 p-6 md:p-10"
-				>
-					<input
-						className="bh-input"
-						value={name}
-						onChange={(event) => setName(event.target.value)}
-						placeholder={t.contact.namePlaceholder}
-						aria-label={t.contact.namePlaceholder}
-						required
-					/>
-					<input
-						type="email"
-						className="bh-input"
-						value={email}
-						onChange={(event) => setEmail(event.target.value)}
-						placeholder={t.contact.emailPlaceholder}
-						aria-label={t.contact.emailPlaceholder}
-						required
-					/>
-					<input
-						type="tel"
-						className="bh-input"
-						value={phone}
-						onChange={(event) => setPhone(event.target.value)}
-						placeholder={t.contact.phonePlaceholder}
-						aria-label={t.contact.phonePlaceholder}
-					/>
-					<input
-						className="bh-input"
-						value={subject}
-						onChange={(event) => setSubject(event.target.value)}
-						placeholder={t.contact.subjectPlaceholder}
-						aria-label={t.contact.subjectPlaceholder}
-					/>
-					<textarea
-						className="bh-input"
-						value={message}
-						onChange={(event) => setMessage(event.target.value)}
-						placeholder={t.contact.messagePlaceholder}
-						aria-label={t.contact.messagePlaceholder}
-						required
-					/>
-					<button type="submit" className="bh-button-dark mt-2 w-full">
-						{t.contact.sendMessage}
-					</button>
-				</form>
+				<Reveal variant="right" delay={120}>
+					<form
+						onSubmit={handleSubmit}
+						className="shadow-card grid gap-5 p-6 md:p-10"
+					>
+						<input
+							className="bh-input"
+							value={name}
+							onChange={(event) => setName(event.target.value)}
+							placeholder={t.contact.namePlaceholder}
+							aria-label={t.contact.namePlaceholder}
+							required
+						/>
+						<input
+							type="email"
+							className="bh-input"
+							value={email}
+							onChange={(event) => setEmail(event.target.value)}
+							placeholder={t.contact.emailPlaceholder}
+							aria-label={t.contact.emailPlaceholder}
+							required
+						/>
+						<input
+							type="tel"
+							className="bh-input"
+							value={phone}
+							onChange={(event) => setPhone(event.target.value)}
+							placeholder={t.contact.phonePlaceholder}
+							aria-label={t.contact.phonePlaceholder}
+						/>
+						<input
+							className="bh-input"
+							value={subject}
+							onChange={(event) => setSubject(event.target.value)}
+							placeholder={t.contact.subjectPlaceholder}
+							aria-label={t.contact.subjectPlaceholder}
+						/>
+						<textarea
+							className="bh-input"
+							value={message}
+							onChange={(event) => setMessage(event.target.value)}
+							placeholder={t.contact.messagePlaceholder}
+							aria-label={t.contact.messagePlaceholder}
+							required
+						/>
+						<button type="submit" className="bh-button-dark mt-2 w-full">
+							{t.contact.sendMessage}
+						</button>
+					</form>
+				</Reveal>
 			</div>
 		</section>
 	);

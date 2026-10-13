@@ -14,6 +14,7 @@ import type React from "react";
 import { SectionHeading } from "#/components/shared/SectionHeading";
 import { SALES_CONTACT } from "#/lib/contact-details";
 import { useI18n } from "#/lib/i18n";
+import { CountUp, Reveal } from "#/lib/motion";
 
 /** Image on an offset orange block, intro copy on the right. */
 export function AboutIntro(): React.JSX.Element {
@@ -22,7 +23,7 @@ export function AboutIntro(): React.JSX.Element {
 	return (
 		<section className="py-20 md:py-28">
 			<div className="page-wrap grid items-center gap-14 lg:grid-cols-2">
-				<div className="relative ml-6 mb-6">
+				<Reveal variant="left" className="relative ml-6 mb-6">
 					<span
 						className="absolute -bottom-6 -left-6 h-3/4 w-full bg-primary"
 						aria-hidden="true"
@@ -32,8 +33,8 @@ export function AboutIntro(): React.JSX.Element {
 						alt=""
 						className="relative aspect-[4/3] w-[88%] object-cover"
 					/>
-				</div>
-				<div>
+				</Reveal>
+				<Reveal variant="right" delay={120}>
 					<h2 className="block-title">{t.about.introTitle}</h2>
 					{t.about.paragraphs.map((paragraph) => (
 						<p
@@ -58,7 +59,7 @@ export function AboutIntro(): React.JSX.Element {
 							</strong>
 						</span>
 					</a>
-				</div>
+				</Reveal>
 			</div>
 		</section>
 	);
@@ -76,7 +77,7 @@ export function AboutFeatures(): React.JSX.Element {
 				{t.about.cards.map((card, index) => {
 					const Icon = FEATURE_ICONS[index] ?? Target;
 					return (
-						<li key={card.title}>
+						<Reveal as="li" key={card.title} delay={index * 120}>
 							<span className="relative inline-flex">
 								<Icon
 									className="size-10 text-[#313131]"
@@ -94,7 +95,7 @@ export function AboutFeatures(): React.JSX.Element {
 							<p className="mt-2 text-sm leading-6 text-[#202020]">
 								{card.items.join(" ")}
 							</p>
-						</li>
+						</Reveal>
 					);
 				})}
 			</ul>
@@ -110,13 +111,19 @@ export function AboutStatBox(): React.JSX.Element {
 	return (
 		<section className="pb-20 md:pb-28">
 			<div className="page-wrap relative">
-				<div className="relative z-10 bg-primary p-8 text-white md:p-10 lg:absolute lg:left-4 lg:top-[-2rem] lg:w-[40%]">
+				<Reveal
+					variant="zoom"
+					className="relative z-10 bg-primary p-8 text-white md:p-10 lg:absolute lg:left-4 lg:top-[-2rem] lg:w-[40%]"
+				>
 					<h2 className="block-title !text-white">{t.about.statBoxTitle}</h2>
 					<p className="mt-4 text-sm leading-6 text-white/90">
 						{t.about.statBoxText}
 					</p>
-				</div>
-				<div className="shadow-card grid grid-cols-2 gap-8 p-6 sm:p-8 md:p-12 lg:ml-[24%] lg:gap-10 lg:pl-[18%]">
+				</Reveal>
+				<Reveal
+					delay={150}
+					className="shadow-card grid grid-cols-2 gap-8 p-6 sm:p-8 md:p-12 lg:ml-[24%] lg:gap-10 lg:pl-[18%]"
+				>
 					{t.home.stats.map((stat, index) => {
 						const Icon = icons[index] ?? Clock;
 						return (
@@ -128,14 +135,14 @@ export function AboutStatBox(): React.JSX.Element {
 								/>
 								<div>
 									<p className="display-title text-3xl font-bold text-[#313131]">
-										{stat.value}
+										<CountUp value={stat.value} />
 									</p>
 									<p className="mt-1 text-sm text-[#555]">{stat.label}</p>
 								</div>
 							</div>
 						);
 					})}
-				</div>
+				</Reveal>
 			</div>
 		</section>
 	);
@@ -148,7 +155,10 @@ export function AboutSplit(): React.JSX.Element {
 
 	return (
 		<section className="grid lg:grid-cols-2">
-			<div className="relative flex min-h-[340px] items-end overflow-hidden bg-black p-8 md:p-12">
+			<Reveal
+				variant="left"
+				className="relative flex min-h-[340px] items-end overflow-hidden bg-black p-8 md:p-12"
+			>
 				<img
 					src="/equipment/drilling-rigs/drill-rig-2.webp"
 					alt=""
@@ -163,8 +173,12 @@ export function AboutSplit(): React.JSX.Element {
 						{t.about.safetyText}
 					</p>
 				</div>
-			</div>
-			<div className="bg-primary p-8 text-white md:p-12">
+			</Reveal>
+			<Reveal
+				variant="right"
+				delay={120}
+				className="bg-primary p-8 text-white md:p-12"
+			>
 				<h2 className="block-title !text-white">{t.about.bestTitle}</h2>
 				<p className="mt-3 text-sm leading-6 text-white/90">
 					{t.about.bestText}
@@ -186,7 +200,7 @@ export function AboutSplit(): React.JSX.Element {
 						);
 					})}
 				</ul>
-			</div>
+			</Reveal>
 		</section>
 	);
 }
@@ -205,8 +219,13 @@ export function AboutIndustries(): React.JSX.Element {
 				/>
 				<div className="grid items-center gap-12 lg:grid-cols-2">
 					<ul className="grid gap-5">
-						{t.about.sectors.map((sector) => (
-							<li key={sector} className="relative pl-7">
+						{t.about.sectors.map((sector, index) => (
+							<Reveal
+								as="li"
+								key={sector}
+								delay={index * 90}
+								className="relative pl-7"
+							>
 								<span
 									className="absolute left-0 top-0 h-full w-1.5 bg-primary"
 									aria-hidden="true"
@@ -218,15 +237,17 @@ export function AboutIndustries(): React.JSX.Element {
 								<span className="shadow-card display-title block px-6 py-5 text-lg font-semibold text-[#313131]">
 									{sector}
 								</span>
-							</li>
+							</Reveal>
 						))}
 					</ul>
-					<img
-						src="/equipment/crushers/jaw-crusher-1.webp"
-						alt=""
-						loading="lazy"
-						className="aspect-[4/3.6] w-full object-cover"
-					/>
+					<Reveal variant="right">
+						<img
+							src="/equipment/crushers/jaw-crusher-1.webp"
+							alt=""
+							loading="lazy"
+							className="aspect-[4/3.6] w-full object-cover"
+						/>
+					</Reveal>
 				</div>
 			</div>
 		</section>

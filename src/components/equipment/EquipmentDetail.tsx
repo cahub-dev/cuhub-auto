@@ -15,6 +15,7 @@ import {
 	localize,
 } from "#/data/equipment";
 import { useI18n } from "#/lib/i18n";
+import { Reveal } from "#/lib/motion";
 import { cn } from "#/lib/utils";
 
 type Tab = "description" | "specs" | "quote";
@@ -60,7 +61,7 @@ export function EquipmentDetail({
 			<PageHero title={t.equipmentDetail.bannerTitle} as="p" />
 			<div className="page-wrap py-14 md:py-20">
 				<div className="grid gap-10 md:grid-cols-2 lg:gap-14">
-					<div>
+					<Reveal variant="left">
 						<div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-[#f7f7f7]">
 							<img
 								src={activeImage}
@@ -103,9 +104,9 @@ export function EquipmentDetail({
 								))}
 							</div>
 						)}
-					</div>
+					</Reveal>
 
-					<div>
+					<Reveal variant="right" delay={120}>
 						<h1 className="display-title text-3xl font-bold text-[#313131] md:text-4xl">
 							{name}
 						</h1>
@@ -145,7 +146,7 @@ export function EquipmentDetail({
 								</Link>
 							</p>
 						)}
-					</div>
+					</Reveal>
 				</div>
 
 				<div ref={tabsRef} className="mt-16 scroll-mt-6">
@@ -225,10 +226,10 @@ export function EquipmentDetail({
 						aria-hidden="true"
 					/>
 					<ul className="mt-8 grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-4">
-						{related.map((other) => (
-							<li key={other.id}>
+						{related.map((other, index) => (
+							<Reveal as="li" key={other.id} delay={(index % 4) * 90}>
 								<EquipmentTile item={other} />
-							</li>
+							</Reveal>
 						))}
 					</ul>
 				</section>

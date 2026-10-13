@@ -4,6 +4,7 @@ import { ContactItems } from "#/components/contact/ContactSection";
 import { PageHero } from "#/components/equipment/PageHero";
 import { SectionHeading } from "#/components/shared/SectionHeading";
 import { useI18n } from "#/lib/i18n";
+import { Reveal } from "#/lib/motion";
 import { buildPageMeta } from "#/lib/seo";
 
 export const Route = createFileRoute("/booking/new")({
@@ -38,7 +39,9 @@ function NewBookingPage() {
 				<div className="mt-12 mb-14">
 					<ContactItems layout="row" />
 				</div>
-				<BookingRequestFlow initialEquipmentId={equipment} />
+				<Reveal>
+					<BookingRequestFlow initialEquipmentId={equipment} />
+				</Reveal>
 			</div>
 		</div>
 	);

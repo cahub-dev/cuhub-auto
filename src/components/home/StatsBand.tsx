@@ -3,6 +3,7 @@
 import { CalendarCheck, Clock, MapPinned, Tractor } from "lucide-react";
 import type React from "react";
 import { useI18n } from "#/lib/i18n";
+import { CountUp, Reveal } from "#/lib/motion";
 
 const ICONS = [CalendarCheck, MapPinned, Tractor, Clock] as const;
 
@@ -27,17 +28,22 @@ export function StatsBand({ image }: { image?: string }): React.JSX.Element {
 				{t.home.stats.map((stat, index) => {
 					const Icon = ICONS[index] ?? Clock;
 					return (
-						<li key={stat.label} className="flex flex-col items-center">
+						<Reveal
+							as="li"
+							key={stat.label}
+							delay={index * 120}
+							className="flex flex-col items-center"
+						>
 							<Icon
 								className="size-11 text-primary"
 								strokeWidth={1.25}
 								aria-hidden="true"
 							/>
 							<span className="display-title mt-4 text-6xl font-bold leading-none text-transparent [-webkit-text-stroke:1.5px_rgba(255,255,255,0.8)]">
-								{stat.value}
+								<CountUp value={stat.value} />
 							</span>
 							<span className="display-title mt-1 text-xl">{stat.label}</span>
-						</li>
+						</Reveal>
 					);
 				})}
 			</ul>
