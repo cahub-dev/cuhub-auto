@@ -12,6 +12,7 @@ import {
 } from "#/data/equipment";
 import { SALES_CONTACT } from "#/lib/contact-details";
 import { useI18n } from "#/lib/i18n";
+import { Reveal } from "#/lib/motion";
 import { buildPageMeta } from "#/lib/seo";
 import { cn } from "#/lib/utils";
 
@@ -170,10 +171,10 @@ function FleetPage(): React.JSX.Element {
 						</div>
 					) : (
 						<ul className="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3">
-							{filtered.map((item) => (
-								<li key={item.id}>
+							{filtered.map((item, index) => (
+								<Reveal as="li" key={item.id} delay={(index % 3) * 90}>
 									<EquipmentTile item={item} />
-								</li>
+								</Reveal>
 							))}
 						</ul>
 					)}

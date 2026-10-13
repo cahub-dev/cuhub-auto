@@ -189,6 +189,8 @@ for (const width of [360, 390]) {
 }
 
 test("capture review screenshots", async ({ page }, testInfo) => {
+	// Six long pages with a scroll pass each; slower than a behaviour test.
+	test.setTimeout(90_000);
 	for (const [name, path] of [
 		["home", "/"],
 		["fleet", "/fleet"],

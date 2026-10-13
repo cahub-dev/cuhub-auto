@@ -3,6 +3,7 @@
 import { Phone } from "lucide-react";
 import type React from "react";
 import { SALES_CONTACT } from "#/lib/contact-details";
+import { Reveal } from "#/lib/motion";
 import { cn } from "#/lib/utils";
 
 interface BenefitsCopy {
@@ -34,7 +35,8 @@ export function BenefitsBlock({
 					reverse && "lg:[&>*:first-child]:order-2",
 				)}
 			>
-				<div
+				<Reveal
+					variant={reverse ? "right" : "left"}
 					className={cn(
 						"shadow-card relative z-10 p-8 md:p-12",
 						reverse ? "lg:-ml-16" : "lg:-mr-16",
@@ -81,9 +83,13 @@ export function BenefitsBlock({
 							</span>
 						</a>
 					)}
-				</div>
+				</Reveal>
 
-				<div className="relative mt-10 lg:mt-0">
+				<Reveal
+					variant={reverse ? "left" : "right"}
+					delay={150}
+					className="relative mt-10 lg:mt-0"
+				>
 					<span
 						className={cn(
 							"absolute -bottom-6 hidden h-3/5 w-1/3 bg-primary md:block",
@@ -97,7 +103,7 @@ export function BenefitsBlock({
 						loading="lazy"
 						className="relative aspect-[4/3.4] w-full object-cover"
 					/>
-				</div>
+				</Reveal>
 			</div>
 		</section>
 	);

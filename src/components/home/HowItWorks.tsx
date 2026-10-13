@@ -6,6 +6,7 @@ import { MachineBox } from "#/components/equipment/MachineBox";
 import { SectionHeading } from "#/components/shared/SectionHeading";
 import { getEquipment } from "#/data/equipment";
 import { useI18n } from "#/lib/i18n";
+import { Reveal } from "#/lib/motion";
 import { cn } from "#/lib/utils";
 
 function BrowserMock(): React.JSX.Element {
@@ -143,7 +144,10 @@ export function HowItWorks(): React.JSX.Element {
 							<li key={step.title}>
 								{index > 0 && <DashedArrow flip={reverse} />}
 								<div className="grid items-center gap-10 md:grid-cols-2 md:gap-16">
-									<div className={cn("flex gap-4", reverse && "md:order-2")}>
+									<Reveal
+										variant={reverse ? "right" : "left"}
+										className={cn("flex gap-4", reverse && "md:order-2")}
+									>
 										<span className="display-title text-5xl font-bold leading-none text-primary">
 											{index + 1}
 										</span>
@@ -155,10 +159,14 @@ export function HowItWorks(): React.JSX.Element {
 												{step.description}
 											</p>
 										</div>
-									</div>
-									<div className={cn(reverse && "md:order-1")}>
+									</Reveal>
+									<Reveal
+										variant={reverse ? "left" : "right"}
+										delay={150}
+										className={cn(reverse && "md:order-1")}
+									>
 										<Visual />
-									</div>
+									</Reveal>
 								</div>
 							</li>
 						);

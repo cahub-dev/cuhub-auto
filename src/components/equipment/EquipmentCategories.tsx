@@ -6,6 +6,7 @@ import { MachineBox } from "#/components/equipment/MachineBox";
 import { SectionHeading } from "#/components/shared/SectionHeading";
 import { EQUIPMENT_CATEGORIES, getEquipmentByCategory } from "#/data/equipment";
 import { useI18n } from "#/lib/i18n";
+import { Reveal } from "#/lib/motion";
 
 export function EquipmentCategories(): React.JSX.Element {
 	const { language, t } = useI18n();
@@ -21,10 +22,15 @@ export function EquipmentCategories(): React.JSX.Element {
 				/>
 
 				<ul className="grid grid-cols-2 gap-x-5 gap-y-8 lg:grid-cols-4">
-					{EQUIPMENT_CATEGORIES.map((category) => {
+					{EQUIPMENT_CATEGORIES.map((category, index) => {
 						const [first] = getEquipmentByCategory(category.id);
 						return (
-							<li key={category.id} data-testid="category-card">
+							<Reveal
+								as="li"
+								key={category.id}
+								delay={(index % 4) * 90}
+								data-testid="category-card"
+							>
 								<Link
 									to="/fleet"
 									search={{ category: category.id }}
@@ -37,7 +43,7 @@ export function EquipmentCategories(): React.JSX.Element {
 										{category.name[language]}
 									</span>
 								</Link>
-							</li>
+							</Reveal>
 						);
 					})}
 				</ul>

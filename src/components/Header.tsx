@@ -88,6 +88,15 @@ export function Header() {
 	const pathname = router.state.location.pathname;
 	// On the home page the header floats over the hero photo, as in Backhoe.
 	const overlay = pathname === "/";
+	// After scrolling past the hero top, the header pins to the top of the screen.
+	const [stuck, setStuck] = useState(false);
+
+	useEffect(() => {
+		const onScroll = (): void => setStuck(window.scrollY > 160);
+		onScroll();
+		window.addEventListener("scroll", onScroll, { passive: true });
+		return () => window.removeEventListener("scroll", onScroll);
+	}, []);
 	const toggleMenu = useCallback(() => setMobileOpen((prev) => !prev), []);
 	const closeMenu = useCallback(() => setMobileOpen(false), []);
 
@@ -107,10 +116,15 @@ export function Header() {
 		<>
 			<div className={cn(overlay && "absolute inset-x-0 top-0 z-50")}>
 				<TopBar />
+				{/* Keeps the page from jumping when the in-flow header becomes fixed. */}
+				{stuck && !overlay && (
+					<div className="h-16 md:h-[76px]" aria-hidden="true" />
+				)}
 				<header
 					className={cn(
-						"relative z-40 text-white",
+						"site-header relative z-40 text-white",
 						overlay ? "bg-black/15" : "bg-[#151515]",
+						stuck && "header-stuck",
 					)}
 				>
 					<div className="page-wrap flex h-16 items-center gap-6 md:h-[76px]">
@@ -141,7 +155,7 @@ export function Header() {
 								<Link
 									key={item.to}
 									to={item.to}
-									className="text-[15px] font-medium text-white no-underline transition-colors hover:text-primary"
+									className="nav-underline text-[15px] font-medium text-white no-underline transition-colors hover:text-primary"
 									activeProps={{ className: "!text-primary" }}
 									activeOptions={{ exact: item.to === "/" }}
 								>

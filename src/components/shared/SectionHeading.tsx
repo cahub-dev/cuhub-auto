@@ -1,4 +1,5 @@
 import type React from "react";
+import { Reveal } from "#/lib/motion";
 import { cn } from "#/lib/utils";
 
 /** Backhoe-style heading: outlined ghost word behind a heavy uppercase title. */
@@ -16,7 +17,7 @@ export function SectionHeading({
 	className?: string;
 }): React.JSX.Element {
 	return (
-		<div
+		<Reveal
 			className={cn(
 				"section-heading",
 				dark && "section-heading-dark",
@@ -30,6 +31,6 @@ export function SectionHeading({
 				{title}
 			</h2>
 			<span className="section-heading-bar" aria-hidden="true" />
-		</div>
+		</Reveal>
 	);
 }

@@ -11,7 +11,7 @@ export function PageHero({
 }): React.JSX.Element {
 	return (
 		<section className="bg-[#222] py-14 text-center md:py-20">
-			<Heading className="display-title text-4xl font-extrabold tracking-tight text-white md:text-5xl">
+			<Heading className="page-hero-title display-title text-4xl font-extrabold tracking-tight text-white md:text-5xl">
 				{title}
 			</Heading>
 		</section>

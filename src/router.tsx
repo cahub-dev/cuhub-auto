@@ -11,6 +11,8 @@ export function getRouter() {
  routeTree,
   context,
   scrollRestoration: true,
+  // Cross-fade between pages (View Transitions API; ignored where unsupported).
+  defaultViewTransition: true,
   defaultPreload: 'intent',
   defaultPreloadStaleTime: 0,
   defaultNotFoundComponent: () => <p>Not Found</p>,
