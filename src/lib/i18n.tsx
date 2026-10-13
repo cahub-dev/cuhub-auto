@@ -54,12 +54,8 @@ export const DICTIONARY = {
 			title: "Rent mining equipment.",
 			subtitle:
 				"Crushers, excavators, loaders, generators and more — delivered to your site.",
-			equipmentPlaceholder: "What are you looking for?",
-			categoryPlaceholder: "Select category",
-			startDate: "Start date",
-			search: "Search",
-			listAll: "Or list all available equipment in our",
-			listAllLink: "catalogue.",
+			viewEquipment: "View equipment",
+			requestQuote: "Request a quote",
 		},
 		featuredFleet: {
 			kicker: "AVAILABLE FOR RENT",
@@ -461,12 +457,8 @@ export const DICTIONARY = {
 			title: "Alugue equipamento de mineração.",
 			subtitle:
 				"Britadores, escavadoras, pás carregadoras, geradores e mais — entregues na sua obra.",
-			equipmentPlaceholder: "O que procura?",
-			categoryPlaceholder: "Selecione a categoria",
-			startDate: "Data de início",
-			search: "Procurar",
-			listAll: "Ou veja todos os equipamentos disponíveis no nosso",
-			listAllLink: "catálogo.",
+			viewEquipment: "Ver equipamentos",
+			requestQuote: "Solicitar cotação",
 		},
 		featuredFleet: {
 			kicker: "DISPONÍVEL PARA ALUGUER",

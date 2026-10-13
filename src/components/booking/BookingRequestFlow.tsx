@@ -25,16 +25,12 @@ import {
 import { SALES_CONTACT } from "#/lib/contact-details";
 import { useI18n } from "#/lib/i18n";
 
-function initialRequest(
-	equipmentId?: string,
-	startDate?: string,
-): BookingRequest {
-	const base = { ...DEFAULT_BOOKING_REQUEST, startDate: startDate ?? "" };
+function initialRequest(equipmentId?: string): BookingRequest {
 	const equipment = equipmentId ? getEquipment(equipmentId) : undefined;
-	if (!equipment) return base;
+	if (!equipment) return DEFAULT_BOOKING_REQUEST;
 
 	return {
-		...base,
+		...DEFAULT_BOOKING_REQUEST,
 		fleetRequest: equipment.name.en,
 		category: getCategory(equipment.categoryId)?.name.en ?? "Not specified",
 	};
@@ -42,10 +38,8 @@ function initialRequest(
 
 export function BookingRequestFlow({
 	initialEquipmentId,
-	initialStartDate,
 }: {
 	initialEquipmentId?: string;
-	initialStartDate?: string;
 }): React.JSX.Element {
 	const { t } = useI18n();
 	const [step, setStep] = useState(0);
@@ -54,7 +48,7 @@ export function BookingRequestFlow({
 	>("idle");
 	const [submitError, setSubmitError] = useState("");
 	const [request, setRequest] = useState<BookingRequest>(() =>
-		initialRequest(initialEquipmentId, initialStartDate),
+		initialRequest(initialEquipmentId),
 	);
 
 	const canContinue = useMemo(() => {
