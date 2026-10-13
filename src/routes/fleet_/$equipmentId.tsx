@@ -13,7 +13,9 @@ export const Route = createFileRoute("/fleet_/$equipmentId")({
 
 		const title = `${item.name.en} for Rent in Mozambique | ${SITE_NAME}`;
 		const description = `${item.summary.en} Request a rental quote from ${SITE_NAME} — delivery to mine sites across Mozambique, certified operator on request.`;
-		const ogImage = `${SITE_URL}${item.image}`;
+		// Share preview: generated JPEG; structured data keeps the real photo.
+		const ogImage = `${SITE_URL}/og/${item.id}.jpg`;
+		const photo = `${SITE_URL}${item.image}`;
 		const url = `${SITE_URL}/fleet/${item.id}`;
 
 		// No Offer/price: rentals are quote-only.
@@ -22,7 +24,7 @@ export const Route = createFileRoute("/fleet_/$equipmentId")({
 			"@type": "Product",
 			name: item.name.en,
 			description: item.description.en,
-			image: ogImage,
+			image: photo,
 			url,
 			category: getCategory(item.categoryId)?.name.en,
 			brand: { "@type": "Brand", name: SITE_NAME },
@@ -35,6 +37,9 @@ export const Route = createFileRoute("/fleet_/$equipmentId")({
 				{ property: "og:title", content: title },
 				{ property: "og:description", content: description },
 				{ property: "og:image", content: ogImage },
+				{ property: "og:image:width", content: "1200" },
+				{ property: "og:image:height", content: "630" },
+				{ property: "og:image:type", content: "image/jpeg" },
 				{ property: "og:url", content: url },
 				{ property: "og:type", content: "product" },
 				{ name: "twitter:title", content: title },

@@ -1,6 +1,8 @@
 export const SITE_NAME = "CA HUB AUTO";
 export const SITE_URL = "https://www.cahubauto.com";
-export const DEFAULT_OG_IMAGE = "/og-image.jpg"; // JPEG required — WhatsApp/crawlers don't support WebP
+// JPEG, 1200x630, under 300 KB — WhatsApp skips WebP and larger images.
+// Regenerate with `pnpm generate:og` (scripts/generate-share-images.py).
+export const DEFAULT_OG_IMAGE = "/og/home.jpg";
 
 export function buildPageMeta({
 	title,
@@ -29,6 +31,8 @@ export function buildPageMeta({
 		{ property: "og:image", content: absImage },
 		{ property: "og:image:width", content: "1200" },
 		{ property: "og:image:height", content: "630" },
+		{ property: "og:image:type", content: "image/jpeg" },
+		{ property: "og:image:alt", content: title },
 		{ property: "og:url", content: absUrl },
 		{ property: "og:type", content: ogType },
 		{ name: "twitter:title", content: fullTitle },

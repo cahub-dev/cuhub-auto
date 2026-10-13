@@ -67,6 +67,13 @@ describe("equipment catalogue", () => {
 		}
 	});
 
+	it("has a JPEG share image for every equipment page", () => {
+		for (const name of ["home", "fleet", ...EQUIPMENT.map((item) => item.id)]) {
+			const path = join(PUBLIC_DIR, "og", `${name}.jpg`);
+			expect(existsSync(path), `${name}.jpg — run pnpm generate:og`).toBe(true);
+		}
+	});
+
 	it("lists every equipment page in the sitemap", () => {
 		const sitemap = readFileSync(join(PUBLIC_DIR, "sitemap.xml"), "utf8");
 		for (const item of EQUIPMENT) {

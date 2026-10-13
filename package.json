@@ -14,7 +14,8 @@
     "lint": "biome lint",
     "check": "biome check",
     "test:e2e": "pnpm --dir e2e --ignore-workspace test",
-    "capture:ref": "pnpm --dir e2e --ignore-workspace capture:ref"
+    "capture:ref": "pnpm --dir e2e --ignore-workspace capture:ref",
+    "generate:og": "python3 scripts/generate-share-images.py"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.63",
