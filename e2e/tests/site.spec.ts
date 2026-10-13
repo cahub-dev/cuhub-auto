@@ -78,28 +78,20 @@ test("WhatsApp quote links go to Simão's number", async ({ page }) => {
 	).toHaveAttribute("href", /^https:\/\/wa\.me\/258846634635\?text=/);
 });
 
-test("hero search filters the catalogue by category", async ({ page }) => {
+test("hero buttons lead to the catalogue and the quote form", async ({
+	page,
+}) => {
 	await open(page, "/");
-	await page.getByRole("combobox", { name: "Select category" }).selectOption("generators");
-	await page.getByRole("button", { name: "Search" }).click();
-	await expect(page).toHaveURL(/\/fleet\?category=generators/);
-	const cards = page.getByTestId("equipment-card");
-	await expect(cards).toHaveCount(1);
-	await expect(cards.first()).toContainText("Diesel Generator Set");
-});
-
-test("hero search with a date opens the quote form prefilled", async ({ page }) => {
+	const hero = page.locator(".hero-section");
+	await expect(hero.getByRole("combobox")).toHaveCount(0);
+	await hero.getByRole("link", { name: "View equipment" }).click();
+	await expect(page).toHaveURL(/\/fleet$/);
 	await open(page, "/");
 	await page
-		.getByRole("combobox", { name: "What are you looking for?" })
-		.selectOption("mobile-jaw-crusher");
-	await page.getByLabel("Start date").fill("2026-11-02");
-	await page.getByRole("button", { name: "Search" }).click();
-	await expect(page).toHaveURL(/\/booking\/new\?.*equipment=mobile-jaw-crusher/);
-	await expect(page).toHaveURL(/start=2026-11-02/);
-	await expect(
-		page.getByRole("button", { name: /Mobile Jaw Crusher/, pressed: true }),
-	).toBeVisible();
+		.locator(".hero-section")
+		.getByRole("link", { name: "Request a quote" })
+		.click();
+	await expect(page).toHaveURL(/\/booking\/new$/);
 });
 
 test("language switch translates the site to Portuguese", async ({ page }) => {

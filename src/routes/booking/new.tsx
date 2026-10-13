@@ -7,17 +7,8 @@ import { useI18n } from "#/lib/i18n";
 import { buildPageMeta } from "#/lib/seo";
 
 export const Route = createFileRoute("/booking/new")({
-	validateSearch: (
-		search: Record<string, unknown>,
-	): { equipment?: string; start?: string } => ({
-		...(typeof search.equipment === "string"
-			? { equipment: search.equipment }
-			: {}),
-		...(typeof search.start === "string" &&
-		/^\d{4}-\d{2}-\d{2}$/.test(search.start)
-			? { start: search.start }
-			: {}),
-	}),
+	validateSearch: (search: Record<string, unknown>): { equipment?: string } =>
+		typeof search.equipment === "string" ? { equipment: search.equipment } : {},
 	head: () => ({
 		meta: buildPageMeta({
 			title: "Request an Equipment Quote",
@@ -31,7 +22,7 @@ export const Route = createFileRoute("/booking/new")({
 
 function NewBookingPage() {
 	const { t } = useI18n();
-	const { equipment, start } = Route.useSearch();
+	const { equipment } = Route.useSearch();
 
 	return (
 		<div>
@@ -47,10 +38,7 @@ function NewBookingPage() {
 				<div className="mt-12 mb-14">
 					<ContactItems layout="row" />
 				</div>
-				<BookingRequestFlow
-					initialEquipmentId={equipment}
-					initialStartDate={start}
-				/>
+				<BookingRequestFlow initialEquipmentId={equipment} />
 			</div>
 		</div>
 	);
