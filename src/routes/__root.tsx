@@ -92,7 +92,9 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en">
+		// The motion boot script adds a class to <html> before hydration, and
+		// I18nProvider sets lang. suppressHydrationWarning covers only this element.
+		<html lang="en" suppressHydrationWarning>
 			<head>
 				<HeadContent />
 			</head>
