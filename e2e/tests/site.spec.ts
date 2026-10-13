@@ -110,10 +110,18 @@ test("equipment detail page offers a quote, not a price", async ({ page }) => {
 	await expect(page.getByRole("heading", { level: 1 })).toHaveText(
 		"Mobile Jaw Crusher",
 	);
-	await page.getByRole("tab", { name: "Specifications" }).click();
-	await expect(page.getByText(/Indicative specifications/)).toBeVisible();
-	await page.getByRole("button", { name: "Request a quote" }).click();
+	// Retry clicks until hydration has attached the tab handlers.
+	await expect(async () => {
+		await page.getByRole("tab", { name: "Specifications" }).click();
+		await expect(page.getByText(/Indicative specifications/)).toBeVisible({
+			timeout: 1000,
+		});
+	}).toPass({ timeout: 15_000 });
 	const whatsapp = page.getByRole("link", { name: "Send via WhatsApp" });
+	await expect(async () => {
+		await page.getByRole("button", { name: "Request a quote" }).click();
+		await expect(whatsapp).toBeVisible({ timeout: 1000 });
+	}).toPass({ timeout: 15_000 });
 	await expect(whatsapp).toHaveAttribute("href", /Mobile%20Jaw%20Crusher/);
 	await expect(page.getByText("Related Equipment")).toBeVisible();
 });
