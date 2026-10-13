@@ -14,7 +14,7 @@ import { COMPANY_ADDRESS, SALES_CONTACT } from "#/lib/contact-details";
 import { I18nProvider } from "#/lib/i18n";
 import { MOTION_BOOT_SCRIPT, SmoothScroll } from "#/lib/motion";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
-import { SITE_NAME, SITE_URL } from "../lib/seo";
+import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "../lib/seo";
 import appCss from "../styles.css?url";
 
 interface MyRouterContext {
@@ -61,7 +61,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			{ property: "og:site_name", content: SITE_NAME },
 			{ property: "og:locale", content: "en_US" },
 			{ property: "og:url", content: SITE_URL },
-			{ property: "og:image", content: `${SITE_URL}/og-image.jpg` },
+			{ property: "og:image", content: `${SITE_URL}${DEFAULT_OG_IMAGE}` },
 			{ property: "og:image:width", content: "1200" },
 			{ property: "og:image:height", content: "630" },
 			{ property: "og:type", content: "website" },

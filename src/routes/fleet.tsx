@@ -27,7 +27,7 @@ export const Route = createFileRoute("/fleet")({
 			description:
 				"Rent mining machinery in Mozambique: jaw and cone crushers, excavators, wheel loaders, diesel generators, dump trucks, drill rigs, ball mills and water bowsers. Quotes within 24 hours.",
 			path: "/fleet",
-			ogImage: "/equipment/excavators/develon-dx220-1.webp",
+			ogImage: "/og/fleet.jpg",
 		}),
 	}),
 	component: FleetPage,
